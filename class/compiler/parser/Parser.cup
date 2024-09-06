@@ -1,0 +1,69 @@
+/* Definición del paquete */
+package compiler.parser;
+
+import java_cup.runtime.Symbol;
+import compiler.scanner.Scanner;
+
+parser code {:
+    private Scanner s;
+
+    public Parser(Scanner s) {
+        this.s = s;
+    }
+
+    public Symbol next_token() {
+        try {
+            return s.next_token();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+:}
+
+/* Conexión a métodos de obtención de tokens */
+scan with {: return next_token(); :};
+
+/* Terminales (tokens) */
+terminal CLASS, INT, BOOLEAN, IF, ELSE, WHILE, FOR, EQ, ASSIGN, PLUS, MINUS, SEMI, LBRACE, RBRACE;
+terminal Integer INT_LITERAL;
+terminal String ID;
+
+/* No terminales */
+non terminal program;
+non terminal decl_list, decl, expr;
+
+/* Precedencias */
+precedence left PLUS, MINUS;
+
+/* Reglas de producción */
+program ::= decl_list;
+
+decl_list ::= decl_list decl
+            | decl;
+
+decl ::= CLASS ID LBRACE RBRACE
+       | INT ID SEMI
+       | BOOLEAN ID SEMI
+       | ID:i ASSIGN expr:e {: 
+            String id = (String) i;  // Obtener el identificador
+            Object exprValue = e;    // Obtener el valor de la expresión
+            System.out.println("Asignación: " + id + " = " + exprValue);
+       :};
+
+expr ::= expr:e1 PLUS expr:e2 {: 
+            RESULT = Integer.valueOf((Integer) e1 + (Integer) e2);  // Operación de suma
+            System.out.println("Suma: " + e1 + " + " + e2);
+       :}
+       | expr:e1 MINUS expr:e2 {: 
+            RESULT = Integer.valueOf((Integer) e1 - (Integer) e2);  // Operación de resta
+            System.out.println("Resta: " + e1 + " - " + e2);
+       :}
+       | INT_LITERAL:l {: 
+            RESULT = l;  // Retornar el valor del literal entero
+            System.out.println("Literal entero: " + l);
+       :}
+       | ID:i {: 
+            RESULT = i;  // Retornar el valor del identificador
+            System.out.println("Identificador: " + i);
+       :};

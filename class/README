@@ -1,0 +1,28 @@
+# Proyecto de Compilador con JFlex y CUP
+
+Este proyecto implementa un compilador simple utilizando **JFlex** para el escáner y **Java CUP** para el parser.
+
+## Estructura del Proyecto
+
+- `/compiler/`: Contiene la implementación principal del compilador.
+- `/scanner/`: Definición y generación del escáner con JFlex.
+- `/parser/`: Definición y generación del parser con Java CUP.
+- `/ast/`: Módulo del Árbol Sintáctico Abstracto.
+- `/semantic/`: Módulo de análisis semántico.
+- `Makefile`: Script para compilar el proyecto.
+
+## Uso
+
+Para compilar el proyecto, ejecuta `make` desde el directorio `/compiler`.
+
+Para compilar desde root con el scanner javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/Compiler.java
+
+Para ejecutar desde root con el scanner java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target scan input.txt
+
+
+
+Para compilar desde root con el Parse javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/parser/Parser.java compiler/parser/sym.java compiler/Compiler.java
+
+Para ejecutar desde root con el parser java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target parse input.txt
+
+Para regenerar los archivos Parser.java y sym.java java -jar compiler/lib/java-cup-11b.jar -parser Parser -symbols sym -destdir compiler/parser compiler/parser/Parser.cup

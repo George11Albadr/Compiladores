@@ -1,0 +1,12 @@
+stage: scanning
+Token: int en la línea 1, columna 1
+Token: x en la línea 1, columna 6
+Token: = en la línea 1, columna 9
+Token: 5 en la línea 1, columna 12
+Token: ; en la línea 1, columna 13
+Token: x en la línea 3, columna 1
+Token: = en la línea 3, columna 4
+Token: x en la línea 3, columna 7
+Token: + en la línea 3, columna 10
+Token: 3 en la línea 3, columna 13
+Token: ; en la línea 3, columna 14
