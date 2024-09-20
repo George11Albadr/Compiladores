@@ -1,69 +1,47 @@
-/* Definición del paquete */
 package compiler.parser;
 
 import java_cup.runtime.Symbol;
-import compiler.scanner.Scanner;
 
-parser code {:
-    private Scanner s;
+terminal CLASS, INT, VOID, BOOLEAN, ASSIGN, SEMI, LBRACE, RBRACE, LPAREN, RPAREN, ID, INT_LITERAL, TRUE, FALSE, IF, EQ, RETURN, COMMA, PLUS, MINUS;
 
-    public Parser(Scanner s) {
-        this.s = s;
-    }
+non terminal program, class_decl, method_decl_list, method_decl, block, statement, statement_list, expr, type, boolean_expr, param_list, param;
 
-    public Symbol next_token() {
-        try {
-            return s.next_token();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-:}
+precedence left PLUS, MINUS;  // Precedencia para operaciones aritméticas
+precedence left EQ;           // Precedencia para operaciones de comparación
+precedence left ASSIGN;       // Precedencia para la asignación
 
-/* Conexión a métodos de obtención de tokens */
-scan with {: return next_token(); :};
+program ::= class_decl;
 
-/* Terminales (tokens) */
-terminal CLASS, INT, BOOLEAN, IF, ELSE, WHILE, FOR, EQ, ASSIGN, PLUS, MINUS, SEMI, LBRACE, RBRACE;
-terminal Integer INT_LITERAL;
-terminal String ID;
+class_decl ::= CLASS ID LBRACE method_decl_list RBRACE;
 
-/* No terminales */
-non terminal program;
-non terminal decl_list, decl, expr;
+method_decl_list ::= method_decl
+                   | method_decl_list method_decl;
 
-/* Precedencias */
-precedence left PLUS, MINUS;
+method_decl ::= type ID LPAREN param_list RPAREN block;
 
-/* Reglas de producción */
-program ::= decl_list;
+param_list ::= param
+             | param_list COMMA param
+             | /* vacío */;
 
-decl_list ::= decl_list decl
-            | decl;
+param ::= type ID;
 
-decl ::= CLASS ID LBRACE RBRACE
-       | INT ID SEMI
-       | BOOLEAN ID SEMI
-       | ID:i ASSIGN expr:e {: 
-            String id = (String) i;  // Obtener el identificador
-            Object exprValue = e;    // Obtener el valor de la expresión
-            System.out.println("Asignación: " + id + " = " + exprValue);
-       :};
+block ::= LBRACE statement_list RBRACE;
 
-expr ::= expr:e1 PLUS expr:e2 {: 
-            RESULT = Integer.valueOf((Integer) e1 + (Integer) e2);  // Operación de suma
-            System.out.println("Suma: " + e1 + " + " + e2);
-       :}
-       | expr:e1 MINUS expr:e2 {: 
-            RESULT = Integer.valueOf((Integer) e1 - (Integer) e2);  // Operación de resta
-            System.out.println("Resta: " + e1 + " - " + e2);
-       :}
-       | INT_LITERAL:l {: 
-            RESULT = l;  // Retornar el valor del literal entero
-            System.out.println("Literal entero: " + l);
-       :}
-       | ID:i {: 
-            RESULT = i;  // Retornar el valor del identificador
-            System.out.println("Identificador: " + i);
-       :};
+statement_list ::= statement
+                 | statement_list statement;
+
+statement ::= ID ASSIGN expr SEMI
+            | IF LPAREN boolean_expr RPAREN block
+            | RETURN expr SEMI
+            | block;
+
+expr ::= expr PLUS expr
+       | expr MINUS expr
+       | INT_LITERAL
+       | ID;
+
+boolean_expr ::= TRUE
+               | FALSE
+               | expr EQ expr;
+
+type ::= INT | VOID | BOOLEAN;

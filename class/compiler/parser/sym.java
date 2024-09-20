@@ -9,42 +9,50 @@ package compiler.parser;
 public class sym {
   /* terminals */
   public static final int CLASS = 2;
-  public static final int ELSE = 6;
-  public static final int PLUS = 11;
-  public static final int RBRACE = 15;
+  public static final int PLUS = 20;
+  public static final int RBRACE = 9;
+  public static final int RPAREN = 11;
   public static final int INT = 3;
-  public static final int SEMI = 13;
-  public static final int WHILE = 7;
-  public static final int IF = 5;
-  public static final int LBRACE = 14;
-  public static final int ID = 17;
-  public static final int INT_LITERAL = 16;
-  public static final int BOOLEAN = 4;
+  public static final int SEMI = 7;
+  public static final int RETURN = 18;
+  public static final int TRUE = 14;
+  public static final int IF = 16;
+  public static final int LPAREN = 10;
+  public static final int LBRACE = 8;
+  public static final int ID = 12;
+  public static final int INT_LITERAL = 13;
+  public static final int BOOLEAN = 5;
+  public static final int COMMA = 19;
   public static final int EOF = 0;
-  public static final int MINUS = 12;
+  public static final int MINUS = 21;
+  public static final int FALSE = 15;
   public static final int error = 1;
-  public static final int ASSIGN = 10;
-  public static final int EQ = 9;
-  public static final int FOR = 8;
+  public static final int EQ = 17;
+  public static final int ASSIGN = 6;
+  public static final int VOID = 4;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "CLASS",
   "INT",
+  "VOID",
   "BOOLEAN",
-  "IF",
-  "ELSE",
-  "WHILE",
-  "FOR",
-  "EQ",
   "ASSIGN",
-  "PLUS",
-  "MINUS",
   "SEMI",
   "LBRACE",
   "RBRACE",
+  "LPAREN",
+  "RPAREN",
+  "ID",
   "INT_LITERAL",
-  "ID"
+  "TRUE",
+  "FALSE",
+  "IF",
+  "EQ",
+  "RETURN",
+  "COMMA",
+  "PLUS",
+  "MINUS"
   };
 }
 
