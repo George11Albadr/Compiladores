@@ -1,4 +1,5 @@
 package compiler.scanner;
+
 import java_cup.runtime.*;
 import compiler.parser.sym;
 
@@ -10,6 +11,16 @@ import compiler.parser.sym;
 %unicode
 %line
 %column
+
+%{
+  private Symbol symbol(int type) {
+    return new Symbol(type, yyline+1, yycolumn+1);
+  }
+  
+  private Symbol symbol(int type, Object value) {
+    return new Symbol(type, yyline+1, yycolumn+1, value);
+  }
+%}
 
 %%
 
@@ -47,6 +58,8 @@ import compiler.parser.sym;
 
 // Manejo de errores (caracteres no reconocidos)
 .            { 
-    System.err.println("Error: Carácter no reconocido '" + yytext() + "' en la línea " + (yyline + 1) + ", columna " + (yycolumn + 1));
-    return new Symbol(sym.error, yyline + 1, yycolumn + 1, yytext());
+    throw new RuntimeException("Error: Carácter no reconocido '" + yytext() + "' en la línea " + (yyline + 1) + ", columna " + (yycolumn + 1));
 }
+
+// Asegúrate de tener esta regla al final
+<<EOF>>     { return symbol(sym.EOF); }

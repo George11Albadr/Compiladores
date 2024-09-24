@@ -3,6 +3,7 @@
 // source: compiler/scanner/Scanner.flex
 
 package compiler.scanner;
+
 import java_cup.runtime.*;
 import compiler.parser.sym;
 
@@ -309,6 +310,15 @@ public class Scanner implements java_cup.runtime.Scanner {
 
   /** Whether the user-EOF-code has already been executed. */
   private boolean zzEOFDone;
+
+  /* user code: */
+  private Symbol symbol(int type) {
+    return new Symbol(type, yyline+1, yycolumn+1);
+  }
+  
+  private Symbol symbol(int type, Object value) {
+    return new Symbol(type, yyline+1, yycolumn+1, value);
+  }
 
 
   /**
@@ -730,13 +740,14 @@ public class Scanner implements java_cup.runtime.Scanner {
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
             zzDoEOF();
-          { return new java_cup.runtime.Symbol(sym.EOF); }
+              {
+                return symbol(sym.EOF);
+              }
       }
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { System.err.println("Error: Carácter no reconocido '" + yytext() + "' en la línea " + (yyline + 1) + ", columna " + (yycolumn + 1));
-    return new Symbol(sym.error, yyline + 1, yycolumn + 1, yytext());
+            { throw new RuntimeException("Error: Carácter no reconocido '" + yytext() + "' en la línea " + (yyline + 1) + ", columna " + (yycolumn + 1));
             }
           // fall through
           case 24: break;

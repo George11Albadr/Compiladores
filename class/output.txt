@@ -1,2 +1,2 @@
 stage: parsing
-Error during parsing: Cannot invoke "java_cup.runtime.Scanner.next_token()" because the return value of "java_cup.runtime.lr_parser.getScanner()" is null
+Parsing completed successfully.

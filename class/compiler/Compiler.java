@@ -69,15 +69,28 @@ public class Compiler {
                 
             } else if (target.equals("parse")) {
                 writer.println("stage: parsing");
-                Parser parser = new Parser();
-                try {
-                    Symbol result = parser.parse(filename);
-                    writer.println("Parsing completed successfully.");
-                    if (debug) System.out.println("Debugging parse: Completed successfully");
-                } catch (Exception e) {
-                    writer.println("Error during parsing: " + e.getMessage());
-                    e.printStackTrace();
-                    if (debug) System.out.println("Debugging parse: Error occurred");
+                try (FileReader fileReader = new FileReader(filename)) {
+                    Scanner scanner = new Scanner(fileReader);
+                    Parser parser = new Parser(scanner);
+                    try {
+                        Symbol result = parser.parse();
+                        writer.println("Parsing completed successfully.");
+                        if (debug) System.out.println("Debugging parse: Completed successfully");
+                    } catch (RuntimeException e) {
+                        // Captura la excepción lanzada por el scanner
+                        writer.println(e.getMessage());
+                        if (debug) System.out.println(e.getMessage());
+                    } catch (Exception e) {
+                        writer.println("Error during parsing: " + e.getMessage());
+                        // Añadir esta línea para imprimir la traza de la excepción en el archivo de salida
+                        e.printStackTrace(writer);
+                        if (debug) {
+                            System.out.println("Debugging parse: Error occurred");
+                            e.printStackTrace(System.out);
+                        }
+                    }
+                } catch (IOException e) {
+                    writer.println("Error al leer el archivo: " + e.getMessage());
                 }
             }
             // Otras fases como ast, semantic, irt, codegen se agregarán aquí
