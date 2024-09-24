@@ -15,17 +15,23 @@ Este proyecto implementa un compilador simple utilizando **JFlex** para el escá
 
 Para compilar el proyecto, ejecuta `make` desde el directorio `/compiler`.
 
-Para regenerar el scanner desde root compiler/lib/jflex-1.9.1/bin/jflex -d compiler/scanner/ compiler/scanner/Scanner.flex
+Para regenerar el scanner desde root 
+java -jar compiler/lib/jflex-full-1.9.1.jar -d compiler/scanner/ compiler/scanner/Scanner.flex
 
-Para compilar desde root con el scanner javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/Compiler.java
+Para compilar desde root con el scanner 
+javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/Compiler.java
 
-Para ejecutar desde root con el scanner java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target scan input.txt
+Para ejecutar desde root con el scanner 
+java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target scan input.txt
 
 
 
 
-Para regenerar los archivos Parser.java y sym.java java -jar compiler/lib/java-cup-11b.jar -parser Parser -symbols sym -destdir compiler/parser compiler/parser/Parser.cup
+Para regenerar los archivos Parser.java y sym.java 
+java -jar compiler/lib/java-cup-11b.jar -parser Parser -symbols sym -destdir compiler/parser compiler/parser/Parser.cup
 
-Para compilar desde root con el Parse javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/parser/Parser.java compiler/parser/sym.java compiler/Compiler.java
+Para compilar desde root con el Parse 
+javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/parser/Parser.java compiler/parser/sym.java compiler/Compiler.java
 
-Para ejecutar desde root con el parser java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target parse input.txt
+Para ejecutar desde root con el parser 
+java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target parse input.txt

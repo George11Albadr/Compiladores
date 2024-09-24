@@ -1,9 +1,13 @@
 # Compila el archivo Parser y Scanner
 all: clean parser scanner compile
+every: clean scanner parser compile-scan 
+every2: clean scanner parser compile-parse
+all2: clean scanner parser compile-scan compile-parse run-scan
+all3: clean scanner parser compile-scan compile-parse run-parse
 
 # Limpia archivos generados previamente
 clean:
-	rm -f compiler/parser/Parser.java compiler/parser/sym.java compiler/scanner/Scanner.java output.txt
+	rm -f compiler/parser/Parser.java compiler/parser/sym.java compiler/scanner/Scanner.java compiler/parser/sym.class compiler/parser/Parser.class compiler/scanner/Scanner.class compiler/Compiler.class output.txt
 
 # Genera Parser.java y sym.java
 parser:
@@ -11,7 +15,15 @@ parser:
 
 # Genera Scanner.java
 scanner:
-	java -jar /Users/georgealbadr/Documents/GitHub/Compiladores/class/compiler/lib/jflex-1.9.1/lib/jflex-full-1.9.1.jar -d compiler/scanner compiler/scanner/Scanner.flex
+	java -jar compiler/lib/jflex-full-1.9.1.jar -d compiler/scanner/ compiler/scanner/Scanner.flex
+
+
+compile-scan:
+	javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/Compiler.java
+
+compile-parse:
+	javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/parser/Parser.java compiler/parser/sym.java compiler/Compiler.java
+
 
 # Compila todos los archivos Java
 compile:

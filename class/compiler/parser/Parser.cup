@@ -1,71 +1,81 @@
 package compiler.parser;
 
-import java_cup.runtime.Symbol;
+import java_cup.runtime.*;
+import compiler.scanner.Scanner;
+import java.io.FileReader;
+import java.io.IOException;
 
-// Indicar que la clase sym se genere en este paquete
+parser code {:
+    public Symbol parse(String filename) throws Exception {
+        Scanner scanner = new Scanner(new FileReader(filename));
+        return this.parse();
+    }
 
+    public void syntax_error(Symbol s) {
+        System.err.println("Syntax error at line " + s.left + ", column " + s.right);
+    }
+:};
 
-terminal CLASS, INT, VOID, BOOLEAN, ASSIGN, SEMI, LBRACE, RBRACE, LPAREN, RPAREN, ID,
-         INT_LITERAL, TRUE, FALSE, IF, EQ, RETURN, COMMA, PLUS, MINUS;
+/* Terminals (tokens returned by the scanner) */
+terminal CLASS, INT, VOID, BOOLEAN, TRUE, FALSE, IF, RETURN;
+terminal ASSIGN, EQ, SEMI, LBRACE, RBRACE, LPAREN, RPAREN, PLUS, MINUS, COMMA;
+terminal String ID;
+terminal Integer INT_LITERAL;
 
-non terminal program, class_decl, class_body_member_list, class_body_member, field_decl, method_decl, param_list, param, block, block_item_list, block_item, decl, statement, assignment, expr, type, id_list, arg_list;
+/* Non-terminals */
+non terminal program, class_decl, method_decl, var_decl, type;
+non terminal statement, expr, param_list, statement_list, arg_list;
 
-
+/* Precedences */
 precedence left PLUS, MINUS;
+precedence left EQ;
 precedence right ASSIGN;
 
+/* The grammar rules */
+start with program;
 
+program ::= class_decl
+          ;
 
-class_decl ::= CLASS ID LBRACE class_body_member_list RBRACE;
+class_decl ::= CLASS ID:name LBRACE method_decl RBRACE 
+             ;
 
-class_body_member_list ::= /* vacío */
-                          | class_body_member_list class_body_member;
+method_decl ::= type ID:name LPAREN param_list RPAREN LBRACE var_decl statement_list RBRACE 
+              ;
 
-class_body_member ::= field_decl
-                    | method_decl;
+param_list ::= param_list COMMA type ID:name 
+             | type ID:name
+             |
+             ;
 
-field_decl ::= type id_list SEMI;
-
-method_decl ::= type ID LPAREN param_list RPAREN block;
-
-
-
-param ::= type ID;
-
-block ::= LBRACE block_item_list RBRACE;
-
-block_item_list ::= /* vacío */
-                  | block_item_list block_item;
-
-block_item ::= decl
-             | statement;
-
-decl ::= type id_list SEMI;
-
-id_list ::= ID
-          | id_list COMMA ID;
-
-statement ::= assignment SEMI
-            | IF LPAREN expr RPAREN block
-            | RETURN expr SEMI
-            | block;
-
-assignment ::= ID ASSIGN expr;
-
-expr ::= expr PLUS expr
-       | expr MINUS expr
-       | expr EQ expr
-       | ID
-       | INT_LITERAL
-       | ID LPAREN arg_list RPAREN
-       | TRUE
-       | FALSE
-       | LPAREN expr RPAREN;
-
-arg_list ::= /* vacío */
-           | arg_list_non_empty;
-
+var_decl ::= type ID:name SEMI
+           ;
 
 type ::= INT
+       | BOOLEAN
        | VOID
-       | BOOLEAN;
+       ;
+
+statement_list ::= statement_list statement
+                 | statement
+                 ;
+
+statement ::= IF LPAREN expr RPAREN statement
+            | ID:name ASSIGN expr SEMI
+            | RETURN expr SEMI
+            ;
+
+expr ::= expr:e1 PLUS expr:e2
+       | expr:e1 MINUS expr:e2
+       | expr:e1 EQ expr:e2
+       | ID:name
+       | INT_LITERAL:i
+       | TRUE
+       | FALSE
+       | ID:name LPAREN arg_list RPAREN
+       ;
+
+arg_list ::= arg_list COMMA expr
+           | expr
+           |
+           ;

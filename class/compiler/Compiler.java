@@ -2,12 +2,12 @@ package compiler;
 
 import compiler.scanner.Scanner;
 import compiler.parser.Parser;
-import compiler.parser.sym;
-import java.io.FileReader;
+import java_cup.runtime.Symbol;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java_cup.runtime.Symbol; // Importar la clase Symbol de Java CUP
+import java.io.FileReader;
+import compiler.parser.sym;
 
 public class Compiler {
     public static void main(String[] args) {
@@ -69,21 +69,15 @@ public class Compiler {
                 
             } else if (target.equals("parse")) {
                 writer.println("stage: parsing");
-                try (FileReader fileReader = new FileReader(filename)) {
-                    Scanner scanner = new Scanner(fileReader);
-                    Parser parser = new Parser(scanner);
-
-                    try {
-                        parser.parse(); // Ejecutar el análisis sintáctico
-                        writer.println("Parsing completed successfully.");
-                        if (debug) System.out.println("Debugging parse: Completed successfully");
-                    } catch (Exception e) {
-                        writer.println("Error during parsing: " + e.getMessage());
-                        e.printStackTrace();
-                        if (debug) System.out.println("Debugging parse: Error occurred");
-                    }
-                } catch (IOException e) {
-                    System.err.println("Error al leer el archivo: " + e.getMessage());
+                Parser parser = new Parser();
+                try {
+                    Symbol result = parser.parse(filename);
+                    writer.println("Parsing completed successfully.");
+                    if (debug) System.out.println("Debugging parse: Completed successfully");
+                } catch (Exception e) {
+                    writer.println("Error during parsing: " + e.getMessage());
+                    e.printStackTrace();
+                    if (debug) System.out.println("Debugging parse: Error occurred");
                 }
             }
             // Otras fases como ast, semantic, irt, codegen se agregarán aquí

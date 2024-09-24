@@ -1,6 +1,5 @@
 package compiler.scanner;
-
-import java_cup.runtime.Symbol;
+import java_cup.runtime.*;
 import compiler.parser.sym;
 
 %%
