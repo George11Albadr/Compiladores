@@ -2,70 +2,45 @@ package compiler.parser;
 
 import java_cup.runtime.Symbol;
 
-// Indicar que la clase sym se genere en este paquete
+terminal CLASS, INT, VOID, BOOLEAN, TRUE, FALSE, IF, EQ, ASSIGN, SEMI, LBRACE, RBRACE, LPAREN, RPAREN, PLUS, MINUS, ID, INT_LITERAL;
 
+non terminal program, class_decl, method_decl, block, statement_list, statement, expr, boolean_expr, type, param_list;
 
-terminal CLASS, INT, VOID, BOOLEAN, ASSIGN, SEMI, LBRACE, RBRACE, LPAREN, RPAREN, ID,
-         INT_LITERAL, TRUE, FALSE, IF, EQ, RETURN, COMMA, PLUS, MINUS;
-
-non terminal program, class_decl, class_body_member_list, class_body_member, field_decl, method_decl, param_list, param, block, block_item_list, block_item, decl, statement, assignment, expr, type, id_list, arg_list;
-
-
+precedence left ASSIGN;
+precedence left EQ;
 precedence left PLUS, MINUS;
-precedence right ASSIGN;
 
+program ::= class_decl;
 
+class_decl ::= CLASS ID LBRACE method_decl_list RBRACE;
 
-class_decl ::= CLASS ID LBRACE class_body_member_list RBRACE;
-
-class_body_member_list ::= /* vacío */
-                          | class_body_member_list class_body_member;
-
-class_body_member ::= field_decl
-                    | method_decl;
-
-field_decl ::= type id_list SEMI;
+method_decl_list ::= method_decl
+                   | method_decl_list method_decl;
 
 method_decl ::= type ID LPAREN param_list RPAREN block;
 
+param_list ::= type ID
+             | param_list COMMA type ID
+             | /* vacío */;
 
+block ::= LBRACE statement_list RBRACE;
 
-param ::= type ID;
+statement_list ::= statement
+                 | statement_list statement;
 
-block ::= LBRACE block_item_list RBRACE;
+statement ::= ID ASSIGN expr SEMI
+            | IF LPAREN boolean_expr RPAREN block
+            | expr SEMI;
 
-block_item_list ::= /* vacío */
-                  | block_item_list block_item;
-
-block_item ::= decl
-             | statement;
-
-decl ::= type id_list SEMI;
-
-id_list ::= ID
-          | id_list COMMA ID;
-
-statement ::= assignment SEMI
-            | IF LPAREN expr RPAREN block
-            | RETURN expr SEMI
-            | block;
-
-assignment ::= ID ASSIGN expr;
-
-expr ::= expr PLUS expr
-       | expr MINUS expr
-       | expr EQ expr
+expr ::= INT_LITERAL
        | ID
-       | INT_LITERAL
-       | ID LPAREN arg_list RPAREN
-       | TRUE
-       | FALSE
-       | LPAREN expr RPAREN;
+       | expr PLUS expr
+       | expr MINUS expr;
 
-arg_list ::= /* vacío */
-           | arg_list_non_empty;
+boolean_expr ::= TRUE
+               | FALSE
+               | ID EQ TRUE
+               | ID EQ FALSE
+               | ID EQ ID;
 
-
-type ::= INT
-       | VOID
-       | BOOLEAN;
+type ::= INT | VOID | BOOLEAN;

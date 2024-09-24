@@ -1,31 +1,23 @@
-# Compila el archivo Parser y Scanner
-all: clean parser scanner compile
+JFLEX_JAR = compiler/lib/jflex-full-1.9.1.jar
+CUP_JAR = compiler/lib/java-cup-11b.jar
+SRC_DIR = compiler
+SCANNER_SRC = $(SRC_DIR)/scanner/Scanner.flex
+SCANNER_OUT = $(SRC_DIR)/scanner/Lexer.java
+COMPILER_SRC = $(SRC_DIR)/Compiler.java
+INPUT_FILE = input.txt
+OUTPUT_FILE = output.txt
 
-# Limpia archivos generados previamente
-clean:
-	rm -f compiler/parser/Parser.java compiler/parser/sym.java compiler/scanner/Scanner.java output.txt
+all: compile run-scan
 
-# Genera Parser.java y sym.java
-parser:
-	java -jar compiler/lib/java-cup-11b.jar -parser Parser -symbols sym -destdir compiler/parser compiler/parser/Parser.cup
-
-# Genera Scanner.java
 scanner:
-	java -jar /Users/georgealbadr/Documents/GitHub/Compiladores/class/compiler/lib/jflex-1.9.1/lib/jflex-full-1.9.1.jar -d compiler/scanner compiler/scanner/Scanner.flex
+	java -jar $(JFLEX_JAR) -d $(SRC_DIR)/scanner $(SCANNER_SRC)
 
-# Compila todos los archivos Java
-compile:
-	javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/parser/Parser.java compiler/parser/sym.java compiler/Compiler.java
+compile: scanner
+	javac -cp $(CUP_JAR):. $(COMPILER_SRC) $(SRC_DIR)/scanner/*.java
 
-# Ejecuta el análisis de escaneo del archivo input.txt y guarda el resultado en output.txt
-run-scan:
-	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target scan input.txt -o output.txt
+run-scan: compile
+	java -cp $(CUP_JAR):. compiler.Compiler -target scan $(INPUT_FILE) -o $(OUTPUT_FILE)
 
-# Ejecuta el análisis de parsing del archivo input.txt y guarda el resultado en output.txt
-run-parse:
-	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target parse input.txt -o output.txt
-
-# Ejecuta todo el proceso (limpieza, generación y análisis)
-execute-scan: all run-scan
-
-execute-parse: all run-parse
+clean:
+	rm -f $(SRC_DIR)/scanner/*.class $(SRC_DIR)/*.class
+	rm -f $(SCANNER_OUT) $(OUTPUT_FILE)
