@@ -4,9 +4,9 @@ class Program {
 
     int suma(int valor1, int valor2){
         int res;
-        res = valor1 + valor2;
+        res = valor1 +valor2;
         return res;
-    }
+    } 
     void main(){
         int resultado1, resultado2;
         boolean resultado3;
@@ -22,3 +22,4 @@ class Program {
         
     }
 }
+

@@ -219,7 +219,7 @@ public class Parser extends java_cup.runtime.lr_parser {
     }
 
     public void syntax_error(Symbol s) {
-        System.err.println("Syntax error at line " + s.left + ", column " + s.right);
+        System.out.println("Error Sintactico en la Linea " + (s.right+1) +" Columna: " +(s.left)+ ". Identificador " +s.value + " no reconocido." + "el type: " + s.sym);
     }
 
 
