@@ -63,3 +63,6 @@ import compiler.parser.sym;
 
 // Asegúrate de tener esta regla al final
 <<EOF>>     { return symbol(sym.EOF); }
+
+// Comentarios
+"//".* { /* Ignorar comentarios de una línea */ }

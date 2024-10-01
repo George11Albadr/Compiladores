@@ -1,3 +1,4 @@
+//comment
 class Program {
     boolean entrada;
     int numeros;
@@ -6,6 +7,7 @@ class Program {
         int res;
         res = valor1 +valor2;
         return res;
+        //comment
     } 
     void main(){
         int resultado1, resultado2;

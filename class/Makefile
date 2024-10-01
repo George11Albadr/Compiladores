@@ -2,8 +2,8 @@
 all: clean parser scanner compile
 every: clean scanner parser compile-scan 
 every2: clean scanner parser compile-parse
-all2: clean scanner parser compile-scan compile-parse run-scan
-all3: clean scanner parser compile-scan compile-parse run-parse
+allscan: clean scanner parser compile-scan compile-parse run-scan
+allparse: clean scanner parser compile-scan compile-parse run-parse
 
 # Limpia archivos generados previamente
 clean:

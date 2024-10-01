@@ -11,6 +11,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -219,7 +221,28 @@ public class Parser extends java_cup.runtime.lr_parser {
     }
 
     public void syntax_error(Symbol s) {
-        System.out.println("Error Sintactico en la Linea " + (s.right+1) +" Columna: " +(s.left)+ ". Identificador " +s.value + " no reconocido." + "el type: " + s.sym);
+        String tokenName = sym.terminalNames[s.sym];
+        String tokenValue = s.value == null ? "" : s.value.toString();
+        String errorMessage = String.format(
+            "Error Sintáctico en la Línea %d, Columna %d: Token '%s' no reconocido. Tipo: %s",
+            s.right + 1, s.left + 1, tokenValue, tokenName
+        );
+
+        // Escribir en el archivo output.txt
+        writeToFile(errorMessage);
+
+        // Imprimir en la consola
+        System.err.println(errorMessage);
+
+
+    }
+
+    private void writeToFile(String message) {
+        try (PrintWriter out = new PrintWriter(new FileWriter("output.txt", true))) {
+            out.println(message);
+        } catch (IOException e) {
+            System.err.println("Error al escribir en el archivo de salida: " + e.getMessage());
+        }
     }
 
 
