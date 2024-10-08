@@ -7,7 +7,7 @@ allparse: clean scanner parser compile-scan compile-parse run-parse
 
 # Limpia archivos generados previamente
 clean:
-	rm -f compiler/parser/Parser.java compiler/parser/sym.java compiler/scanner/Scanner.java compiler/parser/sym.class compiler/parser/Parser.class compiler/scanner/Scanner.class compiler/Compiler.class output.txt
+	rm -f compiler/parser/Parser.java compiler/parser/sym.java compiler/scanner/Scanner.java compiler/parser/sym.class compiler/parser/Parser$CUP$Parser$actions.class compiler/parser/Parser.class compiler/scanner/Scanner.class compiler/Compiler.class output.txt
 
 # Genera Parser.java y sym.java
 parser:

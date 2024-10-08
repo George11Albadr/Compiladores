@@ -1,27 +1,49 @@
-//comment
-class Program {
-    boolean entrada;
-    int numeros;
+class ComplexProgram {
+    int counter;
+    boolean isComplete;
+    int[5] values;
+    char letter;
 
-    int suma(int valor1, int valor2){
-        int res;
-        res = valor1 +valor2;
-        return res;
-        //comment
-    } 
-    void main(){
-        int resultado1, resultado2;
-        boolean resultado3;
-        entrada = true;
+    void initialize() {
+        counter = 0;
+        isComplete = false;
+        letter = 'A';
 
-        if (entrada == true){
-            resultado1 = suma(3,2);
+        for (int i = 0; i < 5; i += 1) {
+            values[i] = i * 2;
         }
-        entrada = false;
-        if (entrada == true){
-            resultado1 = resta(3,2);
+    }
+
+    int calculateSum() {
+        int sum = 0;
+        for (int i = 0; i < 5; i += 1) {
+            sum += values[i];
         }
-        
+        return sum;
+    }
+
+    void checkCompletion() {
+        if (calculateSum() > 10) {
+            isComplete = true;
+        } else {
+            callout("print", "Sum is 10 or less.");
+        }
+    }
+
+    void nestedLoop() {
+        for (int i = 0; i < 3; i += 1) {
+            for (int j = 0; j < 3; j += 1) {
+                values[i] = i + j;
+                if (values[i] % 2 == 0) {
+                    callout("print", "Even number detected.");
+                } else {
+                    callout("print", "Odd number detected.");
+                }
+            }
+        }
+    }
+
+    boolean isEven(int number) {
+        return number % 2 == 0;
     }
 }
-

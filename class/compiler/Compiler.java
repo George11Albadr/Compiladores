@@ -49,41 +49,50 @@ public class Compiler {
             System.exit(1);
         }
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter(output))) {
+        // Inicializar el PrintWriter fuera del try-with-resources
+        PrintWriter writer = null;
+
+        try {
+            writer = new PrintWriter(new FileWriter(output));
+
             if (target.equals("scan")) {
                 writer.println("stage: scanning");
                 try (FileReader fileReader = new FileReader(filename)) {
                     Scanner scanner = new Scanner(fileReader); // Crear el escáner
 
-                    while (!scanner.yyatEOF()) { // Leer tokens hasta el EOF
+                    while (true) { // Leer tokens hasta el EOF
                         Symbol token = scanner.next_token();
                         if (token.sym == sym.EOF) break;
-                        writer.println("Token: " + token.value + " en la línea " + token.left + ", columna " + token.right);
+                        writer.println("Token: " + sym.terminalNames[token.sym] + " (" + token.value + ") en la línea " + token.left + ", columna " + token.right);
                         if (debug) {
-                            System.out.println("Debugging scan: Token -> " + token.value);
+                            System.out.println("Debugging scan: Token -> " + sym.terminalNames[token.sym] + " (" + token.value + ")");
                         }
                     }
                 } catch (IOException e) {
                     System.err.println("Error al leer el archivo: " + e.getMessage());
+                } catch (Exception e) {
+                    writer.println("Error durante el escaneo: " + e.getMessage());
+                    if (debug) {
+                        e.printStackTrace(System.out);
+                    }
                 }
-                
             } else if (target.equals("parse")) {
                 writer.println("stage: parsing");
                 try (FileReader fileReader = new FileReader(filename)) {
                     Scanner scanner = new Scanner(fileReader);
                     Parser parser = new Parser(scanner);
                     try {
-                        Symbol result = parser.parse();
+                        parser.parse();
                         writer.println("Parsing completed successfully.");
                         if (debug) System.out.println("Debugging parse: Completed successfully");
                     } catch (RuntimeException e) {
-                        // Captura la excepción lanzada por el scanner
-                        writer.println(e.getMessage());
-                        if (debug) System.out.println(e.getMessage());
+                        // Captura la excepción lanzada por el scanner o parser
+                        writer.println("Runtime Error: " + e.getMessage());
+                        if (debug) e.printStackTrace(System.out);
                     } catch (Exception e) {
                         writer.println("Error during parsing: " + e.getMessage());
                         // Añadir esta línea para imprimir la traza de la excepción en el archivo de salida
-                        e.printStackTrace(writer);
+                        e.printStackTrace(new PrintWriter(writer));
                         if (debug) {
                             System.out.println("Debugging parse: Error occurred");
                             e.printStackTrace(System.out);
@@ -96,6 +105,10 @@ public class Compiler {
             // Otras fases como ast, semantic, irt, codegen se agregarán aquí
         } catch (IOException e) {
             System.err.println("Error al escribir el archivo de salida: " + e.getMessage());
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
         }
     }
 

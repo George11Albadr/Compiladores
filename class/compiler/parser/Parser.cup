@@ -4,8 +4,6 @@ import java_cup.runtime.*;
 import compiler.scanner.Scanner;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
@@ -13,17 +11,8 @@ parser code {:
     private Scanner scanner;
 
     public Parser(Scanner scanner) {
-        super();
+        super(scanner);
         this.scanner = scanner;
-    }
-
-    public Symbol parse(String filename) throws Exception {
-        try {
-            scanner = new Scanner(new FileReader(filename));
-            return this.parse();
-        } catch (IOException e) {
-            throw new RuntimeException("Error al leer el archivo: " + e.getMessage());
-        }
     }
 
     @Override
@@ -31,12 +20,13 @@ parser code {:
         return scanner.next_token();
     }
 
+    @Override
     public void syntax_error(Symbol s) {
-        String tokenName = sym.terminalNames[s.sym];
+        String tokenName = (s.sym >= 0 && s.sym < sym.terminalNames.length) ? sym.terminalNames[s.sym] : "UNKNOWN";
         String tokenValue = s.value == null ? "" : s.value.toString();
         String errorMessage = String.format(
             "Error Sintáctico en la Línea %d, Columna %d: Token '%s' no reconocido. Tipo: %s",
-            s.right + 1, s.left + 1, tokenValue, tokenName
+            s.left + 1, s.right + 1, tokenValue, tokenName
         );
 
         // Escribir en el archivo output.txt
@@ -44,8 +34,6 @@ parser code {:
 
         // Imprimir en la consola
         System.err.println(errorMessage);
-
-
     }
 
     private void writeToFile(String message) {
@@ -57,81 +45,141 @@ parser code {:
     }
 :};
 
-/* Terminals (tokens returned by the scanner) */
-terminal CLASS, INT, VOID, BOOLEAN, TRUE, FALSE, IF, RETURN;
-terminal ASSIGN, EQ, SEMI, LBRACE, RBRACE, LPAREN, RPAREN, PLUS, MINUS, COMMA;
+/* Declaraciones de terminales */
+terminal CLASS, INT, VOID, DOUBLE, BOOLEAN, STRING, INTERFACE, NULL, THIS;
+terminal EXTENDS, IMPLEMENTS, FOR, WHILE, IF, ELSE, RETURN, BREAK, NEW, NEWARRAY;
+terminal PRINT, READINTEGER, READLINE, TRUE, FALSE, CALLOUT;
+
+terminal ASSIGN, EQ, NEQ, LT, LE, GT, GE, AND, OR, NOT;
+terminal PLUS, MINUS, MULTIPLY, DIVIDE, MOD;
+terminal SEMI, COMMA, DOT;
+terminal LBRACE, RBRACE, LPAREN, RPAREN, LBRACKET, RBRACKET;
+
 terminal String ID;
 terminal Integer INT_LITERAL;
+terminal String STRING_LITERAL;
 
-/* Non-terminals */
-non terminal Object program, class_decl, method_decl, var_decl, type;
-non terminal Object statement, expr, param_list, statement_list, arg_list;
-non terminal Object class_body_member_list, class_body_member, field_decl, block;
-non terminal Object block_item_list, block_item, decl, id_list, assignment;
-non terminal Object arg_list_non_empty;
+/* Declaraciones de no terminales */
+non terminal program, class_decl, method_decl, var_decl, type;
+non terminal statement, expr, param_list, arg_list;
+non terminal class_body_member_list, class_body_member, field_decl, block;
+non terminal block_item_list, block_item, decl, decl_no_semi, init_declarator_list, init_declarator, assignment;
+non terminal arg_list_non_empty, callout_arg_list, callout_arg;
 
-/* Precedences */
-precedence left EQ;
-precedence right ASSIGN;
+/* Precedencias */
+precedence left OR;
+precedence left AND;
+precedence left EQ, NEQ;
+precedence left LT, LE, GT, GE;
 precedence left PLUS, MINUS;
+precedence left MULTIPLY, DIVIDE, MOD;
+precedence right NOT;
+precedence right ASSIGN;
 
-/* The grammar rules */
+/* Símbolo de inicio */
 start with program;
 
-program ::= class_decl;
+/* Reglas gramaticales */
+program ::= class_decl ;
 
-class_decl ::= CLASS ID:name LBRACE class_body_member_list RBRACE;
+class_decl ::= CLASS ID LBRACE class_body_member_list RBRACE ;
 
-class_body_member_list ::= class_body_member_list class_body_member
-                         | /* empty */;
+class_body_member_list ::=
+      class_body_member_list class_body_member
+    | /* vacío */ ;
 
-class_body_member ::= field_decl
-                    | method_decl;
+class_body_member ::=
+      field_decl
+    | method_decl ;
 
-field_decl ::= type id_list SEMI;
+field_decl ::= decl ;
 
-method_decl ::= type ID:name LPAREN param_list RPAREN block;
+method_decl ::= type ID LPAREN param_list RPAREN block ;
 
-param_list ::= param_list COMMA type ID:name
-             | type ID:name
-             | /* empty */;
+param_list ::=
+      param_list COMMA type ID
+    | type ID
+    | /* vacío */ ;
 
-block ::= LBRACE block_item_list RBRACE;
+block ::= LBRACE block_item_list RBRACE ;
 
-block_item_list ::= block_item_list block_item
-                  | /* empty */;
+block_item_list ::=
+      block_item_list block_item
+    | /* vacío */ ;
 
-block_item ::= decl
-             | statement;
+block_item ::=
+      decl
+    | statement ;
 
-decl ::= type id_list SEMI;
+decl ::= type init_declarator_list SEMI ;
 
-id_list ::= id_list COMMA ID:name
-          | ID:name;
+decl_no_semi ::= type init_declarator_list ;
 
-statement ::= assignment SEMI
-            | IF LPAREN expr RPAREN block
-            | RETURN expr SEMI
-            | block;
+init_declarator_list ::=
+      init_declarator
+    | init_declarator_list COMMA init_declarator ;
 
-assignment ::= ID:name ASSIGN expr;
+init_declarator ::=
+      ID
+    | ID ASSIGN expr ;
 
-expr ::= expr:e1 PLUS expr:e2
-       | expr:e1 MINUS expr:e2
-       | expr:e1 EQ expr:e2
-       | ID:name
-       | INT_LITERAL:value
-       | ID:name LPAREN arg_list RPAREN
-       | TRUE
-       | FALSE
-       | LPAREN expr:e RPAREN;
+statement ::=
+      assignment SEMI
+    | expr SEMI
+    | IF LPAREN expr RPAREN block
+    | IF LPAREN expr RPAREN block ELSE block
+    | FOR LPAREN decl_no_semi SEMI expr SEMI assignment RPAREN block
+    | RETURN expr SEMI
+    | block ;
 
-arg_list ::= arg_list_non_empty
-           | /* empty */;
+assignment ::= ID ASSIGN expr ;
 
-arg_list_non_empty ::= arg_list_non_empty COMMA expr
-                     | expr;
+expr ::=
+      expr PLUS expr
+    | expr MINUS expr
+    | expr MULTIPLY expr
+    | expr DIVIDE expr
+    | expr MOD expr
+    | expr LT expr
+    | expr LE expr
+    | expr GT expr
+    | expr GE expr
+    | expr EQ expr
+    | expr NEQ expr
+    | expr AND expr
+    | expr OR expr
+    | NOT expr %prec NOT
+    | MINUS expr %prec NOT /* operador unario menos */
+    | ID
+    | INT_LITERAL
+    | TRUE
+    | FALSE
+    | STRING_LITERAL
+    | ID LPAREN arg_list RPAREN
+    | CALLOUT LPAREN STRING_LITERAL callout_arg_list RPAREN
+    | LPAREN expr RPAREN ;
 
-type ::= INT
-       | VOID
-       | BOOLEAN;
+arg_list ::=
+      arg_list_non_empty
+    | /* vacío */ ;
+
+arg_list_non_empty ::=
+      arg_list_non_empty COMMA expr
+    | expr ;
+
+callout_arg_list ::=
+      callout_arg_list COMMA callout_arg
+    | callout_arg
+    | /* vacío */ ;
+
+callout_arg ::=
+      expr
+    ;
+
+/* Definición de tipo */
+type ::=
+      INT
+    | VOID
+    | BOOLEAN
+    | DOUBLE
+    | STRING ;
