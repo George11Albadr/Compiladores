@@ -1,7 +1,7 @@
-stage: parsing
-Error during parsing: Can't recover from previous error(s)
-java.lang.Exception: Can't recover from previous error(s)
-	at java_cup.runtime.lr_parser.report_fatal_error(lr_parser.java:392)
-	at java_cup.runtime.lr_parser.unrecovered_syntax_error(lr_parser.java:539)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:731)
-	at compiler.Compiler.main(Compiler.java:85)
+Error Sintáctico en la Línea 15, Columna 25: Token 'counter' no reconocido. Tipo: ID
+Error Sintáctico en la Línea 39, Columna 18: Token '}' no reconocido. Tipo: RBRACE
+Error Sintáctico en la Línea 69, Columna 34: Token 'if' no reconocido. Tipo: IF
+Error Sintáctico en la Línea 29, Columna 66: Token ''' no reconocido. Tipo: error
+Error Sintáctico en la Línea 29, Columna 71: Token '{' no reconocido. Tipo: LBRACE
+Error Sintáctico en la Línea 29, Columna 71: Token '{' no reconocido. Tipo: LBRACE
+Error Sintáctico en la Línea 29, Columna 71: Token '{' no reconocido. Tipo: LBRACE

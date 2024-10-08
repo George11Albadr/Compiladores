@@ -46,11 +46,12 @@ parser code {:
 :};
 
 /* Declaraciones de terminales */
-terminal CLASS, INT, VOID, DOUBLE, BOOLEAN, STRING, INTERFACE, NULL, THIS;
+terminal CLASS, INT, VOID, DOUBLE, BOOLEAN, STRING, CHAR, INTERFACE, NULL, THIS;
 terminal EXTENDS, IMPLEMENTS, FOR, WHILE, IF, ELSE, RETURN, BREAK, NEW, NEWARRAY;
 terminal PRINT, READINTEGER, READLINE, TRUE, FALSE, CALLOUT;
 
-terminal ASSIGN, EQ, NEQ, LT, LE, GT, GE, AND, OR, NOT;
+terminal ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, MULTIPLY_ASSIGN, DIVIDE_ASSIGN, MOD_ASSIGN;
+terminal EQ, NEQ, LT, LE, GT, GE, AND, OR, NOT;
 terminal PLUS, MINUS, MULTIPLY, DIVIDE, MOD;
 terminal SEMI, COMMA, DOT;
 terminal LBRACE, RBRACE, LPAREN, RPAREN, LBRACKET, RBRACKET;
@@ -58,13 +59,15 @@ terminal LBRACE, RBRACE, LPAREN, RPAREN, LBRACKET, RBRACKET;
 terminal String ID;
 terminal Integer INT_LITERAL;
 terminal String STRING_LITERAL;
+terminal Character CHAR_LITERAL;
 
 /* Declaraciones de no terminales */
-non terminal program, class_decl, method_decl, var_decl, type;
-non terminal statement, expr, param_list, arg_list;
+non terminal program, class_decl, extends_clause, implements_clause, interface_list;
+non terminal method_decl, type, base_type, array_decl;
+non terminal statement, expr, param_list, arg_list, variable, assignment_operator;
 non terminal class_body_member_list, class_body_member, field_decl, block;
 non terminal block_item_list, block_item, decl, decl_no_semi, init_declarator_list, init_declarator, assignment;
-non terminal arg_list_non_empty, callout_arg_list, callout_arg;
+non terminal arg_list_non_empty, callout_arg_list, callout_arg, expr_list;
 
 /* Precedencias */
 precedence left OR;
@@ -74,7 +77,7 @@ precedence left LT, LE, GT, GE;
 precedence left PLUS, MINUS;
 precedence left MULTIPLY, DIVIDE, MOD;
 precedence right NOT;
-precedence right ASSIGN;
+precedence right ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, MULTIPLY_ASSIGN, DIVIDE_ASSIGN, MOD_ASSIGN;
 
 /* Símbolo de inicio */
 start with program;
@@ -82,7 +85,24 @@ start with program;
 /* Reglas gramaticales */
 program ::= class_decl ;
 
-class_decl ::= CLASS ID LBRACE class_body_member_list RBRACE ;
+class_decl ::=
+    CLASS ID extends_clause implements_clause LBRACE class_body_member_list RBRACE
+;
+
+extends_clause ::=
+    EXTENDS ID
+    | /* vacío */
+;
+
+implements_clause ::=
+    IMPLEMENTS interface_list
+    | /* vacío */
+;
+
+interface_list ::=
+    interface_list COMMA ID
+    | ID
+;
 
 class_body_member_list ::=
       class_body_member_list class_body_member
@@ -111,6 +131,9 @@ block_item ::=
       decl
     | statement ;
 
+/* Eliminamos var_decl */
+
+/* Modificamos decl y init_declarator */
 decl ::= type init_declarator_list SEMI ;
 
 decl_no_semi ::= type init_declarator_list ;
@@ -123,16 +146,42 @@ init_declarator ::=
       ID
     | ID ASSIGN expr ;
 
+/* La producción de type permanece igual */
+type ::= base_type array_decl ;
+
+base_type ::= INT | VOID | BOOLEAN | DOUBLE | STRING | CHAR ;
+
+array_decl ::=
+      /* vacío */
+    | array_decl LBRACKET INT_LITERAL RBRACKET ;
+
+/* La producción de variable permanece igual */
+variable ::= ID
+    | variable DOT ID
+    | variable LBRACKET expr RBRACKET ;
+
+/* Las declaraciones de statement y assignment permanecen igual */
 statement ::=
       assignment SEMI
     | expr SEMI
+    | PRINT LPAREN expr_list RPAREN SEMI
     | IF LPAREN expr RPAREN block
     | IF LPAREN expr RPAREN block ELSE block
     | FOR LPAREN decl_no_semi SEMI expr SEMI assignment RPAREN block
+    | WHILE LPAREN expr RPAREN block
     | RETURN expr SEMI
+    | BREAK SEMI
     | block ;
 
-assignment ::= ID ASSIGN expr ;
+assignment ::= variable assignment_operator expr ;
+
+assignment_operator ::=
+      ASSIGN
+    | PLUS_ASSIGN
+    | MINUS_ASSIGN
+    | MULTIPLY_ASSIGN
+    | DIVIDE_ASSIGN
+    | MOD_ASSIGN ;
 
 expr ::=
       expr PLUS expr
@@ -150,14 +199,25 @@ expr ::=
     | expr OR expr
     | NOT expr %prec NOT
     | MINUS expr %prec NOT /* operador unario menos */
-    | ID
+    | variable
     | INT_LITERAL
+    | CHAR_LITERAL
     | TRUE
     | FALSE
+    | NULL
+    | THIS
     | STRING_LITERAL
+    | READINTEGER LPAREN RPAREN
+    | READLINE LPAREN RPAREN
     | ID LPAREN arg_list RPAREN
     | CALLOUT LPAREN STRING_LITERAL callout_arg_list RPAREN
+    | NEW type
+    | NEWARRAY LPAREN type COMMA expr RPAREN
     | LPAREN expr RPAREN ;
+
+expr_list ::=
+    expr_list COMMA expr
+    | expr ;
 
 arg_list ::=
       arg_list_non_empty
@@ -174,12 +234,4 @@ callout_arg_list ::=
 
 callout_arg ::=
       expr
-    ;
-
-/* Definición de tipo */
-type ::=
-      INT
-    | VOID
-    | BOOLEAN
-    | DOUBLE
-    | STRING ;
+     ;
