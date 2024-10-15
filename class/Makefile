@@ -51,3 +51,5 @@ run-parseb:
 execute-scan: all run-scan
 
 execute-parse: all run-parse
+
+execute-M: all run-scanb run-parseb

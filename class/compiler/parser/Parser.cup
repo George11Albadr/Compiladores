@@ -11,8 +11,19 @@ parser code {:
     private Scanner scanner;
 
     public Parser(Scanner scanner) {
-        super(scanner);
+        super();
         this.scanner = scanner;
+    }
+
+    public Symbol parse(String filename) throws Exception {
+        try {
+            scanner = new Scanner(new FileReader(filename));
+            return this.parse();
+        } catch (IOException e) {
+            throw new RuntimeException(
+                "Error al leer el archivo: " + e.getMessage()
+            );
+        }
     }
 
     @Override
@@ -20,14 +31,19 @@ parser code {:
         return scanner.next_token();
     }
 
-    @Override
     public void syntax_error(Symbol s) {
-        String tokenName = (s.sym >= 0 && s.sym < sym.terminalNames.length) ? sym.terminalNames[s.sym] : "UNKNOWN";
         String tokenValue = s.value == null ? "" : s.value.toString();
         String errorMessage = String.format(
-            "Error Sintáctico en la Línea %d, Columna %d: Token '%s' no reconocido. Tipo: %s",
-            s.left + 1, s.right + 1, tokenValue, tokenName
+            "Error de sintaxis en línea %d, columna %d. Token inesperado '%s'.",
+            s.left + 1, s.right + 1, tokenValue
         );
+
+        // Sugiere posibles causas para errores comunes
+        if (tokenValue.matches("\\d.*")) {
+            errorMessage += " Los identificadores no pueden comenzar con un dígito.";
+        } else if (s.sym == sym.INT_LITERAL || s.sym == sym.CHAR_LITERAL) {
+            errorMessage += " Se esperaba un operador o una expresión después del literal.";
+        }
 
         // Escribir en el archivo output.txt
         writeToFile(errorMessage);
@@ -37,201 +53,221 @@ parser code {:
     }
 
     private void writeToFile(String message) {
-        try (PrintWriter out = new PrintWriter(new FileWriter("output.txt", true))) {
+        try (PrintWriter out = new PrintWriter(
+                new FileWriter("output.txt", true))) {
             out.println(message);
         } catch (IOException e) {
-            System.err.println("Error al escribir en el archivo de salida: " + e.getMessage());
+            System.err.println(
+                "Error al escribir en el archivo: " + e.getMessage()
+            );
         }
     }
 :};
 
 /* Declaraciones de terminales */
-terminal CLASS, INT, VOID, DOUBLE, BOOLEAN, STRING, CHAR, INTERFACE, NULL, THIS;
+terminal CLASS, ID, INT, LBRACE, RBRACE, SEMI, VOID, BOOLEAN, STRING, CHAR, NULL, THIS;
 terminal EXTENDS, IMPLEMENTS, FOR, WHILE, IF, ELSE, RETURN, BREAK, NEW, NEWARRAY;
-terminal PRINT, READINTEGER, READLINE, TRUE, FALSE, CALLOUT;
+terminal PRINT, READINTEGER, TRUE, FALSE, CALLOUT;
+terminal CONTINUE;
 
-terminal ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, MULTIPLY_ASSIGN, DIVIDE_ASSIGN, MOD_ASSIGN;
+terminal ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN;
 terminal EQ, NEQ, LT, LE, GT, GE, AND, OR, NOT;
 terminal PLUS, MINUS, MULTIPLY, DIVIDE, MOD;
-terminal SEMI, COMMA, DOT;
-terminal LBRACE, RBRACE, LPAREN, RPAREN, LBRACKET, RBRACKET;
+terminal COMMA, DOT;
+terminal LPAREN, RPAREN, LBRACKET, RBRACKET, INT_LITERAL, STRING_LITERAL, CHAR_LITERAL, UMINUS;
 
-terminal String ID;
-terminal Integer INT_LITERAL;
-terminal String STRING_LITERAL;
-terminal Character CHAR_LITERAL;
-
-/* Declaraciones de no terminales */
-non terminal program, class_decl, extends_clause, implements_clause, interface_list;
-non terminal method_decl, type, base_type, array_decl;
-non terminal statement, expr, param_list, arg_list, variable, assignment_operator;
-non terminal class_body_member_list, class_body_member, field_decl, block;
-non terminal block_item_list, block_item, decl, decl_no_semi, init_declarator_list, init_declarator, assignment;
-non terminal arg_list_non_empty, callout_arg_list, callout_arg, expr_list;
+/* No terminales */
+/* No terminales */
+non terminal program, class_body_member_list, class_body_member,
+             method_decl_rest, id_with_optional_array,
+             param_list, block, var_decl_list, var_decl, id_plus_array_list,
+             statement_list, statement, expr_opt, assign_op, location,
+             method_call, method_name, expr_plus_list_opt, expr_plus_list,
+             opt_comma_callout_arg_list, callout_arg_list, callout_arg,
+             expr, assign_expr, bin_op, arith_op, rel_op, eq_op, cond_op, literal,
+             int_literal, char_literal, bool_literal, type, for_init_expr,
+             for_update_expr, assign_opt, base_type, array_decl_optional;
 
 /* Precedencias */
+precedence right ASSIGN;
+precedence right PLUS_ASSIGN;
+precedence right MINUS_ASSIGN;
 precedence left OR;
 precedence left AND;
-precedence left EQ, NEQ;
-precedence left LT, LE, GT, GE;
+precedence nonassoc EQ, NEQ;
+precedence nonassoc LT, LE, GT, GE;
 precedence left PLUS, MINUS;
 precedence left MULTIPLY, DIVIDE, MOD;
 precedence right NOT;
-precedence right ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, MULTIPLY_ASSIGN, DIVIDE_ASSIGN, MOD_ASSIGN;
+precedence right UMINUS;
 
 /* Símbolo de inicio */
 start with program;
 
 /* Reglas gramaticales */
-program ::= class_decl ;
 
-class_decl ::=
-    CLASS ID extends_clause implements_clause LBRACE class_body_member_list RBRACE
-;
+/* Programa */
+program ::= CLASS ID LBRACE class_body_member_list RBRACE;
 
-extends_clause ::=
-    EXTENDS ID
-    | /* vacío */
-;
+/* Lista de miembros del cuerpo de la clase */
+class_body_member_list ::= class_body_member_list class_body_member
+                         | /* vacío */;
 
-implements_clause ::=
-    IMPLEMENTS interface_list
-    | /* vacío */
-;
+/* Miembro del cuerpo de la clase */
+class_body_member ::= type id_with_optional_array assign_opt SEMI
+                    | VOID ID method_decl_rest
+                    | type id_with_optional_array method_decl_rest;
 
-interface_list ::=
-    interface_list COMMA ID
-    | ID
-;
+/* Declaración de método */
+method_decl_rest ::= LPAREN param_list RPAREN block;
 
-class_body_member_list ::=
-      class_body_member_list class_body_member
-    | /* vacío */ ;
+/* Identificador con arreglo opcional */
+id_with_optional_array ::= ID
+                         | ID LBRACKET RBRACKET;
 
-class_body_member ::=
-      field_decl
-    | method_decl ;
+/* Lista de parámetros */
+param_list ::= param_list COMMA type id_with_optional_array
+             | type id_with_optional_array
+             | /* vacío */;
 
-field_decl ::= decl ;
+/* Bloque de código */
+block ::= LBRACE var_decl_list statement_list RBRACE;
 
-method_decl ::= type ID LPAREN param_list RPAREN block ;
+/* Lista de declaraciones de variables locales */
+var_decl_list ::= var_decl_list var_decl
+                | /* vacío */;
 
-param_list ::=
-      param_list COMMA type ID
-    | type ID
-    | /* vacío */ ;
+/* Declaración de variable local con asignación opcional */
+var_decl ::= type id_plus_array_list assign_opt SEMI;
 
-block ::= LBRACE block_item_list RBRACE ;
+/* Asignación opcional para declaraciones de variables */
+assign_opt ::= ASSIGN expr
+             | /* vacío */;
 
-block_item_list ::=
-      block_item_list block_item
-    | /* vacío */ ;
+/* Lista de identificadores (variables locales) con arreglos opcionales */
+id_plus_array_list ::= id_plus_array_list COMMA id_with_optional_array
+                     | id_with_optional_array;
 
-block_item ::=
-      decl
-    | statement ;
+/* Lista de sentencias */
+statement_list ::= statement_list statement
+                 | /* vacío */;
 
-/* Eliminamos var_decl */
+/* Sentencias */
+statement ::= location assign_op expr SEMI
+            | method_call SEMI
+            | IF LPAREN expr RPAREN block ELSE block
+            | IF LPAREN expr RPAREN block
+            | WHILE LPAREN expr RPAREN block
+            | FOR LPAREN for_init_expr SEMI expr_opt SEMI for_update_expr RPAREN block
+            | RETURN expr_opt SEMI
+            | BREAK SEMI
+            | CONTINUE SEMI
+            | block;
 
-/* Modificamos decl y init_declarator */
-decl ::= type init_declarator_list SEMI ;
+/* Expresión opcional */
+expr_opt ::= expr
+           | /* vacío */;
 
-decl_no_semi ::= type init_declarator_list ;
+/* Inicialización del for */
+for_init_expr ::= type id_with_optional_array assign_op expr
+                | assign_expr
+                | /* vacío */;
 
-init_declarator_list ::=
-      init_declarator
-    | init_declarator_list COMMA init_declarator ;
+/* Actualización del for */
+for_update_expr ::= assign_expr
+                  | expr
+                  | /* vacío */;
 
-init_declarator ::=
-      ID
-    | ID ASSIGN expr ;
+/* Expresión de asignación */
+assign_expr ::= location assign_op expr;
 
-/* La producción de type permanece igual */
-type ::= base_type array_decl ;
+/* Operadores de asignación */
+assign_op ::= ASSIGN
+            | PLUS_ASSIGN
+            | MINUS_ASSIGN;
 
-base_type ::= INT | VOID | BOOLEAN | DOUBLE | STRING | CHAR ;
+/* Ubicación (variable o arreglo) */
+location ::= ID
+            | ID LBRACKET expr RBRACKET ;
 
-array_decl ::=
-      /* vacío */
-    | array_decl LBRACKET INT_LITERAL RBRACKET ;
+/* Llamada a método */
+method_call ::= method_name LPAREN expr_plus_list_opt RPAREN
+              | CALLOUT LPAREN STRING_LITERAL opt_comma_callout_arg_list RPAREN;
 
-/* La producción de variable permanece igual */
-variable ::= ID
-    | variable DOT ID
-    | variable LBRACKET expr RBRACKET ;
+/* Lista opcional de argumentos para callout */
+opt_comma_callout_arg_list ::= COMMA callout_arg_list
+                             | /* vacío */;
 
-/* Las declaraciones de statement y assignment permanecen igual */
-statement ::=
-      assignment SEMI
-    | expr SEMI
-    | PRINT LPAREN expr_list RPAREN SEMI
-    | IF LPAREN expr RPAREN block
-    | IF LPAREN expr RPAREN block ELSE block
-    | FOR LPAREN decl_no_semi SEMI expr SEMI assignment RPAREN block
-    | WHILE LPAREN expr RPAREN block
-    | RETURN expr SEMI
-    | BREAK SEMI
-    | block ;
+/* Nombre del método */
+method_name ::= ID;
 
-assignment ::= variable assignment_operator expr ;
+/* Lista opcional de expresiones */
+expr_plus_list_opt ::= expr_plus_list
+                     | /* vacío */;
 
-assignment_operator ::=
-      ASSIGN
-    | PLUS_ASSIGN
-    | MINUS_ASSIGN
-    | MULTIPLY_ASSIGN
-    | DIVIDE_ASSIGN
-    | MOD_ASSIGN ;
+/* Lista de expresiones separadas por comas */
+expr_plus_list ::= expr_plus_list COMMA expr
+                 | expr;
 
-expr ::=
-      expr PLUS expr
-    | expr MINUS expr
-    | expr MULTIPLY expr
-    | expr DIVIDE expr
-    | expr MOD expr
-    | expr LT expr
-    | expr LE expr
-    | expr GT expr
-    | expr GE expr
-    | expr EQ expr
-    | expr NEQ expr
-    | expr AND expr
-    | expr OR expr
-    | NOT expr %prec NOT
-    | MINUS expr %prec NOT /* operador unario menos */
-    | variable
-    | INT_LITERAL
-    | CHAR_LITERAL
-    | TRUE
-    | FALSE
-    | NULL
-    | THIS
-    | STRING_LITERAL
-    | READINTEGER LPAREN RPAREN
-    | READLINE LPAREN RPAREN
-    | ID LPAREN arg_list RPAREN
-    | CALLOUT LPAREN STRING_LITERAL callout_arg_list RPAREN
-    | NEW type
-    | NEWARRAY LPAREN type COMMA expr RPAREN
-    | LPAREN expr RPAREN ;
+/* Lista de argumentos para callout */
+callout_arg_list ::= callout_arg_list COMMA callout_arg
+                   | callout_arg;
 
-expr_list ::=
-    expr_list COMMA expr
-    | expr ;
+/* Argumento para callout */
+callout_arg ::= expr
+              | STRING_LITERAL;
 
-arg_list ::=
-      arg_list_non_empty
-    | /* vacío */ ;
+/* Expresiones */
+expr ::= location
+       | method_call
+       | literal
+       | expr bin_op expr
+       | MINUS expr %prec UMINUS
+       | NOT expr
+       | NEW type LPAREN expr RPAREN
+       | LPAREN expr RPAREN;
 
-arg_list_non_empty ::=
-      arg_list_non_empty COMMA expr
-    | expr ;
+/* Operadores binarios */
+bin_op ::= arith_op
+         | rel_op
+         | eq_op
+         | cond_op;
 
-callout_arg_list ::=
-      callout_arg_list COMMA callout_arg
-    | callout_arg
-    | /* vacío */ ;
+/* Operadores aritméticos */
+arith_op ::= PLUS | MINUS | MULTIPLY | DIVIDE | MOD;
 
-callout_arg ::=
-      expr
-     ;
+/* Operadores relacionales */
+rel_op ::= LT | GT | LE | GE;
+
+/* Operadores de igualdad */
+eq_op ::= EQ | NEQ;
+
+/* Operadores condicionales */
+cond_op ::= AND | OR;
+
+/* Literales */
+literal ::= int_literal
+          | char_literal
+          | bool_literal;
+
+/* Literal entero */
+int_literal ::= INT_LITERAL;
+
+/* Literal de carácter */
+char_literal ::= CHAR_LITERAL;
+
+/* Literal booleano */
+bool_literal ::= TRUE
+               | FALSE;
+
+// Define el tipo posiblemente incluyendo la declaración de arreglo con tamaño
+type ::= base_type array_decl_optional;
+
+base_type ::= INT
+            | BOOLEAN
+            | CHAR
+            | STRING;
+
+array_decl_optional ::= LBRACKET INT_LITERAL RBRACKET
+                      | /* vacío si no es un arreglo */;
+/* Fin de instrucciones */

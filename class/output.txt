@@ -5,3 +5,36 @@ Error Sintáctico en la Línea 29, Columna 66: Token ''' no reconocido. Tipo: er
 Error Sintáctico en la Línea 29, Columna 71: Token '{' no reconocido. Tipo: LBRACE
 Error Sintáctico en la Línea 29, Columna 71: Token '{' no reconocido. Tipo: LBRACE
 Error Sintáctico en la Línea 29, Columna 71: Token '{' no reconocido. Tipo: LBRACE
+Error de sintaxis en línea 8, columna 15. Token inesperado '5'. Los identificadores no pueden comenzar con un dígito.
+Error de sintaxis en línea 22, columna 24. Token inesperado 'int'.
+Error de sintaxis en línea 22, columna 24. Token inesperado 'int'.
+Error de sintaxis en línea 22, columna 42. Token inesperado 'i'.
+Error de sintaxis en línea 8, columna 15. Token inesperado '5'. Los identificadores no pueden comenzar con un dígito.
+Error de sintaxis en línea 8, columna 15. Token inesperado '5'. Los identificadores no pueden comenzar con un dígito.
+Error de sintaxis en línea 8, columna 15. Token inesperado '5'. Los identificadores no pueden comenzar con un dígito.
+Error de sintaxis en línea 8, columna 15. Token inesperado '5'. Los identificadores no pueden comenzar con un dígito.
+Error de sintaxis en línea 8, columna 13. Token inesperado '['.
+Error de sintaxis en línea 33, columna 31. Token inesperado '='.
+Error de sintaxis en línea 33, columna 31. Token inesperado '='.
+Error de sintaxis en línea 33, columna 31. Token inesperado '='.
+Error de sintaxis en línea 33, columna 31. Token inesperado '='.
+Error de sintaxis en línea 33, columna 31. Token inesperado '='.
+Error de sintaxis en línea 33, columna 31. Token inesperado '='.
+Error de sintaxis en línea 15, columna 34. Token inesperado '='.
+Error de sintaxis en línea 15, columna 34. Token inesperado '='.
+Error de sintaxis en línea 8, columna 13. Token inesperado '['.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 6, columna 19. Token inesperado 'true'.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 6, columna 19. Token inesperado 'true'.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 6, columna 19. Token inesperado 'true'.

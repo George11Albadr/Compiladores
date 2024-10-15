@@ -1,19 +1,11 @@
-class Program {
-    int x;
-    boolean flag;
+class ComplexProgram {
+    int counter;
+    boolean TRUE;
+    int[5] values;
+    char letter;
 
-    void main() {
-        x = 10;
-        flag = true;
-        
-        if (flag) {
-            x = x + 5;
-        } else {
-            x = x - 5;
-        }
-        
-        for (int i = 0; i < 5; i = i + 1) {
-            callout("Hello, World!", x);
-        }
+    void main (){
+        int prueba;
+        prueba = 1;
     }
 }
