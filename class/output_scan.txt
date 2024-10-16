@@ -30,7 +30,9 @@ Token: ASSIGN (=) en la línea 16, columna 31
 Token: INT_LITERAL (1) en la línea 16, columna 35
 Token: SEMI (;) en la línea 16, columna 36
 Token: BOOLEAN (boolean) en la línea 18, columna 17
-Token: ID (TRUE) en la línea 18, columna 30
-Token: SEMI (;) en la línea 18, columna 34
+Token: ID (prueba2) en la línea 18, columna 33
+Token: ASSIGN (=) en la línea 18, columna 42
+Token: ID (TRUE) en la línea 18, columna 49
+Token: SEMI (;) en la línea 18, columna 53
 Token: RBRACE (}) en la línea 20, columna 9
 Token: RBRACE (}) en la línea 22, columna 1

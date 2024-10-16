@@ -30,6 +30,8 @@ import compiler.parser.sym;
 "int"         { return symbol(sym.INT, yytext()); }
 "void"        { return symbol(sym.VOID, yytext()); }
 "boolean"     { return symbol(sym.BOOLEAN, yytext()); }
+"true"        { return symbol(sym.TRUE, yytext()); }
+"false"       { return symbol(sym.FALSE, yytext()); }
 "string"      { return symbol(sym.STRING, yytext()); }
 "char"        { return symbol(sym.CHAR, yytext()); }
 "null"        { return symbol(sym.NULL, yytext()); }
@@ -46,8 +48,6 @@ import compiler.parser.sym;
 "NewArray"    { return symbol(sym.NEWARRAY, yytext()); }
 "Print"       { return symbol(sym.PRINT, yytext()); }
 "ReadInteger" { return symbol(sym.READINTEGER, yytext()); }
-"true"        { return symbol(sym.TRUE, yytext()); }
-"false"       { return symbol(sym.FALSE, yytext()); }
 "callout"     { return symbol(sym.CALLOUT, yytext()); }
 
 /* Operadores y símbolos */

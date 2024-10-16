@@ -123,7 +123,7 @@ method_decl_rest ::= LPAREN param_list RPAREN block;
 
 /* Identificador con arreglo opcional */
 id_with_optional_array ::= ID
-                         | ID LBRACKET RBRACKET;
+                         | ID LBRACKET expr RBRACKET;
 
 /* Lista de parámetros */
 param_list ::= param_list COMMA type id_with_optional_array

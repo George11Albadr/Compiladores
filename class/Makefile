@@ -48,8 +48,8 @@ run-parseb:
 	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target parse input_copy.txt -o output_parse.txt
 
 # Ejecuta todo el proceso (limpieza, generación y análisis)
-execute-scan: all run-scan
+exe-scan: all run-scan
 
-execute-parse: all run-parse
+exe-parse: all run-parse
 
-execute-M: all run-scanb run-parseb
+exe-M: all run-scanb run-parseb

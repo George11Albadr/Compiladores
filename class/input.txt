@@ -1,6 +1,6 @@
 class ComplexProgram {
     int counter;
-    boolean TRUE;
+    boolean isComplete;
     int[5] values;
     char letter;
 
