@@ -42,3 +42,5 @@ Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
 Error de sintaxis en línea 8, columna 14. Token inesperado ']'.
 Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
 Error de sintaxis en línea 19, columna 18. Token inesperado 'boolean'.
+Error de sintaxis en línea 4, columna 30. Token inesperado ']'.
+Error de sintaxis en línea 17, columna 50. Token inesperado 'size'.

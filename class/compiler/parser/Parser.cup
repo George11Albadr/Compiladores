@@ -123,7 +123,8 @@ method_decl_rest ::= LPAREN param_list RPAREN block;
 
 /* Identificador con arreglo opcional */
 id_with_optional_array ::= ID
-                         | ID LBRACKET expr RBRACKET;
+                         | ID LBRACKET expr RBRACKET
+                         | ID LBRACKET RBRACKET;
 
 /* Lista de parámetros */
 param_list ::= param_list COMMA type id_with_optional_array
@@ -224,6 +225,7 @@ expr ::= location
        | expr bin_op expr
        | MINUS expr %prec UMINUS
        | NOT expr
+       | NEW base_type LBRACKET expr RBRACKET
        | NEW type LPAREN expr RPAREN
        | LPAREN expr RPAREN;
 
@@ -268,6 +270,7 @@ base_type ::= INT
             | CHAR
             | STRING;
 
-array_decl_optional ::= LBRACKET INT_LITERAL RBRACKET
+array_decl_optional ::= LBRACKET expr RBRACKET
+                      | LBRACKET RBRACKET
                       | /* vacío si no es un arreglo */;
 /* Fin de instrucciones */

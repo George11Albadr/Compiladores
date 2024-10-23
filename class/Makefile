@@ -52,4 +52,6 @@ exe-scan: all run-scan
 
 exe-parse: all run-parse
 
-exe-M: all run-scanb run-parseb
+exe-M1: all run-scan run-parse
+
+exe-M2: all run-scanb run-parseb
