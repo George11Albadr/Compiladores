@@ -12,6 +12,15 @@ clean:
 	      compiler/parser/Parser\$$CUP\$$Parser\$$actions.class \
 	      compiler/parser/Parser.class compiler/scanner/Scanner.class \
 	      compiler/Compiler.class output_scan.txt output_parse.txt
+clean-sus:
+	rm compiler/ast/*.class
+
+clean2:
+	rm -f compiler/parser/Parser.java compiler/parser/sym.java compiler/scanner/Scanner.java \
+	      compiler/parser/sym.class \
+	      compiler/parser/Parser\$$CUP\$$Parser\$$actions.class \
+	      compiler/parser/Parser.class compiler/scanner/Scanner.class \
+	      compiler/Compiler.class compiler/ast/*.class output_scan.txt output_parse.txt 
 
 # Genera Parser.java y sym.java
 parser:
@@ -21,6 +30,9 @@ parser:
 scanner:
 	java -jar compiler/lib/jflex-full-1.9.1.jar -d compiler/scanner/ compiler/scanner/Scanner.flex
 
+# Compila los archivos del paquete ast
+compile-ast:
+	javac -cp compiler/lib/java-cup-11b.jar:. compiler/ast/*.java
 
 compile-scan:
 	javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/Compiler.java
@@ -31,16 +43,20 @@ compile-parse:
 
 # Compila todos los archivos Java
 compile:
-	javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/parser/Parser.java compiler/parser/sym.java compiler/Compiler.java
+	javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/ast/*.java compiler/parser/Parser.java compiler/parser/sym.java compiler/Compiler.java
 
-# Ejecuta el análisis de escaneo del archivo input.txt y guarda el resultado en output.txt
+# Ejecuta el análisis de escaneo del archivo input.txt y guarda el resultado en output_scan.txt
 run-scan:
+	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target scan input.txt -o output_scan.txt
+
+# Ejecuta el análisis de escaneo del archivo input.txt y guarda el resultado en output_scan.txt (con AST)
+run-scan-ast:
 	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target scan input.txt -o output_scan.txt
 
 run-scanb:
 	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target scan input_copy.txt -o output_scan.txt
 
-# Ejecuta el análisis de parsing del archivo input.txt y guarda el resultado en output.txt
+# Ejecuta el análisis de parsing del archivo input.txt y guarda el resultado en output_parse.txt
 run-parse:
 	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target parse input.txt -o output_parse.txt
 
@@ -55,3 +71,6 @@ exe-parse: all run-parse
 exe-M1: all run-scan run-parse
 
 exe-M2: all run-scanb run-parseb
+
+# Ejecuta todo el proceso con AST, incluyendo la fase de escaneo
+all-ast: clean2 scanner parser compile run-scan run-parse

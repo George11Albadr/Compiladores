@@ -1,2 +1,4 @@
 stage: parsing
 Parsing completed successfully.
+Unknown Node
+Runtime Error: Cannot invoke "Object.getClass()" because "<parameter1>" is null

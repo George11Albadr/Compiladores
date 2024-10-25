@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import compiler.ast.*;
 
 parser code {:
     private Scanner scanner;
@@ -77,7 +78,6 @@ terminal COMMA, DOT;
 terminal LPAREN, RPAREN, LBRACKET, RBRACKET, INT_LITERAL, STRING_LITERAL, CHAR_LITERAL, UMINUS;
 
 /* No terminales */
-/* No terminales */
 non terminal program, class_body_member_list, class_body_member,
              method_decl_rest, id_with_optional_array,
              param_list, block, var_decl_list, var_decl, id_plus_array_list,
@@ -104,7 +104,7 @@ precedence right UMINUS;
 /* Símbolo de inicio */
 start with program;
 
-/* Reglas gramaticales */
+/* Producciones */
 
 /* Programa */
 program ::= CLASS ID LBRACE class_body_member_list RBRACE;
