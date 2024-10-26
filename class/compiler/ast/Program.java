@@ -2,18 +2,16 @@ package compiler.ast;
 
 import java.util.List;
 
-public class Program extends ASTNode {
+public class Program {
     public String className;
-    public List<ASTNode> classMembers;
+    public List<ClassBodyMember> classBody;
 
-    public Program(int line, int column, String className, List<ASTNode> classMembers) {
-        super(line, column);
+    public Program(String className, List<ClassBodyMember> classBody) {
         this.className = className;
-        this.classMembers = classMembers;
+        this.classBody = classBody;
     }
 
-    @Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitProgram(this);
+        visitor.visit(this);
     }
 }

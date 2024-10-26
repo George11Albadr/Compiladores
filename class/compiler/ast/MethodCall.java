@@ -1,19 +1,27 @@
 package compiler.ast;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class MethodCall extends Expression {
-    public String methodName;
-    public List<Expression> args;
+    protected String methodName;
+    protected List<Expression> arguments;
 
-    public MethodCall(int line, int column, String methodName, List<Expression> args) {
-        super(line, column);
+    public MethodCall(String methodName, List<Expression> arguments) {
         this.methodName = methodName;
-        this.args = args;
+        this.arguments = arguments;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public List<Expression> getArguments() {
+        return arguments;
     }
 
     @Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitMethodCall(this);
+        visitor.visit(this);
     }
 }

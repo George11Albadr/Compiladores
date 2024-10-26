@@ -1,19 +1,32 @@
+// En compiler/ast/IfStmt.java
 package compiler.ast;
 
 public class IfStmt extends Statement {
-    public Expression condition;
-    public Block thenBlock;
-    public Block elseBlock;
+    private Expression condition;
+    private Block thenBlock;
+    private Block elseBlock;
 
-    public IfStmt(int line, int column, Expression condition, Block thenBlock, Block elseBlock) {
-        super(line, column);
+    public IfStmt(Expression condition, Block thenBlock, Block elseBlock) {
         this.condition = condition;
         this.thenBlock = thenBlock;
         this.elseBlock = elseBlock;
     }
 
+    // Métodos getter
+    public Expression getCondition() {
+        return condition;
+    }
+
+    public Block getThenBlock() {
+        return thenBlock;
+    }
+
+    public Block getElseBlock() {
+        return elseBlock;
+    }
+
     @Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitIfStmt(this);
+        visitor.visit(this);
     }
 }

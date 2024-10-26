@@ -1,12 +1,14 @@
+// En compiler/ast/BreakStmt.java
 package compiler.ast;
 
 public class BreakStmt extends Statement {
-    public BreakStmt(int line, int column) {
-        super(line, column);
+    public BreakStmt() {
+        // Constructor vacío
     }
 
-    @Override
+@Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitBreakStmt(this);
+        visitor.visit(this);
     }
+    
 }

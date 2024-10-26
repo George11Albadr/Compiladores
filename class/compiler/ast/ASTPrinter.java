@@ -1,243 +1,392 @@
 package compiler.ast;
 
-import compiler.ast.*; // Importa todas las clases en el paquete `compiler.ast`
+import java.io.PrintWriter;
+import java.util.List;
 
 public class ASTPrinter implements ASTVisitor {
+    private PrintWriter writer;
     private int indent = 0;
 
-    // Método auxiliar para manejar la indentación en la salida
-    private void printIndent() {
+    public ASTPrinter(PrintWriter writer) {
+        this.writer = writer;
+    }
+
+    private void println(String s) {
         for (int i = 0; i < indent; i++) {
-            System.out.print("  ");
+            writer.print("  ");
         }
+        writer.println(s);
     }
 
-    // Método para imprimir los nodos con indentación
-    private void printNode(String nodeName) {
-        printIndent();
-        System.out.println(nodeName);
-    }
-
-    // Nodo Program
-    @Override
-    public void visitProgram(Program program) {
-        printNode("Program");
+    private void indent() {
         indent++;
-        for (ASTNode member : program.classMembers) { // Verificamos si `classMembers` es el nombre correcto
+    }
+
+    private void unindent() {
+        if (indent > 0) indent--;
+    }
+
+    @Override
+    public void visit(Program program) {
+        println("Program: " + program.className);
+        System.out.println("Visiting Program");
+        indent();
+        for (ClassBodyMember member : program.classBody) {
             member.accept(this);
         }
-        indent--;
+        unindent();
     }
 
-    // Nodo AssignExpr
     @Override
-    public void visitAssignExpr(AssignExpr assignExpr) {
-        printNode("Assign Expression");
-        indent++;
-        assignExpr.var.accept(this);
-        assignExpr.expr.accept(this);
-        indent--;
+    public void visit(VarDecl varDecl) {
+        println("VarDecl: " + varDecl.name + " Type: " + varDecl.type.getClass().getSimpleName() + (varDecl.isArray ? "[]" : ""));
+        if (varDecl.initExpr != null) {
+            indent();
+            println("InitExpr:");
+            indent();
+            varDecl.initExpr.accept(this);
+            unindent();
+            unindent();
+        }
     }
 
-    // Nodo AssignStmt
     @Override
-    public void visitAssignStmt(AssignStmt assignStmt) {
-        printNode("Assign Statement");
-        indent++;
-        assignStmt.location.accept(this);
-        assignStmt.expr.accept(this);
-        indent--;
+    public void visit(MethodDecl methodDecl) {
+        println("MethodDecl: " + methodDecl.name + " ReturnType: " + methodDecl.returnType.getClass().getSimpleName());
+        indent();
+        println("Parameters:");
+        indent();
+        for (Param param : methodDecl.params) {
+            println("Param: " + param.name + " Type: " + param.type.getClass().getSimpleName() + (param.isArray ? "[]" : ""));
+        }
+        unindent();
+        println("Body:");
+        methodDecl.body.accept(this);
+        unindent();
     }
 
-    // Nodo BinOp
     @Override
-    public void visitBinOp(BinOp binOp) {
-        printNode("Binary Operation: " + binOp.op); // Cambiamos `operator` a `op` según el ejemplo
-        indent++;
-        binOp.left.accept(this);
-        binOp.right.accept(this);
-        indent--;
-    }
-
-    // Nodo Block
-    @Override
-    public void visitBlock(Block block) {
-        printNode("Block");
-        indent++;
+    public void visit(Block block) {
+        println("Block:");
+        indent();
+        println("VarDecls:");
+        indent();
+        for (VarDecl varDecl : block.varDecls) {
+            varDecl.accept(this);
+        }
+        unindent();
+        println("Statements:");
+        indent();
         for (Statement stmt : block.statements) {
             stmt.accept(this);
         }
-        indent--;
+        unindent();
+        unindent();
     }
 
-    // Nodo BreakStmt
     @Override
-    public void visitBreakStmt(BreakStmt breakStmt) {
-        printNode("Break Statement");
+    public void visit(AssignStmt assignStmt) {
+        println("AssignStmt:");
+        indent();
+        println("Location:");
+        indent();
+        assignStmt.location.accept(this);
+        unindent();
+        println("Operator: " + assignStmt.op);
+        println("Expression:");
+        indent();
+        assignStmt.expr.accept(this);
+        unindent();
+        unindent();
     }
 
-    // Nodo CalloutCall
     @Override
-    public void visitCalloutCall(CalloutCall calloutCall) {
-        printNode("Callout Call: " + calloutCall.methodName);
-        indent++;
-        for (Expression arg : calloutCall.args) {
+    public void visit(MethodCallStmt methodCallStmt) {
+        println("MethodCallStmt:");
+        indent();
+        methodCallStmt.getMethodCall().accept(this);
+        unindent();
+    }
+
+    @Override
+    public void visit(IfStmt ifStmt) {
+        println("IfStmt:");
+        indent();
+        println("Condition:");
+        indent();
+        ifStmt.getCondition().accept(this);
+        unindent();
+        println("Then Block:");
+        indent();
+        if (ifStmt.getThenBlock() != null) { // Corrección aquí: Añadido 'if ('
+            ifStmt.getThenBlock().accept(this);
+        } else {
+            println("None");
+        }
+        unindent();
+        if (ifStmt.getElseBlock() != null) { // Añadido 'if' para el else
+            println("Else Block:");
+            indent();
+            ifStmt.getElseBlock().accept(this);
+            unindent();
+        }
+        unindent();
+    }
+
+    @Override
+    public void visit(WhileStmt whileStmt) {
+        println("WhileStmt:");
+        indent();
+        println("Condition:");
+        indent();
+        whileStmt.getCondition().accept(this);
+        unindent();
+        println("Body:");
+        indent();
+        whileStmt.getBody().accept(this);
+        unindent();
+        unindent();
+    }
+
+    @Override
+    public void visit(ForStmt forStmt) {
+        println("ForStmt:");
+        indent();
+        if (forStmt.getInit() != null) {
+            println("Initialization:");
+            indent();
+            forStmt.getInit().accept(this);
+            unindent();
+        }
+        if (forStmt.getCondition() != null) {
+            println("Condition:");
+            indent();
+            forStmt.getCondition().accept(this);
+            unindent();
+        }
+        if (forStmt.getUpdate() != null) {
+            println("Update:");
+            indent();
+            forStmt.getUpdate().accept(this);
+            unindent();
+        }
+        println("Body:");
+        indent();
+        forStmt.getBody().accept(this);
+        unindent();
+        unindent();
+    }
+
+    @Override
+    public void visit(ReturnStmt returnStmt) {
+        println("ReturnStmt:");
+        indent();
+        if (returnStmt.getExpression() != null) {
+            returnStmt.getExpression().accept(this);
+        } else {
+            println("void");
+        }
+        unindent();
+    }
+
+    @Override
+    public void visit(BreakStmt breakStmt) {
+        println("BreakStmt");
+    }
+
+    @Override
+    public void visit(ContinueStmt continueStmt) {
+        println("ContinueStmt");
+    }
+
+    @Override
+    public void visit(ExprStmt exprStmt) {
+        println("ExprStmt:");
+        indent();
+        exprStmt.getExpression().accept(this);
+        unindent();
+    }
+
+    @Override
+    public void visit(VarDeclStmt varDeclStmt) {
+        println("VarDeclStmt:");
+        indent();
+        varDeclStmt.getVarDecl().accept(this);
+        if (varDeclStmt.getInitExpression() != null) {
+            println("InitExpression:");
+            indent();
+            varDeclStmt.getInitExpression().accept(this);
+            unindent();
+        }
+        unindent();
+    }
+
+    @Override
+    public void visit(AssignExpr assignExpr) {
+        println("AssignExpr:");
+        indent();
+        println("Location:");
+        indent();
+        assignExpr.getLocation().accept(this);
+        unindent();
+        println("Operator: " + assignExpr.getOperator());
+        println("Expression:");
+        indent();
+        assignExpr.getExpression().accept(this);
+        unindent();
+        unindent();
+    }
+
+    @Override
+    public void visit(MethodCall methodCall) {
+        println("MethodCall: " + methodCall.getMethodName());
+        indent();
+        println("Arguments:");
+        indent();
+        for (Expression arg : methodCall.getArguments()) {
             arg.accept(this);
         }
-        indent--;
+        unindent();
+        unindent();
     }
 
-    // Nodo ContinueStmt
     @Override
-    public void visitContinueStmt(ContinueStmt continueStmt) {
-        printNode("Continue Statement");
+    public void visit(CalloutStmt calloutStmt) {
+        println("CalloutStmt:");
+        indent();
+        calloutStmt.getCalloutCall().accept(this);
+        unindent();
     }
 
-    // Nodo Expression (abstracto)
-    //@Override
-    //public void visitExpression(Expression expr) {
-    //    printNode("Expression");
-    //} 
-
-    // Nodo ForStmt
     @Override
-    public void visitForStmt(ForStmt forStmt) {
-        printNode("For Statement");
-        indent++;
-        forStmt.init.accept(this);
-        forStmt.condition.accept(this);
-        forStmt.update.accept(this);
-        forStmt.body.accept(this);
-        indent--;
-    }
-
-    // Nodo IfStmt
-    @Override
-    public void visitIfStmt(IfStmt ifStmt) {
-        printNode("If Statement");
-        indent++;
-        ifStmt.condition.accept(this);
-        ifStmt.thenBlock.accept(this);
-        if (ifStmt.elseBlock != null) {
-            printNode("Else Block");
-            ifStmt.elseBlock.accept(this);
-        }
-        indent--;
-    }
-
-    // Nodo Literal
-    @Override
-    public void visitLiteral(Literal literal) {
-        printNode("Literal: " + literal.value); // Asegúrate de que `value` es el nombre correcto del campo
-    }
-
-    // Nodo MethodCall
-    @Override
-    public void visitMethodCall(MethodCall methodCall) {
-        printNode("Method Call: " + methodCall.methodName);
-        indent++;
-        for (Expression arg : methodCall.args) {
+    public void visit(CalloutCall calloutCall) {
+        println("CalloutCall: " + calloutCall.getFunctionName());
+        indent();
+        println("Arguments:");
+        indent();
+        for (CalloutArg arg : calloutCall.getCalloutArguments()) {
             arg.accept(this);
         }
-        indent--;
+        unindent();
+        unindent();
     }
 
-    // Nodo MethodCallStmt
     @Override
-    public void visitMethodCallStmt(MethodCallStmt methodCallStmt) {
-        printNode("Method Call Statement");
-        methodCallStmt.call.accept(this);
+    public void visit(NewArrayExpr newArrayExpr) {
+        println("NewArrayExpr:");
+        indent();
+        println("Type:");
+        indent();
+        newArrayExpr.getType().accept(this);
+        unindent();
+        println("Size:");
+        indent();
+        newArrayExpr.getSize().accept(this);
+        unindent();
+        unindent();
     }
 
-    // Nodo MethodDecl
     @Override
-    public void visitMethodDecl(MethodDecl methodDecl) {
-        printNode("Method Declaration: " + methodDecl.id);
-        indent++;
-        for (Param param : methodDecl.params) {
-            param.accept(this);
+    public void visit(BinaryExpr binaryExpr) {
+        println("BinaryExpr: " + binaryExpr.op);
+        indent();
+        println("Left:");
+        indent();
+        binaryExpr.left.accept(this);
+        unindent();
+        println("Right:");
+        indent();
+        binaryExpr.right.accept(this);
+        unindent();
+        unindent();
+    }
+
+    @Override
+    public void visit(UnaryExpr unaryExpr) {
+        println("UnaryExpr: " + unaryExpr.op);
+        indent();
+        unaryExpr.expr.accept(this);
+        unindent();
+    }
+
+    @Override
+    public void visit(IntLiteral intLiteral) {
+        println("IntLiteral: " + intLiteral.value);
+    }
+
+    @Override
+    public void visit(BoolLiteral boolLiteral) {
+        println("BoolLiteral: " + boolLiteral.value);
+    }
+
+    @Override
+    public void visit(CharLiteral charLiteral) {
+        println("CharLiteral: '" + charLiteral.value + "'");
+    }
+
+    @Override
+    public void visit(StringLiteral stringLiteral) {
+        println("StringLiteral: \"" + stringLiteral.getValue() + "\"");
+    }
+
+    @Override
+    public void visit(VarLocation varLocation) {
+        println("VarLocation: " + varLocation.name);
+    }
+
+    @Override
+    public void visit(ArrayLocation arrayLocation) {
+        println("ArrayLocation: " + arrayLocation.name);
+        indent();
+        println("Index:");
+        indent();
+        arrayLocation.index.accept(this);
+        unindent();
+        unindent();
+    }
+
+    @Override
+    public void visit(IntType intType) {
+        println("Type: int");
+    }
+
+    @Override
+    public void visit(BooleanType booleanType) {
+        println("Type: boolean");
+    }
+
+    @Override
+    public void visit(CharType charType) {
+        println("Type: char");
+    }
+
+    @Override
+    public void visit(VoidType voidType) {
+        println("Type: void");
+    }
+
+    @Override
+    public void visit(Param param) {
+        println("Param: " + param.name + " Type: " + param.type.getClass().getSimpleName() + (param.isArray ? "[]" : ""));
+    }
+
+    @Override
+    public void visit(ExprArg exprArg) {
+        println("ExprArg:");
+        indent();
+        exprArg.getExpression().accept(this);
+        unindent();
+    }
+
+    @Override
+    public void visit(StringArg stringArg) {
+        println("StringArg: \"" + stringArg.getValue() + "\"");
+    }
+
+    @Override
+    public void visit(MultiVarDecl multiVarDecl) {
+        for (ClassBodyMember decl : multiVarDecl.getDeclarations()) {
+            decl.accept(this);
         }
-        methodDecl.body.accept(this);
-        indent--;
-    }
-
-    // Nodo NewArray
-    @Override
-    public void visitNewArray(NewArray newArray) {
-        printNode("New Array of type: " + newArray.type);
-        indent++;
-        newArray.size.accept(this);
-        indent--;
-    }
-
-    // Nodo NewObject
-    @Override
-    public void visitNewObject(NewObject newObject) {
-        printNode("New Object: " + newObject.className);
-    }
-
-    // Nodo Param
-    @Override
-    public void visitParam(Param param) {
-        printNode("Parameter: " + param.id + " of type " + param.type);
-    }
-
-    // Nodo ReturnStmt
-    @Override
-    public void visitReturnStmt(ReturnStmt returnStmt) {
-        printNode("Return Statement");
-        indent++;
-        if (returnStmt.expr != null) {
-            returnStmt.expr.accept(this);
-        }
-        indent--;
-    }
-
-    // Nodo Statement (abstracto)
-    @Override
-    public void visitStatement(Statement stmt) {
-        printNode("Statement");
-    }
-
-    // Nodo Type
-    @Override
-    public void visitASTType(ASTType type) {
-        printNode("Type: " + type.typeName);
-    }
-
-    // Nodo UnaryOp
-    @Override
-    public void visitUnaryOp(UnaryOp unaryOp) {
-        printNode("Unary Operation: " + unaryOp.op); // Cambiamos `operator` a `op`
-        indent++;
-        unaryOp.expr.accept(this);
-        indent--;
-    }
-
-    // Nodo VarDecl
-    @Override
-    public void visitVarDecl(VarDecl varDecl) {
-        printNode("Variable Declaration: " + varDecl.id + " of type " + varDecl.type);
-        indent++;
-        if (varDecl.initExpr != null) {
-            varDecl.initExpr.accept(this);
-        }
-        indent--;
-    }
-
-    // Nodo VarLocation
-    @Override
-    public void visitVarLocation(VarLocation varLocation) {
-        printNode("Variable Location: " + varLocation.id);
-    }
-
-    // Nodo WhileStmt
-    @Override
-    public void visitWhileStmt(WhileStmt whileStmt) {
-        printNode("While Statement");
-        indent++;
-        whileStmt.condition.accept(this);
-        whileStmt.body.accept(this);
-        indent--;
     }
 }

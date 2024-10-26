@@ -1,21 +1,36 @@
 package compiler.ast;
 
 public class ForStmt extends Statement {
-    public Statement init;
-    public Expression condition;
-    public Statement update;
-    public Block body;
+    private Statement init;
+    private Expression condition;
+    private Statement update;
+    private Statement body;
 
-    public ForStmt(int line, int column, Statement init, Expression condition, Statement update, Block body) {
-        super(line, column);
+    public ForStmt(Statement init, Expression condition, Statement update, Statement body) {
         this.init = init;
         this.condition = condition;
         this.update = update;
         this.body = body;
     }
 
+    public Statement getInit() {
+        return init;
+    }
+
+    public Expression getCondition() {
+        return condition;
+    }
+
+    public Statement getUpdate() {
+        return update;
+    }
+
+    public Statement getBody() {
+        return body;
+    }
+
     @Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitForStmt(this);
+        visitor.visit(this);
     }
 }

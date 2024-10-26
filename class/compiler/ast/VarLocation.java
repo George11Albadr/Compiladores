@@ -1,17 +1,14 @@
 package compiler.ast;
 
-public class VarLocation extends Expression {
-    public String id;
-    public Expression index;
+public class VarLocation extends Location {
+    public String name;
 
-    public VarLocation(int line, int column, String id, Expression index) {
-        super(line, column);
-        this.id = id;
-        this.index = index;
+    public VarLocation(String name) {
+        this.name = name;
     }
 
     @Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitVarLocation(this);
+        visitor.visit(this);
     }
 }

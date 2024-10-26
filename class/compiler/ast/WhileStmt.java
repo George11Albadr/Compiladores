@@ -1,17 +1,26 @@
+// En compiler/ast/WhileStmt.java
 package compiler.ast;
 
 public class WhileStmt extends Statement {
-    public Expression condition;
-    public Block body;
+    private Expression condition;
+    private Block body;
 
-    public WhileStmt(int line, int column, Expression condition, Block body) {
-        super(line, column);
+    public WhileStmt(Expression condition, Block body) {
         this.condition = condition;
         this.body = body;
     }
 
+    // Métodos getter
+    public Expression getCondition() {
+        return condition;
+    }
+
+    public Block getBody() {
+        return body;
+    }
+
     @Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitWhileStmt(this);
+        visitor.visit(this);
     }
 }

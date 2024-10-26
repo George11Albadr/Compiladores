@@ -1,17 +1,21 @@
 package compiler;
 
 import compiler.scanner.Scanner;
+import compiler.parser.sym;
 import compiler.parser.Parser;
+import compiler.ast.Program;
+import compiler.ast.ASTPrinter;
 import java_cup.runtime.Symbol;
+import compiler.ast.ASTDotGenerator;
+
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.FileReader;
-import compiler.parser.sym;
-import compiler.ast.*;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.io.BufferedWriter;
+import java.lang.reflect.Field;
 
 public class Compiler {
     public static void main(String[] args) {
@@ -19,6 +23,7 @@ public class Compiler {
             printHelp();
             System.exit(1);
         }
+    
 
         String filename = "";
         String output = "output.txt";
@@ -29,10 +34,22 @@ public class Compiler {
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "-o":
-                    output = args[++i];
+                    if (i + 1 < args.length) {
+                        output = args[++i];
+                    } else {
+                        System.err.println("Error: Se espera un nombre de archivo después de -o.");
+                        printHelp();
+                        System.exit(1);
+                    }
                     break;
                 case "-target":
-                    target = args[++i];
+                    if (i + 1 < args.length) {
+                        target = args[++i];
+                    } else {
+                        System.err.println("Error: Se espera un objetivo después de -target.");
+                        printHelp();
+                        System.exit(1);
+                    }
                     break;
                 case "-debug":
                     debug = true;
@@ -46,335 +63,340 @@ public class Compiler {
             }
         }
 
-        // Validar que se haya especificado un archivo de entrada
         if (filename.isEmpty()) {
             System.err.println("Error: No se especificó un archivo de entrada.");
             printHelp();
             System.exit(1);
         }
 
-        PrintWriter writer = null;
-
         try {
-            writer = new PrintWriter(new FileWriter(output));
-
-            if (target.equals("scan")) {
-                writer.println("stage: scanning");
-                try (FileReader fileReader = new FileReader(filename)) {
-                    Scanner scanner = new Scanner(fileReader);
-
-                    while (true) {
-                        Symbol token = scanner.next_token();
-                        if (token.sym == sym.EOF) break;
-                        // Token detection
-                        writer.println("Token: " + sym.terminalNames[token.sym] + " (" + token.value + ") en la línea " + (token.left + 1) + ", columna " + (token.right + 1));
-
-                        // Debugging
-                        if (debug) {
-                            System.out.println("Debugging scan: Token -> " + sym.terminalNames[token.sym] + " (" + token.value + ") at line " + (token.left + 1) + ", column " + (token.right + 1));
-                        }
-                    }
-                } catch (IOException e) {
-                    System.err.println("Error al leer el archivo: " + e.getMessage());
-                } catch (Exception e) {
-                    writer.println("Error durante el escaneo: " + e.getMessage());
-                    if (debug) {
-                        e.printStackTrace(System.out);
-                    }
-                }
-            } else if (target.equals("parse")) {
-                writer.println("stage: parsing");
-                try (FileReader fileReader = new FileReader(filename)) {
-                    Scanner scanner = new Scanner(fileReader);
-                    Parser parser = new Parser(scanner);
-                    try {
-                        Program ast = (Program) parser.parse().value;
-                        writer.println("Parsing completed successfully.");
-                        if (debug) System.out.println("Debugging parse: Completed successfully");
-
-
-                        if (ast != null) {
-                            ast.accept(new ASTPrinter());
-                        } else { 
-                            System.out.println("Error: el valor ast es nulo");
-                        }
-
-                        // Imprimir el AST
-                        printAST(ast, "", writer);
-
-                        // Generar el archivo DOT para visualizar el AST
-                        generateDot(ast, "ast.dot");
-                        writer.println("Generated AST in ast.dot");
-
-                    } catch (RuntimeException e) {
-                        writer.println("Runtime Error: " + e.getMessage());
-                        if (debug) {
-                            System.out.println("Debugging runtime error: " + e.getMessage());
-                            e.printStackTrace(System.out);
-                        }
-                    } catch (Exception e) {
-                        writer.println("Error durante el parsing: " + e.getMessage());
-                        if (debug) {
-                            System.out.println("Debugging parse exception: " + e.getMessage());
-                            e.printStackTrace(System.out);
-                        }
-                        e.printStackTrace(new PrintWriter(writer));
-                    }
-                } catch (IOException e) {
-                    writer.println("Error al leer el archivo: " + e.getMessage());
-                }
+            switch (target) {
+                case "scan":
+                    runScan(filename, output, debug);
+                    break;
+                case "parse":
+                    runParse(filename, output, debug);
+                    break;
+                case "dot":
+                    runDot(filename, output, debug);
+                    break;
+                default:
+                    System.err.println("Objetivo desconocido: " + target);
+                    printHelp();
             }
         } catch (IOException e) {
-            System.err.println("Error al escribir el archivo de salida: " + e.getMessage());
-        } finally {
-            if (writer != null) {
-                writer.close();
+            System.err.println("Error al procesar el archivo: " + e.getMessage());
+            if (debug) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+
+    /**
+     * Método para ejecutar el análisis sintáctico y generar el AST.
+     *
+     * @param filename Archivo de entrada.
+     * @param output   Archivo de salida.
+     * @param debug    Bandera para activar el modo debug.
+     * @throws IOException Si ocurre un error de E/S.
+     */
+    private static void runParse(String filename, String output, boolean debug) throws IOException {
+        // Crear el archivo de salida para el parsing normal
+        try (PrintWriter writer = new PrintWriter(new FileWriter(output))) {
+            // Indicar el inicio de la etapa de parsing
+            writer.println("stage: parsing");
+            System.out.println("stage: parsing");
+
+            // Inicializar Scanner y Parser
+            Scanner scanner = new Scanner(new FileReader(filename));
+            Parser parser = new Parser(scanner);
+
+            // Realizar el parsing
+            Symbol result = parser.parse();
+
+            // Verificar si el parsing resultó en un AST válido
+            if (result == null || result.value == null) {
+                writer.println("Error: No se pudo generar el AST.");
+                if (debug) {
+                    System.err.println("Error: No se pudo generar el AST.");
+                }
+                return;
+            }
+
+            // Obtener el nodo raíz del AST
+            Program program = (Program) result.value;
+
+            // Confirmar que el parsing fue exitoso
+            writer.println("Parsing completed successfully.");
+            if (debug) {
+                System.out.println("Debug: Parsing completed successfully.");
+            }
+
+            // Indicar el inicio de la impresión del AST
+            writer.println("AST:");
+            ASTPrinter printer = new ASTPrinter(writer);
+
+            // Traversar el AST y generar la representación
+            program.accept(printer);
+            writer.println(); // Añadir una línea en blanco al final
+
+            // Generar el archivo DOT
+            String dotFile = output.substring(0, output.lastIndexOf('.')) + ".dot";
+            try (PrintWriter dotWriter = new PrintWriter(new FileWriter(dotFile))) {
+                ASTDotGenerator dotGenerator = new ASTDotGenerator(dotWriter);
+                dotGenerator.beginGraph();
+                program.accept(dotGenerator);
+                dotGenerator.endGraph();
+                System.out.println("Archivo DOT generado exitosamente en " + dotFile);
+
+                // Generar PDF automáticamente
+                String pdfFile = dotFile.replaceAll("\\.dot$", "") + ".pdf";
+                try {
+                    generatePDF(dotFile, pdfFile, debug);
+                    System.out.println("PDF generado exitosamente en " + pdfFile);
+                } catch (IOException e) {
+                    System.err.println("Error generando PDF: " + e.getMessage());
+                    // Puedes optar por imprimir la pila de excepciones solo si debug está activado
+                    if (debug) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            if (debug) {
+                System.out.println("Debug: AST generado correctamente en " + output);
+            }
+
+            // Mensaje de éxito
+            System.out.println("Parsing completado exitosamente. AST generado en " + output);
+        } catch (Exception e) {
+            System.err.println("Error durante el parsing: " + e.getMessage());
+            if (debug) {
+                e.printStackTrace();
             }
         }
     }
 
-    // Método para imprimir la ayuda del compilador
+    /**
+     * Método para ejecutar el análisis léxico (scanning).
+     *
+     * @param filename Archivo de entrada.
+     * @param output   Archivo de salida.
+     * @param debug    Bandera para activar el modo debug.
+     * @throws IOException Si ocurre un error de E/S.
+     */
+    private static void runScan(String filename, String output, boolean debug) throws IOException {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(output))) {
+            // Indicar el inicio de la etapa de scanning
+            writer.println("stage: scanning");
+            System.out.println("stage: scanning");
+
+            try (FileReader fileReader = new FileReader(filename)) {
+                Scanner scanner = new Scanner(fileReader);
+                while (!scanner.yyatEOF()) {
+                    Symbol token = scanner.next_token();
+                    if (token.sym == sym.EOF) break;
+
+                    String nombreToken = getTokenName(token.sym);
+                    String valorToken = (token.value != null) ? token.value.toString() : "N/A";
+                    String tipoToken = esReservada(token.sym) ? "reservada" : "no reservada";
+
+                    writer.printf("Token: %s | Valor: %s | Línea: %d | Columna: %d | Tipo: %s%n",
+                            nombreToken, valorToken, token.left + 1, token.right + 1, tipoToken);
+
+                    if (debug) {
+                        System.out.printf("Token: %s | Valor: %s | Línea: %d | Columna: %d | Tipo: %s%n",
+                                nombreToken, valorToken, token.left + 1, token.right + 1, tipoToken);
+                    }
+                }
+            } catch (Exception e) {
+                writer.println("Error durante el análisis de escaneo: " + e.getMessage());
+                System.err.println("Error durante el análisis de escaneo: " + e.getMessage());
+                if (debug) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * Método para determinar si un token es una palabra reservada.
+     *
+     * @param tokenSym Símbolo del token.
+     * @return true si es reservada, false en caso contrario.
+     */
+    private static boolean esReservada(int tokenSym) {
+        switch (tokenSym) {
+            case sym.CLASS:
+            case sym.INT:
+            case sym.BOOLEAN:
+            case sym.VOID:
+            case sym.TRUE:
+            case sym.FALSE:
+            case sym.IF:
+            case sym.ELSE:
+            case sym.FOR:
+            case sym.WHILE:
+            case sym.RETURN:
+            case sym.BREAK:
+            case sym.CONTINUE:
+            case sym.CALLOUT:
+            case sym.CHAR:
+            case sym.NEW:
+            case sym.ASSIGN:
+            case sym.PLUS_ASSIGN:
+            case sym.MINUS_ASSIGN:
+            case sym.SEMI:
+            case sym.COMMA:
+            case sym.LBRACE:
+            case sym.RBRACE:
+            case sym.LPAREN:
+            case sym.RPAREN:
+            case sym.LBRACKET:
+            case sym.RBRACKET:
+            case sym.AND:
+            case sym.OR:
+            case sym.NOT:
+            case sym.EQ:
+            case sym.NEQ:
+            case sym.LE:
+            case sym.GE:
+            case sym.LT:
+            case sym.GT:
+            case sym.PLUS:
+            case sym.MINUS:
+            case sym.TIMES:
+            case sym.DIVIDE:
+            case sym.MOD:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Método para obtener el nombre de un token a partir de su símbolo.
+     *
+     * @param tokenSym Símbolo del token.
+     * @return Nombre del token o "UNKNOWN" si no se encuentra.
+     */
+    private static String getTokenName(int tokenSym) {
+        try {
+            Field[] fields = sym.class.getFields();
+            for (Field field : fields) {
+                if (field.getType() == int.class && field.getInt(null) == tokenSym) {
+                    return field.getName();
+                }
+            }
+        } catch (IllegalAccessException e) {
+            // Manejar excepción si es necesario
+        }
+        return "UNKNOWN";
+    }
+
+    /**
+     * Método para imprimir la ayuda y uso del compilador.
+     */
     private static void printHelp() {
-        System.out.println("Uso: java Compiler [option] <filename>");
+        System.out.println("Uso: java compiler.Compiler [option] <filename>");
         System.out.println("-o <outname>: Especifica el nombre del archivo de salida.");
-        System.out.println("-target <stage>: scan, parse, ast, semantic, irt, codegen.");
-        System.out.println("-debug: Activa el modo debug para más detalles.");
+        System.out.println("-target <stage>: scan, parse, dot.");
+        System.out.println("-debug: Activa el modo debug.");
+        System.out.println("-h: Muestra esta ayuda.");
     }
 
-    // Método para imprimir el AST
-    public static void printAST(ASTNode node, String indent, PrintWriter writer) {
-        if (node instanceof Program) {
-            Program program = (Program) node;
-            writer.println(indent + "Program: " + program.className);
-            for (ASTNode member : program.classMembers) {
-                printAST(member, indent + "  ", writer);
+    /**
+     * Método para ejecutar la generación del archivo DOT y PDF.
+     *
+     * @param filename Archivo de entrada.
+     * @param output   Archivo de salida.
+     * @param debug    Bandera para activar el modo debug.
+     * @throws IOException Si ocurre un error de E/S.
+     */
+    private static void runDot(String filename, String output, boolean debug) throws IOException {
+        String dotFile = output;
+        String pdfFile = output.replaceAll("\\.dot$", "") + ".pdf";
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(dotFile))) {
+            // Inicializar Scanner y Parser
+            Scanner scanner = new Scanner(new FileReader(filename));
+            Parser parser = new Parser(scanner);
+
+            // Realizar el parsing
+            Symbol result = parser.parse();
+
+            if (result != null && result.value != null) {
+                Program program = (Program) result.value;
+
+                // Crear el generador DOT
+                ASTDotGenerator dotGenerator = new ASTDotGenerator(writer);
+
+                // Generar el archivo DOT
+                dotGenerator.beginGraph();
+                program.accept(dotGenerator);
+                dotGenerator.endGraph();
+
+                System.out.println("Archivo DOT generado exitosamente en " + dotFile);
+
             }
-        } else if (node instanceof VarDecl) {
-            VarDecl varDecl = (VarDecl) node;
-            writer.println(indent + "VarDecl: " + varDecl.id + " Type: " + varDecl.type.typeName);
-            if (varDecl.initExpr != null) {
-                writer.println(indent + "  Init Expression:");
-                printAST(varDecl.initExpr, indent + "    ", writer);
+        } catch (Exception e) {
+            System.err.println("Error generando el archivo DOT/PDF: " + e.getMessage());
+            if (debug) {
+                e.printStackTrace();
             }
-        } else if (node instanceof MethodDecl) {
-            MethodDecl methodDecl = (MethodDecl) node;
-            writer.println(indent + "MethodDecl: " + methodDecl.id + " ReturnType: " + methodDecl.returnType.typeName);
-            writer.println(indent + "  Parameters:");
-            for (Param param : methodDecl.params) {
-                printAST(param, indent + "    ", writer);
-            }
-            writer.println(indent + "  Body:");
-            printAST(methodDecl.body, indent + "    ", writer);
-        } else if (node instanceof Param) {
-            Param param = (Param) node;
-            writer.println(indent + "Param: " + param.id + " Type: " + param.type.typeName);
-        } else if (node instanceof Block) {
-            Block block = (Block) node;
-            writer.println(indent + "Block:");
-            if (!block.varDecls.isEmpty()) {
-                writer.println(indent + "  VarDecls:");
-                for (VarDecl varDecl : block.varDecls) {
-                    printAST(varDecl, indent + "    ", writer);
-                }
-            }
-            if (!block.statements.isEmpty()) {
-                writer.println(indent + "  Statements:");
-                for (Statement stmt : block.statements) {
-                    printAST(stmt, indent + "    ", writer);
-                }
-            }
-        } else if (node instanceof AssignStmt) {
-            AssignStmt assignStmt = (AssignStmt) node;
-            writer.println(indent + "AssignStmt:");
-            writer.println(indent + "  Location:");
-            printAST(assignStmt.location, indent + "    ", writer);
-            writer.println(indent + "  Operator: " + assignStmt.operator);
-            writer.println(indent + "  Expression:");
-            printAST(assignStmt.expr, indent + "    ", writer);
-        } else if (node instanceof IfStmt) {
-            IfStmt ifStmt = (IfStmt) node;
-            writer.println(indent + "IfStmt:");
-            writer.println(indent + "  Condition:");
-            printAST(ifStmt.condition, indent + "    ", writer);
-            writer.println(indent + "  Then Block:");
-            printAST(ifStmt.thenBlock, indent + "    ", writer);
-            if (ifStmt.elseBlock != null) {
-                writer.println(indent + "  Else Block:");
-                printAST(ifStmt.elseBlock, indent + "    ", writer);
-            }
-        } else if (node instanceof VarLocation) {
-            VarLocation varLoc = (VarLocation) node;
-            writer.println(indent + "VarLocation: " + varLoc.id);
-            if (varLoc.index != null) {
-                writer.println(indent + "  Index:");
-                printAST(varLoc.index, indent + "    ", writer);
-            }
-        } else if (node instanceof BinOp) {
-            BinOp binOp = (BinOp) node;
-            writer.println(indent + "BinOp(" + binOp.op + ")");
-            writer.println(indent + "  Left:");
-            printAST(binOp.left, indent + "    ", writer);
-            writer.println(indent + "  Right:");
-            printAST(binOp.right, indent + "    ", writer);
-        } else if (node instanceof UnaryOp) {
-            UnaryOp unaryOp = (UnaryOp) node;
-            writer.println(indent + "UnaryOp(" + unaryOp.op + ")");
-            writer.println(indent + "  Expression:");
-            printAST(unaryOp.expr, indent + "    ", writer);
-        } else if (node instanceof Literal) {
-            Literal literal = (Literal) node;
-            writer.println(indent + "Literal: " + literal.value);
-        } else if (node instanceof MethodCallStmt) {
-            MethodCallStmt methodCallStmt = (MethodCallStmt) node;
-            writer.println(indent + "MethodCallStmt:");
-            printAST(methodCallStmt.call, indent + "  ", writer);
-        } else if (node instanceof MethodCall) {
-            MethodCall methodCall = (MethodCall) node;
-            writer.println(indent + "MethodCall: " + methodCall.methodName);
-            if (!methodCall.args.isEmpty()) {
-                writer.println(indent + "  Arguments:");
-                for (Expression arg : methodCall.args) {
-                    printAST(arg, indent + "    ", writer);
-                }
-            }
-        } else if (node instanceof CalloutCall) {
-            CalloutCall calloutCall = (CalloutCall) node;
-            writer.println(indent + "CalloutCall: " + calloutCall.methodName);
-            if (!calloutCall.args.isEmpty()) {
-                writer.println(indent + "  Arguments:");
-                for (Expression arg : calloutCall.args) {
-                    printAST(arg, indent + "    ", writer);
-                }
-            }
-        } else {
-            writer.println(indent + "Unknown Node");
         }
     }
 
-    // Método para generar el archivo DOT
-    public static void generateDot(ASTNode node, String filename) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        writer.write("digraph AST {\n");
-        AtomicInteger nodeCounter = new AtomicInteger(0);
-        generateDotNode(node, writer, nodeCounter);
-        writer.write("}\n");
-        writer.close();
-    }
-
-    public static int generateDotNode(ASTNode node, BufferedWriter writer, AtomicInteger nodeCounter) throws IOException {
-        int myId = nodeCounter.getAndIncrement();
-        String label = node.getClass().getSimpleName();
-
-        if (node instanceof Program) {
-            Program program = (Program) node;
-            label += "\\n" + program.className;
-        } else if (node instanceof VarDecl) {
-            VarDecl varDecl = (VarDecl) node;
-            label += "\\n" + varDecl.id + ": " + varDecl.type.typeName;
-        } else if (node instanceof MethodDecl) {
-            MethodDecl methodDecl = (MethodDecl) node;
-            label += "\\n" + methodDecl.id + ": " + methodDecl.returnType.typeName;
-        } else if (node instanceof Param) {
-            Param param = (Param) node;
-            label += "\\n" + param.id + ": " + param.type.typeName;
-        } else if (node instanceof AssignStmt) {
-            AssignStmt assignStmt = (AssignStmt) node;
-            label += "\\n" + assignStmt.operator;
-        } else if (node instanceof VarLocation) {
-            VarLocation varLoc = (VarLocation) node;
-            label += "\\n" + varLoc.id;
-        } else if (node instanceof BinOp) {
-            BinOp binOp = (BinOp) node;
-            label += "\\n" + binOp.op;
-        } else if (node instanceof UnaryOp) {
-            UnaryOp unaryOp = (UnaryOp) node;
-            label += "\\n" + unaryOp.op;
-        } else if (node instanceof Literal) {
-            Literal literal = (Literal) node;
-            label += "\\n" + literal.value;
-        } else if (node instanceof MethodCall) {
-            MethodCall methodCall = (MethodCall) node;
-            label += "\\n" + methodCall.methodName;
-        }
-
-        writer.write("  node" + myId + " [label=\"" + label + "\"];\n");
-
-        if (node instanceof Program) {
-            Program program = (Program) node;
-            for (ASTNode member : program.classMembers) {
-                int childId = generateDotNode(member, writer, nodeCounter);
-                writer.write("  node" + myId + " -> node" + childId + ";\n");
-            }
-        } else if (node instanceof VarDecl) {
-            VarDecl varDecl = (VarDecl) node;
-            if (varDecl.initExpr != null) {
-                int childId = generateDotNode(varDecl.initExpr, writer, nodeCounter);
-                writer.write("  node" + myId + " -> node" + childId + ";\n");
-            }
-        } else if (node instanceof MethodDecl) {
-            MethodDecl methodDecl = (MethodDecl) node;
-            for (Param param : methodDecl.params) {
-                int childId = generateDotNode(param, writer, nodeCounter);
-                writer.write("  node" + myId + " -> node" + childId + ";\n");
-            }
-            int bodyId = generateDotNode(methodDecl.body, writer, nodeCounter);
-            writer.write("  node" + myId + " -> node" + bodyId + ";\n");
-        } else if (node instanceof Block) {
-            Block block = (Block) node;
-            for (VarDecl varDecl : block.varDecls) {
-                int childId = generateDotNode(varDecl, writer, nodeCounter);
-                writer.write("  node" + myId + " -> node" + childId + ";\n");
-            }
-            for (Statement stmt : block.statements) {
-                int childId = generateDotNode(stmt, writer, nodeCounter);
-                writer.write("  node" + myId + " -> node" + childId + ";\n");
-            }
-        } else if (node instanceof AssignStmt) {
-            AssignStmt assignStmt = (AssignStmt) node;
-            int locId = generateDotNode(assignStmt.location, writer, nodeCounter);
-            int exprId = generateDotNode(assignStmt.expr, writer, nodeCounter);
-            writer.write("  node" + myId + " -> node" + locId + ";\n");
-            writer.write("  node" + myId + " -> node" + exprId + ";\n");
-        } else if (node instanceof IfStmt) {
-            IfStmt ifStmt = (IfStmt) node;
-            int condId = generateDotNode(ifStmt.condition, writer, nodeCounter);
-            int thenId = generateDotNode(ifStmt.thenBlock, writer, nodeCounter);
-            writer.write("  node" + myId + " -> node" + condId + ";\n");
-            writer.write("  node" + myId + " -> node" + thenId + ";\n");
-            if (ifStmt.elseBlock != null) {
-                int elseId = generateDotNode(ifStmt.elseBlock, writer, nodeCounter);
-                writer.write("  node" + myId + " -> node" + elseId + ";\n");
-            }
-        } else if (node instanceof VarLocation) {
-            VarLocation varLoc = (VarLocation) node;
-            if (varLoc.index != null) {
-                int indexId = generateDotNode(varLoc.index, writer, nodeCounter);
-                writer.write("  node" + myId + " -> node" + indexId + ";\n");
-            }
-        } else if (node instanceof BinOp) {
-            BinOp binOp = (BinOp) node;
-            int leftId = generateDotNode(binOp.left, writer, nodeCounter);
-            int rightId = generateDotNode(binOp.right, writer, nodeCounter);
-            writer.write("  node" + myId + " -> node" + leftId + ";\n");
-            writer.write("  node" + myId + " -> node" + rightId + ";\n");
-        } else if (node instanceof UnaryOp) {
-            UnaryOp unaryOp = (UnaryOp) node;
-            int exprId = generateDotNode(unaryOp.expr, writer, nodeCounter);
-            writer.write("  node" + myId + " -> node" + exprId + ";\n");
-        } else if (node instanceof MethodCall) {
-            MethodCall methodCall = (MethodCall) node;
-            for (Expression arg : methodCall.args) {
-                int argId = generateDotNode(arg, writer, nodeCounter);
-                writer.write("  node" + myId + " -> node" + argId + ";\n");
-            }
-        } else if (node instanceof CalloutCall) {
-            CalloutCall calloutCall = (CalloutCall) node;
-            for (Expression arg : calloutCall.args) {
-                int argId = generateDotNode(arg, writer, nodeCounter);
-                writer.write("  node" + myId + " -> node" + argId + ";\n");
+    /**
+     * Método para generar el PDF a partir del archivo DOT utilizando Graphviz.
+     *
+     * @param dotFile Ruta al archivo DOT.
+     * @param pdfFile Ruta al archivo PDF de salida.
+     * @param debug    Bandera para activar el modo debug.
+     * @throws IOException Si ocurre un error durante la ejecución de `dot`.
+     */
+    private static void generatePDF(String dotFile, String pdfFile, boolean debug) throws IOException {
+        if (debug) {
+            System.out.println("Contenido del archivo DOT antes de generar el PDF:");
+            try (BufferedReader br = new BufferedReader(new FileReader(dotFile))) {
+                String line;
+                int currentLine = 1;
+                while ((line = br.readLine()) != null) {
+                    System.out.printf("%d: %s%n", currentLine, line);
+                    currentLine++;
+                }
+            } catch (IOException e) {
+                System.err.println("Error leyendo el archivo DOT para depuración: " + e.getMessage());
+                if (debug) {
+                    e.printStackTrace();
+                }
             }
         }
-
-        return myId;
+    
+        ProcessBuilder pb = new ProcessBuilder("dot", "-Tpdf", dotFile, "-o", pdfFile);
+        pb.redirectErrorStream(true); // Combina stdout y stderr
+    
+        // Ejecutar el proceso
+        Process process = pb.start();
+    
+        // Leer la salida del proceso para detectar errores
+        StringBuilder outputError = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                outputError.append(line).append("\n");
+            }
+        }
+    
+        try {
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new IOException(outputError.toString().trim());
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Proceso de generación de PDF interrumpido", e);
+        }
     }
-}
+}    

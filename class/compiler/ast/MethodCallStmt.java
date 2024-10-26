@@ -1,15 +1,18 @@
 package compiler.ast;
 
 public class MethodCallStmt extends Statement {
-    public MethodCall call;
+    private MethodCall methodCall;
 
-    public MethodCallStmt(int line, int column, MethodCall call) {
-        super(line, column);
-        this.call = call;
+    public MethodCallStmt(MethodCall methodCall) {
+        this.methodCall = methodCall;
+    }
+
+    public MethodCall getMethodCall() {
+        return methodCall;
     }
 
     @Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitMethodCallStmt(this);
+        visitor.visit(this);
     }
 }

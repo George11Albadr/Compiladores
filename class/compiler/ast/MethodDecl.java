@@ -2,22 +2,21 @@ package compiler.ast;
 
 import java.util.List;
 
-public class MethodDecl extends ASTNode {
-    public String id;
-    public ASTType returnType;
+public class MethodDecl implements ClassBodyMember {
+    public Type returnType;
+    public String name;
     public List<Param> params;
     public Block body;
 
-    public MethodDecl(int line, int column, String id, ASTType returnType, List<Param> params, Block body) {
-        super(line, column);
-        this.id = id;
+    public MethodDecl(Type returnType, String name, List<Param> params, Block body) {
         this.returnType = returnType;
+        this.name = name;
         this.params = params;
         this.body = body;
     }
 
     @Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitMethodDecl(this);
+        visitor.visit(this);
     }
 }

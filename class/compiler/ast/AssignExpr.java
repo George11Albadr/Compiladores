@@ -1,17 +1,30 @@
 package compiler.ast;
 
 public class AssignExpr extends Expression {
-    public VarLocation var;  // Variable a asignar
-    public Expression expr;  // Expresión asignada
+    private Location location;
+    private String operator; // Debe ser String
+    private Expression expression;
 
-    public AssignExpr(int line, int column, VarLocation var, Expression expr) {
-        super(line, column);
-        this.var = var;
-        this.expr = expr;
+    public AssignExpr(Location location, String operator, Expression expression) {
+        this.location = location;
+        this.operator = operator;
+        this.expression = expression;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public Expression getExpression() {
+        return expression;
     }
 
     @Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitAssignExpr(this);
+        visitor.visit(this);
     }
 }

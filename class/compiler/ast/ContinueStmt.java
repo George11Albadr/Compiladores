@@ -1,12 +1,13 @@
+// En compiler/ast/ContinueStmt.java
 package compiler.ast;
 
 public class ContinueStmt extends Statement {
-    public ContinueStmt(int line, int column) {
-        super(line, column);
+    public ContinueStmt() {
+        // Constructor vacío
     }
 
     @Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitContinueStmt(this);
+        visitor.visit(this);
     }
 }

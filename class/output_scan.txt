@@ -1,429 +1,429 @@
 stage: scanning
-Token: CLASS (class) en la línea 2, columna 2
-Token: ID (EducationalProgram) en la línea 2, columna 27
-Token: LBRACE ({) en la línea 2, columna 47
-Token: INT (int) en la línea 4, columna 10
-Token: ID (numbers) en la línea 4, columna 22
-Token: LBRACKET ([) en la línea 4, columna 29
-Token: RBRACKET (]) en la línea 4, columna 30
-Token: SEMI (;) en la línea 4, columna 31
-Token: BOOLEAN (boolean) en la línea 6, columna 10
-Token: ID (flags) en la línea 6, columna 24
-Token: LBRACKET ([) en la línea 6, columna 29
-Token: RBRACKET (]) en la línea 6, columna 30
-Token: SEMI (;) en la línea 6, columna 31
-Token: CHAR (char) en la línea 8, columna 10
-Token: ID (letters) en la línea 8, columna 23
-Token: LBRACKET ([) en la línea 8, columna 30
-Token: RBRACKET (]) en la línea 8, columna 31
-Token: SEMI (;) en la línea 8, columna 32
-Token: INT (int) en la línea 10, columna 10
-Token: ID (size) en la línea 10, columna 19
-Token: SEMI (;) en la línea 10, columna 23
-Token: VOID (void) en la línea 13, columna 10
-Token: ID (initialize) en la línea 13, columna 26
-Token: LPAREN (() en la línea 13, columna 36
-Token: INT (int) en la línea 13, columna 37
-Token: ID (arraySize) en la línea 13, columna 51
-Token: RPAREN ()) en la línea 13, columna 60
-Token: LBRACE ({) en la línea 13, columna 63
-Token: ID (size) en la línea 15, columna 22
-Token: ASSIGN (=) en la línea 15, columna 28
-Token: ID (arraySize) en la línea 15, columna 40
-Token: SEMI (;) en la línea 15, columna 49
-Token: ID (numbers) en la línea 17, columna 25
-Token: ASSIGN (=) en la línea 17, columna 34
-Token: NEW (new) en la línea 17, columna 37
-Token: INT (int) en la línea 17, columna 42
-Token: LBRACKET ([) en la línea 17, columna 45
-Token: ID (size) en la línea 17, columna 50
-Token: RBRACKET (]) en la línea 17, columna 54
-Token: SEMI (;) en la línea 17, columna 55
-Token: ID (flags) en la línea 19, columna 23
-Token: ASSIGN (=) en la línea 19, columna 30
-Token: NEW (new) en la línea 19, columna 33
-Token: BOOLEAN (boolean) en la línea 19, columna 38
-Token: LBRACKET ([) en la línea 19, columna 45
-Token: ID (size) en la línea 19, columna 50
-Token: RBRACKET (]) en la línea 19, columna 54
-Token: SEMI (;) en la línea 19, columna 55
-Token: ID (letters) en la línea 21, columna 25
-Token: ASSIGN (=) en la línea 21, columna 34
-Token: NEW (new) en la línea 21, columna 37
-Token: CHAR (char) en la línea 21, columna 42
-Token: LBRACKET ([) en la línea 21, columna 46
-Token: ID (size) en la línea 21, columna 51
-Token: RBRACKET (]) en la línea 21, columna 55
-Token: SEMI (;) en la línea 21, columna 56
-Token: FOR (for) en la línea 23, columna 18
-Token: LPAREN (() en la línea 23, columna 23
-Token: INT (int) en la línea 23, columna 24
-Token: ID (i) en la línea 23, columna 30
-Token: ASSIGN (=) en la línea 23, columna 33
-Token: INT_LITERAL (0) en la línea 23, columna 37
-Token: SEMI (;) en la línea 23, columna 38
-Token: ID (i) en la línea 23, columna 42
-Token: LT (<) en la línea 23, columna 45
-Token: ID (size) en la línea 23, columna 52
-Token: SEMI (;) en la línea 23, columna 56
-Token: ID (i) en la línea 23, columna 60
-Token: ASSIGN (=) en la línea 23, columna 63
-Token: ID (i) en la línea 23, columna 67
-Token: PLUS (+) en la línea 23, columna 70
-Token: INT_LITERAL (1) en la línea 23, columna 74
-Token: RPAREN ()) en la línea 23, columna 75
-Token: LBRACE ({) en la línea 23, columna 78
-Token: ID (numbers) en la línea 25, columna 33
-Token: LBRACKET ([) en la línea 25, columna 40
-Token: ID (i) en la línea 25, columna 42
-Token: RBRACKET (]) en la línea 25, columna 43
-Token: ASSIGN (=) en la línea 25, columna 46
-Token: ID (i) en la línea 25, columna 50
-Token: MULTIPLY (*) en la línea 25, columna 53
-Token: INT_LITERAL (2) en la línea 25, columna 57
-Token: SEMI (;) en la línea 25, columna 58
-Token: ID (flags) en la línea 27, columna 31
-Token: LBRACKET ([) en la línea 27, columna 36
-Token: ID (i) en la línea 27, columna 38
-Token: RBRACKET (]) en la línea 27, columna 39
-Token: ASSIGN (=) en la línea 27, columna 42
-Token: LPAREN (() en la línea 27, columna 45
-Token: ID (i) en la línea 27, columna 47
-Token: MOD (%) en la línea 27, columna 50
-Token: INT_LITERAL (2) en la línea 27, columna 54
-Token: EQ (==) en la línea 27, columna 57
-Token: INT_LITERAL (0) en la línea 27, columna 62
-Token: RPAREN ()) en la línea 27, columna 63
-Token: SEMI (;) en la línea 27, columna 64
-Token: IF (if) en la línea 29, columna 26
-Token: LPAREN (() en la línea 29, columna 30
-Token: ID (i) en la línea 29, columna 32
-Token: MOD (%) en la línea 29, columna 35
-Token: INT_LITERAL (2) en la línea 29, columna 39
-Token: EQ (==) en la línea 29, columna 42
-Token: INT_LITERAL (0) en la línea 29, columna 47
-Token: RPAREN ()) en la línea 29, columna 48
-Token: LBRACE ({) en la línea 29, columna 51
-Token: ID (letters) en la línea 31, columna 41
-Token: LBRACKET ([) en la línea 31, columna 48
-Token: ID (i) en la línea 31, columna 50
-Token: RBRACKET (]) en la línea 31, columna 51
-Token: ASSIGN (=) en la línea 31, columna 54
-Token: CHAR_LITERAL (A) en la línea 31, columna 60
-Token: SEMI (;) en la línea 31, columna 63
-Token: RBRACE (}) en la línea 33, columna 26
-Token: ELSE (else) en la línea 33, columna 29
-Token: LBRACE ({) en la línea 33, columna 35
-Token: ID (letters) en la línea 35, columna 41
-Token: LBRACKET ([) en la línea 35, columna 48
-Token: ID (i) en la línea 35, columna 50
-Token: RBRACKET (]) en la línea 35, columna 51
-Token: ASSIGN (=) en la línea 35, columna 54
-Token: CHAR_LITERAL (B) en la línea 35, columna 60
-Token: SEMI (;) en la línea 35, columna 63
-Token: RBRACE (}) en la línea 37, columna 26
-Token: RBRACE (}) en la línea 39, columna 18
-Token: RBRACE (}) en la línea 41, columna 10
-Token: INT (int) en la línea 43, columna 10
-Token: ID (calculateSum) en la línea 43, columna 27
-Token: LPAREN (() en la línea 43, columna 39
-Token: INT (int) en la línea 43, columna 40
-Token: ID (limit) en la línea 43, columna 50
-Token: RPAREN ()) en la línea 43, columna 55
-Token: LBRACE ({) en la línea 43, columna 58
-Token: INT (int) en la línea 45, columna 18
-Token: ID (sum) en la línea 45, columna 26
-Token: SEMI (;) en la línea 45, columna 29
-Token: ID (sum) en la línea 47, columna 21
-Token: ASSIGN (=) en la línea 47, columna 26
-Token: INT_LITERAL (0) en la línea 47, columna 30
-Token: SEMI (;) en la línea 47, columna 31
-Token: FOR (for) en la línea 49, columna 18
-Token: LPAREN (() en la línea 49, columna 23
-Token: INT (int) en la línea 49, columna 24
-Token: ID (i) en la línea 49, columna 30
-Token: ASSIGN (=) en la línea 49, columna 33
-Token: INT_LITERAL (1) en la línea 49, columna 37
-Token: SEMI (;) en la línea 49, columna 38
-Token: ID (i) en la línea 49, columna 42
-Token: LE (<=) en la línea 49, columna 45
-Token: ID (limit) en la línea 49, columna 54
-Token: SEMI (;) en la línea 49, columna 59
-Token: ID (i) en la línea 49, columna 63
-Token: ASSIGN (=) en la línea 49, columna 66
-Token: ID (i) en la línea 49, columna 70
-Token: PLUS (+) en la línea 49, columna 73
-Token: INT_LITERAL (1) en la línea 49, columna 77
-Token: RPAREN ()) en la línea 49, columna 78
-Token: LBRACE ({) en la línea 49, columna 81
-Token: ID (sum) en la línea 51, columna 29
-Token: ASSIGN (=) en la línea 51, columna 34
-Token: ID (sum) en la línea 51, columna 40
-Token: PLUS (+) en la línea 51, columna 45
-Token: ID (i) en la línea 51, columna 49
-Token: SEMI (;) en la línea 51, columna 50
-Token: RBRACE (}) en la línea 53, columna 18
-Token: RETURN (return) en la línea 55, columna 18
-Token: ID (sum) en la línea 55, columna 29
-Token: SEMI (;) en la línea 55, columna 32
-Token: RBRACE (}) en la línea 57, columna 10
-Token: BOOLEAN (boolean) en la línea 59, columna 10
-Token: ID (isPrime) en la línea 59, columna 26
-Token: LPAREN (() en la línea 59, columna 33
-Token: INT (int) en la línea 59, columna 34
-Token: ID (number) en la línea 59, columna 45
-Token: RPAREN ()) en la línea 59, columna 51
-Token: LBRACE ({) en la línea 59, columna 54
-Token: IF (if) en la línea 61, columna 18
-Token: LPAREN (() en la línea 61, columna 22
-Token: ID (number) en la línea 61, columna 29
-Token: LE (<=) en la línea 61, columna 37
-Token: INT_LITERAL (1) en la línea 61, columna 42
-Token: RPAREN ()) en la línea 61, columna 43
-Token: LBRACE ({) en la línea 61, columna 46
-Token: RETURN (return) en la línea 63, columna 26
-Token: FALSE (false) en la línea 63, columna 34
-Token: SEMI (;) en la línea 63, columna 39
-Token: RBRACE (}) en la línea 65, columna 18
-Token: FOR (for) en la línea 67, columna 18
-Token: LPAREN (() en la línea 67, columna 23
-Token: INT (int) en la línea 67, columna 24
-Token: ID (i) en la línea 67, columna 30
-Token: ASSIGN (=) en la línea 67, columna 33
-Token: INT_LITERAL (2) en la línea 67, columna 37
-Token: SEMI (;) en la línea 67, columna 38
-Token: ID (i) en la línea 67, columna 42
-Token: LT (<) en la línea 67, columna 45
-Token: ID (number) en la línea 67, columna 54
-Token: SEMI (;) en la línea 67, columna 60
-Token: ID (i) en la línea 67, columna 64
-Token: ASSIGN (=) en la línea 67, columna 67
-Token: ID (i) en la línea 67, columna 71
-Token: PLUS (+) en la línea 67, columna 74
-Token: INT_LITERAL (1) en la línea 67, columna 78
-Token: RPAREN ()) en la línea 67, columna 79
-Token: LBRACE ({) en la línea 67, columna 82
-Token: IF (if) en la línea 69, columna 26
-Token: LPAREN (() en la línea 69, columna 30
-Token: ID (number) en la línea 69, columna 37
-Token: MOD (%) en la línea 69, columna 45
-Token: ID (i) en la línea 69, columna 49
-Token: EQ (==) en la línea 69, columna 52
-Token: INT_LITERAL (0) en la línea 69, columna 57
-Token: RPAREN ()) en la línea 69, columna 58
-Token: LBRACE ({) en la línea 69, columna 61
-Token: RETURN (return) en la línea 71, columna 34
-Token: FALSE (false) en la línea 71, columna 42
-Token: SEMI (;) en la línea 71, columna 47
-Token: RBRACE (}) en la línea 73, columna 26
-Token: RBRACE (}) en la línea 75, columna 18
-Token: RETURN (return) en la línea 77, columna 18
-Token: TRUE (true) en la línea 77, columna 26
-Token: SEMI (;) en la línea 77, columna 30
-Token: RBRACE (}) en la línea 79, columna 10
-Token: VOID (void) en la línea 81, columna 10
-Token: ID (displayNumbers) en la línea 81, columna 30
-Token: LPAREN (() en la línea 81, columna 44
-Token: RPAREN ()) en la línea 81, columna 45
-Token: LBRACE ({) en la línea 81, columna 48
-Token: FOR (for) en la línea 83, columna 18
-Token: LPAREN (() en la línea 83, columna 23
-Token: INT (int) en la línea 83, columna 24
-Token: ID (i) en la línea 83, columna 30
-Token: ASSIGN (=) en la línea 83, columna 33
-Token: INT_LITERAL (0) en la línea 83, columna 37
-Token: SEMI (;) en la línea 83, columna 38
-Token: ID (i) en la línea 83, columna 42
-Token: LT (<) en la línea 83, columna 45
-Token: ID (size) en la línea 83, columna 52
-Token: SEMI (;) en la línea 83, columna 56
-Token: ID (i) en la línea 83, columna 60
-Token: ASSIGN (=) en la línea 83, columna 63
-Token: ID (i) en la línea 83, columna 67
-Token: PLUS (+) en la línea 83, columna 70
-Token: INT_LITERAL (1) en la línea 83, columna 74
-Token: RPAREN ()) en la línea 83, columna 75
-Token: LBRACE ({) en la línea 83, columna 78
-Token: CALLOUT (callout) en la línea 85, columna 26
-Token: LPAREN (() en la línea 85, columna 33
-Token: STRING_LITERAL (print) en la línea 85, columna 41
-Token: COMMA (,) en la línea 85, columna 48
-Token: ID (numbers) en la línea 85, columna 58
-Token: LBRACKET ([) en la línea 85, columna 65
-Token: ID (i) en la línea 85, columna 67
-Token: RBRACKET (]) en la línea 85, columna 68
-Token: COMMA (,) en la línea 85, columna 69
-Token: STRING_LITERAL ( ) en la línea 85, columna 75
-Token: RPAREN ()) en la línea 85, columna 78
-Token: SEMI (;) en la línea 85, columna 79
-Token: RBRACE (}) en la línea 87, columna 18
-Token: CALLOUT (callout) en la línea 89, columna 18
-Token: LPAREN (() en la línea 89, columna 25
-Token: STRING_LITERAL (print) en la línea 89, columna 33
-Token: COMMA (,) en la línea 89, columna 40
-Token: STRING_LITERAL (\n) en la línea 89, columna 47
-Token: RPAREN ()) en la línea 89, columna 51
-Token: SEMI (;) en la línea 89, columna 52
-Token: RBRACE (}) en la línea 91, columna 10
-Token: INT (int) en la línea 93, columna 10
-Token: ID (factorial) en la línea 93, columna 24
-Token: LPAREN (() en la línea 93, columna 33
-Token: INT (int) en la línea 93, columna 34
-Token: ID (num) en la línea 93, columna 42
-Token: RPAREN ()) en la línea 93, columna 45
-Token: LBRACE ({) en la línea 93, columna 48
-Token: INT (int) en la línea 95, columna 18
-Token: ID (result) en la línea 95, columna 29
-Token: SEMI (;) en la línea 95, columna 35
-Token: ID (result) en la línea 97, columna 24
-Token: ASSIGN (=) en la línea 97, columna 32
-Token: INT_LITERAL (1) en la línea 97, columna 36
-Token: SEMI (;) en la línea 97, columna 37
-Token: FOR (for) en la línea 99, columna 18
-Token: LPAREN (() en la línea 99, columna 23
-Token: INT (int) en la línea 99, columna 24
-Token: ID (i) en la línea 99, columna 30
-Token: ASSIGN (=) en la línea 99, columna 33
-Token: INT_LITERAL (1) en la línea 99, columna 37
-Token: SEMI (;) en la línea 99, columna 38
-Token: ID (i) en la línea 99, columna 42
-Token: LE (<=) en la línea 99, columna 45
-Token: ID (num) en la línea 99, columna 52
-Token: SEMI (;) en la línea 99, columna 55
-Token: ID (i) en la línea 99, columna 59
-Token: ASSIGN (=) en la línea 99, columna 62
-Token: ID (i) en la línea 99, columna 66
-Token: PLUS (+) en la línea 99, columna 69
-Token: INT_LITERAL (1) en la línea 99, columna 73
-Token: RPAREN ()) en la línea 99, columna 74
-Token: LBRACE ({) en la línea 99, columna 77
-Token: ID (result) en la línea 101, columna 32
-Token: ASSIGN (=) en la línea 101, columna 40
-Token: ID (result) en la línea 101, columna 49
-Token: MULTIPLY (*) en la línea 101, columna 57
-Token: ID (i) en la línea 101, columna 61
-Token: SEMI (;) en la línea 101, columna 62
-Token: RBRACE (}) en la línea 103, columna 18
-Token: RETURN (return) en la línea 105, columna 18
-Token: ID (result) en la línea 105, columna 32
-Token: SEMI (;) en la línea 105, columna 38
-Token: RBRACE (}) en la línea 107, columna 10
-Token: VOID (void) en la línea 109, columna 10
-Token: ID (generateFibonacci) en la línea 109, columna 33
-Token: LPAREN (() en la línea 109, columna 50
-Token: INT (int) en la línea 109, columna 51
-Token: ID (limit) en la línea 109, columna 61
-Token: RPAREN ()) en la línea 109, columna 66
-Token: LBRACE ({) en la línea 109, columna 69
-Token: INT (int) en la línea 111, columna 18
-Token: ID (first) en la línea 111, columna 28
-Token: SEMI (;) en la línea 111, columna 33
-Token: INT (int) en la línea 113, columna 18
-Token: ID (second) en la línea 113, columna 29
-Token: SEMI (;) en la línea 113, columna 35
-Token: INT (int) en la línea 115, columna 18
-Token: ID (next) en la línea 115, columna 27
-Token: SEMI (;) en la línea 115, columna 31
-Token: ID (first) en la línea 117, columna 23
-Token: ASSIGN (=) en la línea 117, columna 30
-Token: INT_LITERAL (0) en la línea 117, columna 34
-Token: SEMI (;) en la línea 117, columna 35
-Token: ID (second) en la línea 119, columna 24
-Token: ASSIGN (=) en la línea 119, columna 32
-Token: INT_LITERAL (1) en la línea 119, columna 36
-Token: SEMI (;) en la línea 119, columna 37
-Token: FOR (for) en la línea 121, columna 18
-Token: LPAREN (() en la línea 121, columna 23
-Token: INT (int) en la línea 121, columna 24
-Token: ID (i) en la línea 121, columna 30
-Token: ASSIGN (=) en la línea 121, columna 33
-Token: INT_LITERAL (0) en la línea 121, columna 37
-Token: SEMI (;) en la línea 121, columna 38
-Token: ID (i) en la línea 121, columna 42
-Token: LT (<) en la línea 121, columna 45
-Token: ID (limit) en la línea 121, columna 53
-Token: SEMI (;) en la línea 121, columna 58
-Token: ID (i) en la línea 121, columna 62
-Token: ASSIGN (=) en la línea 121, columna 65
-Token: ID (i) en la línea 121, columna 69
-Token: PLUS (+) en la línea 121, columna 72
-Token: INT_LITERAL (1) en la línea 121, columna 76
-Token: RPAREN ()) en la línea 121, columna 77
-Token: LBRACE ({) en la línea 121, columna 80
-Token: CALLOUT (callout) en la línea 123, columna 26
-Token: LPAREN (() en la línea 123, columna 33
-Token: STRING_LITERAL (print) en la línea 123, columna 41
-Token: COMMA (,) en la línea 123, columna 48
-Token: ID (first) en la línea 123, columna 56
-Token: COMMA (,) en la línea 123, columna 61
-Token: STRING_LITERAL ( ) en la línea 123, columna 67
-Token: RPAREN ()) en la línea 123, columna 70
-Token: SEMI (;) en la línea 123, columna 71
-Token: ID (next) en la línea 125, columna 30
-Token: ASSIGN (=) en la línea 125, columna 36
-Token: ID (first) en la línea 125, columna 44
-Token: PLUS (+) en la línea 125, columna 51
-Token: ID (second) en la línea 125, columna 60
-Token: SEMI (;) en la línea 125, columna 66
-Token: ID (first) en la línea 127, columna 31
-Token: ASSIGN (=) en la línea 127, columna 38
-Token: ID (second) en la línea 127, columna 47
-Token: SEMI (;) en la línea 127, columna 53
-Token: ID (second) en la línea 129, columna 32
-Token: ASSIGN (=) en la línea 129, columna 40
-Token: ID (next) en la línea 129, columna 47
-Token: SEMI (;) en la línea 129, columna 51
-Token: RBRACE (}) en la línea 131, columna 18
-Token: CALLOUT (callout) en la línea 133, columna 18
-Token: LPAREN (() en la línea 133, columna 25
-Token: STRING_LITERAL (print) en la línea 133, columna 33
-Token: COMMA (,) en la línea 133, columna 40
-Token: STRING_LITERAL (\n) en la línea 133, columna 47
-Token: RPAREN ()) en la línea 133, columna 51
-Token: SEMI (;) en la línea 133, columna 52
-Token: RBRACE (}) en la línea 135, columna 10
-Token: BOOLEAN (boolean) en la línea 137, columna 10
-Token: ID (containsValue) en la línea 137, columna 32
-Token: LPAREN (() en la línea 137, columna 45
-Token: INT (int) en la línea 137, columna 46
-Token: ID (value) en la línea 137, columna 56
-Token: RPAREN ()) en la línea 137, columna 61
-Token: LBRACE ({) en la línea 137, columna 64
-Token: FOR (for) en la línea 139, columna 18
-Token: LPAREN (() en la línea 139, columna 23
-Token: INT (int) en la línea 139, columna 24
-Token: ID (i) en la línea 139, columna 30
-Token: ASSIGN (=) en la línea 139, columna 33
-Token: INT_LITERAL (0) en la línea 139, columna 37
-Token: SEMI (;) en la línea 139, columna 38
-Token: ID (i) en la línea 139, columna 42
-Token: LT (<) en la línea 139, columna 45
-Token: ID (size) en la línea 139, columna 52
-Token: SEMI (;) en la línea 139, columna 56
-Token: ID (i) en la línea 139, columna 60
-Token: ASSIGN (=) en la línea 139, columna 63
-Token: ID (i) en la línea 139, columna 67
-Token: PLUS (+) en la línea 139, columna 70
-Token: INT_LITERAL (1) en la línea 139, columna 74
-Token: RPAREN ()) en la línea 139, columna 75
-Token: LBRACE ({) en la línea 139, columna 78
-Token: IF (if) en la línea 141, columna 26
-Token: LPAREN (() en la línea 141, columna 30
-Token: ID (numbers) en la línea 141, columna 38
-Token: LBRACKET ([) en la línea 141, columna 45
-Token: ID (i) en la línea 141, columna 47
-Token: RBRACKET (]) en la línea 141, columna 48
-Token: EQ (==) en la línea 141, columna 51
-Token: ID (value) en la línea 141, columna 60
-Token: RPAREN ()) en la línea 141, columna 65
-Token: LBRACE ({) en la línea 141, columna 68
-Token: RETURN (return) en la línea 143, columna 34
-Token: TRUE (true) en la línea 143, columna 42
-Token: SEMI (;) en la línea 143, columna 46
-Token: RBRACE (}) en la línea 145, columna 26
-Token: RBRACE (}) en la línea 147, columna 18
-Token: RETURN (return) en la línea 149, columna 18
-Token: FALSE (false) en la línea 149, columna 26
-Token: SEMI (;) en la línea 149, columna 31
-Token: RBRACE (}) en la línea 151, columna 10
-Token: RBRACE (}) en la línea 153, columna 2
+Token: CLASS | Valor: class | Línea: 2 | Columna: 2 | Tipo: reservada
+Token: ID | Valor: EducationalProgram | Línea: 2 | Columna: 8 | Tipo: no reservada
+Token: LBRACE | Valor: { | Línea: 2 | Columna: 27 | Tipo: reservada
+Token: INT | Valor: int | Línea: 3 | Columna: 6 | Tipo: reservada
+Token: ID | Valor: numbers | Línea: 3 | Columna: 10 | Tipo: no reservada
+Token: LBRACKET | Valor: [ | Línea: 3 | Columna: 17 | Tipo: reservada
+Token: RBRACKET | Valor: ] | Línea: 3 | Columna: 18 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 3 | Columna: 19 | Tipo: reservada
+Token: BOOLEAN | Valor: boolean | Línea: 4 | Columna: 6 | Tipo: reservada
+Token: ID | Valor: flags | Línea: 4 | Columna: 14 | Tipo: no reservada
+Token: LBRACKET | Valor: [ | Línea: 4 | Columna: 19 | Tipo: reservada
+Token: RBRACKET | Valor: ] | Línea: 4 | Columna: 20 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 4 | Columna: 21 | Tipo: reservada
+Token: CHAR | Valor: char | Línea: 5 | Columna: 6 | Tipo: reservada
+Token: ID | Valor: letters | Línea: 5 | Columna: 11 | Tipo: no reservada
+Token: LBRACKET | Valor: [ | Línea: 5 | Columna: 18 | Tipo: reservada
+Token: RBRACKET | Valor: ] | Línea: 5 | Columna: 19 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 5 | Columna: 20 | Tipo: reservada
+Token: INT | Valor: int | Línea: 6 | Columna: 6 | Tipo: reservada
+Token: ID | Valor: size | Línea: 6 | Columna: 10 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 6 | Columna: 14 | Tipo: reservada
+Token: VOID | Valor: void | Línea: 8 | Columna: 6 | Tipo: reservada
+Token: ID | Valor: initialize | Línea: 8 | Columna: 11 | Tipo: no reservada
+Token: LPAREN | Valor: ( | Línea: 8 | Columna: 21 | Tipo: reservada
+Token: INT | Valor: int | Línea: 8 | Columna: 22 | Tipo: reservada
+Token: ID | Valor: arraySize | Línea: 8 | Columna: 26 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 8 | Columna: 35 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 8 | Columna: 37 | Tipo: reservada
+Token: ID | Valor: size | Línea: 9 | Columna: 10 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 9 | Columna: 15 | Tipo: reservada
+Token: ID | Valor: arraySize | Línea: 9 | Columna: 17 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 9 | Columna: 26 | Tipo: reservada
+Token: ID | Valor: numbers | Línea: 10 | Columna: 10 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 10 | Columna: 18 | Tipo: reservada
+Token: NEW | Valor: new | Línea: 10 | Columna: 20 | Tipo: reservada
+Token: INT | Valor: int | Línea: 10 | Columna: 24 | Tipo: reservada
+Token: LBRACKET | Valor: [ | Línea: 10 | Columna: 27 | Tipo: reservada
+Token: ID | Valor: size | Línea: 10 | Columna: 28 | Tipo: no reservada
+Token: RBRACKET | Valor: ] | Línea: 10 | Columna: 32 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 10 | Columna: 33 | Tipo: reservada
+Token: ID | Valor: flags | Línea: 11 | Columna: 10 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 11 | Columna: 16 | Tipo: reservada
+Token: NEW | Valor: new | Línea: 11 | Columna: 18 | Tipo: reservada
+Token: BOOLEAN | Valor: boolean | Línea: 11 | Columna: 22 | Tipo: reservada
+Token: LBRACKET | Valor: [ | Línea: 11 | Columna: 29 | Tipo: reservada
+Token: ID | Valor: size | Línea: 11 | Columna: 30 | Tipo: no reservada
+Token: RBRACKET | Valor: ] | Línea: 11 | Columna: 34 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 11 | Columna: 35 | Tipo: reservada
+Token: ID | Valor: letters | Línea: 12 | Columna: 10 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 12 | Columna: 18 | Tipo: reservada
+Token: NEW | Valor: new | Línea: 12 | Columna: 20 | Tipo: reservada
+Token: CHAR | Valor: char | Línea: 12 | Columna: 24 | Tipo: reservada
+Token: LBRACKET | Valor: [ | Línea: 12 | Columna: 28 | Tipo: reservada
+Token: ID | Valor: size | Línea: 12 | Columna: 29 | Tipo: no reservada
+Token: RBRACKET | Valor: ] | Línea: 12 | Columna: 33 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 12 | Columna: 34 | Tipo: reservada
+Token: FOR | Valor: for | Línea: 13 | Columna: 10 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 13 | Columna: 14 | Tipo: reservada
+Token: INT | Valor: int | Línea: 13 | Columna: 15 | Tipo: reservada
+Token: ID | Valor: i | Línea: 13 | Columna: 19 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 13 | Columna: 21 | Tipo: reservada
+Token: INT_LITERAL | Valor: 0 | Línea: 13 | Columna: 23 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 13 | Columna: 24 | Tipo: reservada
+Token: ID | Valor: i | Línea: 13 | Columna: 26 | Tipo: no reservada
+Token: LT | Valor: < | Línea: 13 | Columna: 28 | Tipo: reservada
+Token: ID | Valor: size | Línea: 13 | Columna: 30 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 13 | Columna: 34 | Tipo: reservada
+Token: ID | Valor: i | Línea: 13 | Columna: 36 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 13 | Columna: 38 | Tipo: reservada
+Token: ID | Valor: i | Línea: 13 | Columna: 40 | Tipo: no reservada
+Token: PLUS | Valor: + | Línea: 13 | Columna: 42 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 13 | Columna: 44 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 13 | Columna: 45 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 13 | Columna: 47 | Tipo: reservada
+Token: ID | Valor: numbers | Línea: 14 | Columna: 14 | Tipo: no reservada
+Token: LBRACKET | Valor: [ | Línea: 14 | Columna: 21 | Tipo: reservada
+Token: ID | Valor: i | Línea: 14 | Columna: 22 | Tipo: no reservada
+Token: RBRACKET | Valor: ] | Línea: 14 | Columna: 23 | Tipo: reservada
+Token: ASSIGN | Valor: = | Línea: 14 | Columna: 25 | Tipo: reservada
+Token: ID | Valor: i | Línea: 14 | Columna: 27 | Tipo: no reservada
+Token: TIMES | Valor: * | Línea: 14 | Columna: 29 | Tipo: reservada
+Token: INT_LITERAL | Valor: 2 | Línea: 14 | Columna: 31 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 14 | Columna: 32 | Tipo: reservada
+Token: ID | Valor: flags | Línea: 15 | Columna: 14 | Tipo: no reservada
+Token: LBRACKET | Valor: [ | Línea: 15 | Columna: 19 | Tipo: reservada
+Token: ID | Valor: i | Línea: 15 | Columna: 20 | Tipo: no reservada
+Token: RBRACKET | Valor: ] | Línea: 15 | Columna: 21 | Tipo: reservada
+Token: ASSIGN | Valor: = | Línea: 15 | Columna: 23 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 15 | Columna: 25 | Tipo: reservada
+Token: ID | Valor: i | Línea: 15 | Columna: 26 | Tipo: no reservada
+Token: MOD | Valor: % | Línea: 15 | Columna: 28 | Tipo: reservada
+Token: INT_LITERAL | Valor: 2 | Línea: 15 | Columna: 30 | Tipo: no reservada
+Token: EQ | Valor: == | Línea: 15 | Columna: 32 | Tipo: reservada
+Token: INT_LITERAL | Valor: 0 | Línea: 15 | Columna: 35 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 15 | Columna: 36 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 15 | Columna: 37 | Tipo: reservada
+Token: IF | Valor: if | Línea: 16 | Columna: 14 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 16 | Columna: 17 | Tipo: reservada
+Token: ID | Valor: i | Línea: 16 | Columna: 18 | Tipo: no reservada
+Token: MOD | Valor: % | Línea: 16 | Columna: 20 | Tipo: reservada
+Token: INT_LITERAL | Valor: 2 | Línea: 16 | Columna: 22 | Tipo: no reservada
+Token: EQ | Valor: == | Línea: 16 | Columna: 24 | Tipo: reservada
+Token: INT_LITERAL | Valor: 0 | Línea: 16 | Columna: 27 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 16 | Columna: 28 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 16 | Columna: 30 | Tipo: reservada
+Token: ID | Valor: letters | Línea: 17 | Columna: 18 | Tipo: no reservada
+Token: LBRACKET | Valor: [ | Línea: 17 | Columna: 25 | Tipo: reservada
+Token: ID | Valor: i | Línea: 17 | Columna: 26 | Tipo: no reservada
+Token: RBRACKET | Valor: ] | Línea: 17 | Columna: 27 | Tipo: reservada
+Token: ASSIGN | Valor: = | Línea: 17 | Columna: 29 | Tipo: reservada
+Token: CHAR_LITERAL | Valor: 'A' | Línea: 17 | Columna: 31 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 17 | Columna: 34 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 18 | Columna: 14 | Tipo: reservada
+Token: ELSE | Valor: else | Línea: 18 | Columna: 16 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 18 | Columna: 21 | Tipo: reservada
+Token: ID | Valor: letters | Línea: 19 | Columna: 18 | Tipo: no reservada
+Token: LBRACKET | Valor: [ | Línea: 19 | Columna: 25 | Tipo: reservada
+Token: ID | Valor: i | Línea: 19 | Columna: 26 | Tipo: no reservada
+Token: RBRACKET | Valor: ] | Línea: 19 | Columna: 27 | Tipo: reservada
+Token: ASSIGN | Valor: = | Línea: 19 | Columna: 29 | Tipo: reservada
+Token: CHAR_LITERAL | Valor: 'B' | Línea: 19 | Columna: 31 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 19 | Columna: 34 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 20 | Columna: 14 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 21 | Columna: 10 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 22 | Columna: 6 | Tipo: reservada
+Token: INT | Valor: int | Línea: 23 | Columna: 6 | Tipo: reservada
+Token: ID | Valor: calculateSum | Línea: 23 | Columna: 10 | Tipo: no reservada
+Token: LPAREN | Valor: ( | Línea: 23 | Columna: 22 | Tipo: reservada
+Token: INT | Valor: int | Línea: 23 | Columna: 23 | Tipo: reservada
+Token: ID | Valor: limit | Línea: 23 | Columna: 27 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 23 | Columna: 32 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 23 | Columna: 34 | Tipo: reservada
+Token: INT | Valor: int | Línea: 24 | Columna: 10 | Tipo: reservada
+Token: ID | Valor: sum | Línea: 24 | Columna: 14 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 24 | Columna: 17 | Tipo: reservada
+Token: ID | Valor: sum | Línea: 25 | Columna: 10 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 25 | Columna: 14 | Tipo: reservada
+Token: INT_LITERAL | Valor: 0 | Línea: 25 | Columna: 16 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 25 | Columna: 17 | Tipo: reservada
+Token: FOR | Valor: for | Línea: 26 | Columna: 10 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 26 | Columna: 14 | Tipo: reservada
+Token: INT | Valor: int | Línea: 26 | Columna: 15 | Tipo: reservada
+Token: ID | Valor: i | Línea: 26 | Columna: 19 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 26 | Columna: 21 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 26 | Columna: 23 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 26 | Columna: 24 | Tipo: reservada
+Token: ID | Valor: i | Línea: 26 | Columna: 26 | Tipo: no reservada
+Token: LE | Valor: <= | Línea: 26 | Columna: 28 | Tipo: reservada
+Token: ID | Valor: limit | Línea: 26 | Columna: 31 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 26 | Columna: 36 | Tipo: reservada
+Token: ID | Valor: i | Línea: 26 | Columna: 38 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 26 | Columna: 40 | Tipo: reservada
+Token: ID | Valor: i | Línea: 26 | Columna: 42 | Tipo: no reservada
+Token: PLUS | Valor: + | Línea: 26 | Columna: 44 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 26 | Columna: 46 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 26 | Columna: 47 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 26 | Columna: 49 | Tipo: reservada
+Token: ID | Valor: sum | Línea: 27 | Columna: 14 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 27 | Columna: 18 | Tipo: reservada
+Token: ID | Valor: sum | Línea: 27 | Columna: 20 | Tipo: no reservada
+Token: PLUS | Valor: + | Línea: 27 | Columna: 24 | Tipo: reservada
+Token: ID | Valor: i | Línea: 27 | Columna: 26 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 27 | Columna: 27 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 28 | Columna: 10 | Tipo: reservada
+Token: RETURN | Valor: return | Línea: 29 | Columna: 10 | Tipo: reservada
+Token: ID | Valor: sum | Línea: 29 | Columna: 17 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 29 | Columna: 20 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 30 | Columna: 6 | Tipo: reservada
+Token: BOOLEAN | Valor: boolean | Línea: 31 | Columna: 6 | Tipo: reservada
+Token: ID | Valor: isPrime | Línea: 31 | Columna: 14 | Tipo: no reservada
+Token: LPAREN | Valor: ( | Línea: 31 | Columna: 21 | Tipo: reservada
+Token: INT | Valor: int | Línea: 31 | Columna: 22 | Tipo: reservada
+Token: ID | Valor: number | Línea: 31 | Columna: 26 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 31 | Columna: 32 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 31 | Columna: 34 | Tipo: reservada
+Token: IF | Valor: if | Línea: 32 | Columna: 10 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 32 | Columna: 13 | Tipo: reservada
+Token: ID | Valor: number | Línea: 32 | Columna: 14 | Tipo: no reservada
+Token: LE | Valor: <= | Línea: 32 | Columna: 21 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 32 | Columna: 24 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 32 | Columna: 25 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 32 | Columna: 27 | Tipo: reservada
+Token: RETURN | Valor: return | Línea: 33 | Columna: 14 | Tipo: reservada
+Token: FALSE | Valor: false | Línea: 33 | Columna: 21 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 33 | Columna: 26 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 34 | Columna: 10 | Tipo: reservada
+Token: FOR | Valor: for | Línea: 35 | Columna: 10 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 35 | Columna: 14 | Tipo: reservada
+Token: INT | Valor: int | Línea: 35 | Columna: 15 | Tipo: reservada
+Token: ID | Valor: i | Línea: 35 | Columna: 19 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 35 | Columna: 21 | Tipo: reservada
+Token: INT_LITERAL | Valor: 2 | Línea: 35 | Columna: 23 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 35 | Columna: 24 | Tipo: reservada
+Token: ID | Valor: i | Línea: 35 | Columna: 26 | Tipo: no reservada
+Token: LT | Valor: < | Línea: 35 | Columna: 28 | Tipo: reservada
+Token: ID | Valor: number | Línea: 35 | Columna: 30 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 35 | Columna: 36 | Tipo: reservada
+Token: ID | Valor: i | Línea: 35 | Columna: 38 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 35 | Columna: 40 | Tipo: reservada
+Token: ID | Valor: i | Línea: 35 | Columna: 42 | Tipo: no reservada
+Token: PLUS | Valor: + | Línea: 35 | Columna: 44 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 35 | Columna: 46 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 35 | Columna: 47 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 35 | Columna: 49 | Tipo: reservada
+Token: IF | Valor: if | Línea: 36 | Columna: 14 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 36 | Columna: 17 | Tipo: reservada
+Token: ID | Valor: number | Línea: 36 | Columna: 18 | Tipo: no reservada
+Token: MOD | Valor: % | Línea: 36 | Columna: 25 | Tipo: reservada
+Token: ID | Valor: i | Línea: 36 | Columna: 27 | Tipo: no reservada
+Token: EQ | Valor: == | Línea: 36 | Columna: 29 | Tipo: reservada
+Token: INT_LITERAL | Valor: 0 | Línea: 36 | Columna: 32 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 36 | Columna: 33 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 36 | Columna: 35 | Tipo: reservada
+Token: RETURN | Valor: return | Línea: 37 | Columna: 18 | Tipo: reservada
+Token: FALSE | Valor: false | Línea: 37 | Columna: 25 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 37 | Columna: 30 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 38 | Columna: 14 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 39 | Columna: 10 | Tipo: reservada
+Token: RETURN | Valor: return | Línea: 40 | Columna: 10 | Tipo: reservada
+Token: TRUE | Valor: true | Línea: 40 | Columna: 17 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 40 | Columna: 21 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 41 | Columna: 6 | Tipo: reservada
+Token: VOID | Valor: void | Línea: 42 | Columna: 6 | Tipo: reservada
+Token: ID | Valor: displayNumbers | Línea: 42 | Columna: 11 | Tipo: no reservada
+Token: LPAREN | Valor: ( | Línea: 42 | Columna: 25 | Tipo: reservada
+Token: RPAREN | Valor: ) | Línea: 42 | Columna: 26 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 42 | Columna: 28 | Tipo: reservada
+Token: FOR | Valor: for | Línea: 43 | Columna: 10 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 43 | Columna: 14 | Tipo: reservada
+Token: INT | Valor: int | Línea: 43 | Columna: 15 | Tipo: reservada
+Token: ID | Valor: i | Línea: 43 | Columna: 19 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 43 | Columna: 21 | Tipo: reservada
+Token: INT_LITERAL | Valor: 0 | Línea: 43 | Columna: 23 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 43 | Columna: 24 | Tipo: reservada
+Token: ID | Valor: i | Línea: 43 | Columna: 26 | Tipo: no reservada
+Token: LT | Valor: < | Línea: 43 | Columna: 28 | Tipo: reservada
+Token: ID | Valor: size | Línea: 43 | Columna: 30 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 43 | Columna: 34 | Tipo: reservada
+Token: ID | Valor: i | Línea: 43 | Columna: 36 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 43 | Columna: 38 | Tipo: reservada
+Token: ID | Valor: i | Línea: 43 | Columna: 40 | Tipo: no reservada
+Token: PLUS | Valor: + | Línea: 43 | Columna: 42 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 43 | Columna: 44 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 43 | Columna: 45 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 43 | Columna: 47 | Tipo: reservada
+Token: CALLOUT | Valor: callout | Línea: 44 | Columna: 14 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 44 | Columna: 21 | Tipo: reservada
+Token: STRING_LITERAL | Valor: "print" | Línea: 44 | Columna: 22 | Tipo: no reservada
+Token: COMMA | Valor: , | Línea: 44 | Columna: 29 | Tipo: reservada
+Token: ID | Valor: numbers | Línea: 44 | Columna: 31 | Tipo: no reservada
+Token: LBRACKET | Valor: [ | Línea: 44 | Columna: 38 | Tipo: reservada
+Token: ID | Valor: i | Línea: 44 | Columna: 39 | Tipo: no reservada
+Token: RBRACKET | Valor: ] | Línea: 44 | Columna: 40 | Tipo: reservada
+Token: COMMA | Valor: , | Línea: 44 | Columna: 41 | Tipo: reservada
+Token: STRING_LITERAL | Valor: " " | Línea: 44 | Columna: 43 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 44 | Columna: 46 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 44 | Columna: 47 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 45 | Columna: 10 | Tipo: reservada
+Token: CALLOUT | Valor: callout | Línea: 46 | Columna: 10 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 46 | Columna: 17 | Tipo: reservada
+Token: STRING_LITERAL | Valor: "print" | Línea: 46 | Columna: 18 | Tipo: no reservada
+Token: COMMA | Valor: , | Línea: 46 | Columna: 25 | Tipo: reservada
+Token: STRING_LITERAL | Valor: "\n" | Línea: 46 | Columna: 27 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 46 | Columna: 31 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 46 | Columna: 32 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 47 | Columna: 6 | Tipo: reservada
+Token: INT | Valor: int | Línea: 48 | Columna: 6 | Tipo: reservada
+Token: ID | Valor: factorial | Línea: 48 | Columna: 10 | Tipo: no reservada
+Token: LPAREN | Valor: ( | Línea: 48 | Columna: 19 | Tipo: reservada
+Token: INT | Valor: int | Línea: 48 | Columna: 20 | Tipo: reservada
+Token: ID | Valor: num | Línea: 48 | Columna: 24 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 48 | Columna: 27 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 48 | Columna: 29 | Tipo: reservada
+Token: INT | Valor: int | Línea: 49 | Columna: 10 | Tipo: reservada
+Token: ID | Valor: result | Línea: 49 | Columna: 14 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 49 | Columna: 20 | Tipo: reservada
+Token: ID | Valor: result | Línea: 50 | Columna: 10 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 50 | Columna: 17 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 50 | Columna: 19 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 50 | Columna: 20 | Tipo: reservada
+Token: FOR | Valor: for | Línea: 51 | Columna: 10 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 51 | Columna: 14 | Tipo: reservada
+Token: INT | Valor: int | Línea: 51 | Columna: 15 | Tipo: reservada
+Token: ID | Valor: i | Línea: 51 | Columna: 19 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 51 | Columna: 21 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 51 | Columna: 23 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 51 | Columna: 24 | Tipo: reservada
+Token: ID | Valor: i | Línea: 51 | Columna: 26 | Tipo: no reservada
+Token: LE | Valor: <= | Línea: 51 | Columna: 28 | Tipo: reservada
+Token: ID | Valor: num | Línea: 51 | Columna: 31 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 51 | Columna: 34 | Tipo: reservada
+Token: ID | Valor: i | Línea: 51 | Columna: 36 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 51 | Columna: 38 | Tipo: reservada
+Token: ID | Valor: i | Línea: 51 | Columna: 40 | Tipo: no reservada
+Token: PLUS | Valor: + | Línea: 51 | Columna: 42 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 51 | Columna: 44 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 51 | Columna: 45 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 51 | Columna: 47 | Tipo: reservada
+Token: ID | Valor: result | Línea: 52 | Columna: 14 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 52 | Columna: 21 | Tipo: reservada
+Token: ID | Valor: result | Línea: 52 | Columna: 23 | Tipo: no reservada
+Token: TIMES | Valor: * | Línea: 52 | Columna: 30 | Tipo: reservada
+Token: ID | Valor: i | Línea: 52 | Columna: 32 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 52 | Columna: 33 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 53 | Columna: 10 | Tipo: reservada
+Token: RETURN | Valor: return | Línea: 54 | Columna: 10 | Tipo: reservada
+Token: ID | Valor: result | Línea: 54 | Columna: 17 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 54 | Columna: 23 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 55 | Columna: 6 | Tipo: reservada
+Token: VOID | Valor: void | Línea: 56 | Columna: 6 | Tipo: reservada
+Token: ID | Valor: generateFibonacci | Línea: 56 | Columna: 11 | Tipo: no reservada
+Token: LPAREN | Valor: ( | Línea: 56 | Columna: 28 | Tipo: reservada
+Token: INT | Valor: int | Línea: 56 | Columna: 29 | Tipo: reservada
+Token: ID | Valor: limit | Línea: 56 | Columna: 33 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 56 | Columna: 38 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 56 | Columna: 40 | Tipo: reservada
+Token: INT | Valor: int | Línea: 57 | Columna: 10 | Tipo: reservada
+Token: ID | Valor: first | Línea: 57 | Columna: 14 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 57 | Columna: 19 | Tipo: reservada
+Token: INT | Valor: int | Línea: 58 | Columna: 10 | Tipo: reservada
+Token: ID | Valor: second | Línea: 58 | Columna: 14 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 58 | Columna: 20 | Tipo: reservada
+Token: INT | Valor: int | Línea: 59 | Columna: 10 | Tipo: reservada
+Token: ID | Valor: next | Línea: 59 | Columna: 14 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 59 | Columna: 18 | Tipo: reservada
+Token: ID | Valor: first | Línea: 60 | Columna: 10 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 60 | Columna: 16 | Tipo: reservada
+Token: INT_LITERAL | Valor: 0 | Línea: 60 | Columna: 18 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 60 | Columna: 19 | Tipo: reservada
+Token: ID | Valor: second | Línea: 61 | Columna: 10 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 61 | Columna: 17 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 61 | Columna: 19 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 61 | Columna: 20 | Tipo: reservada
+Token: FOR | Valor: for | Línea: 62 | Columna: 10 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 62 | Columna: 14 | Tipo: reservada
+Token: INT | Valor: int | Línea: 62 | Columna: 15 | Tipo: reservada
+Token: ID | Valor: i | Línea: 62 | Columna: 19 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 62 | Columna: 21 | Tipo: reservada
+Token: INT_LITERAL | Valor: 0 | Línea: 62 | Columna: 23 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 62 | Columna: 24 | Tipo: reservada
+Token: ID | Valor: i | Línea: 62 | Columna: 26 | Tipo: no reservada
+Token: LT | Valor: < | Línea: 62 | Columna: 28 | Tipo: reservada
+Token: ID | Valor: limit | Línea: 62 | Columna: 30 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 62 | Columna: 35 | Tipo: reservada
+Token: ID | Valor: i | Línea: 62 | Columna: 37 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 62 | Columna: 39 | Tipo: reservada
+Token: ID | Valor: i | Línea: 62 | Columna: 41 | Tipo: no reservada
+Token: PLUS | Valor: + | Línea: 62 | Columna: 43 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 62 | Columna: 45 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 62 | Columna: 46 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 62 | Columna: 48 | Tipo: reservada
+Token: CALLOUT | Valor: callout | Línea: 63 | Columna: 14 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 63 | Columna: 21 | Tipo: reservada
+Token: STRING_LITERAL | Valor: "print" | Línea: 63 | Columna: 22 | Tipo: no reservada
+Token: COMMA | Valor: , | Línea: 63 | Columna: 29 | Tipo: reservada
+Token: ID | Valor: first | Línea: 63 | Columna: 31 | Tipo: no reservada
+Token: COMMA | Valor: , | Línea: 63 | Columna: 36 | Tipo: reservada
+Token: STRING_LITERAL | Valor: " " | Línea: 63 | Columna: 38 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 63 | Columna: 41 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 63 | Columna: 42 | Tipo: reservada
+Token: ID | Valor: next | Línea: 64 | Columna: 14 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 64 | Columna: 19 | Tipo: reservada
+Token: ID | Valor: first | Línea: 64 | Columna: 21 | Tipo: no reservada
+Token: PLUS | Valor: + | Línea: 64 | Columna: 27 | Tipo: reservada
+Token: ID | Valor: second | Línea: 64 | Columna: 29 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 64 | Columna: 35 | Tipo: reservada
+Token: ID | Valor: first | Línea: 65 | Columna: 14 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 65 | Columna: 20 | Tipo: reservada
+Token: ID | Valor: second | Línea: 65 | Columna: 22 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 65 | Columna: 28 | Tipo: reservada
+Token: ID | Valor: second | Línea: 66 | Columna: 14 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 66 | Columna: 21 | Tipo: reservada
+Token: ID | Valor: next | Línea: 66 | Columna: 23 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 66 | Columna: 27 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 67 | Columna: 10 | Tipo: reservada
+Token: CALLOUT | Valor: callout | Línea: 68 | Columna: 10 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 68 | Columna: 17 | Tipo: reservada
+Token: STRING_LITERAL | Valor: "print" | Línea: 68 | Columna: 18 | Tipo: no reservada
+Token: COMMA | Valor: , | Línea: 68 | Columna: 25 | Tipo: reservada
+Token: STRING_LITERAL | Valor: "\n" | Línea: 68 | Columna: 27 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 68 | Columna: 31 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 68 | Columna: 32 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 69 | Columna: 6 | Tipo: reservada
+Token: BOOLEAN | Valor: boolean | Línea: 70 | Columna: 6 | Tipo: reservada
+Token: ID | Valor: containsValue | Línea: 70 | Columna: 14 | Tipo: no reservada
+Token: LPAREN | Valor: ( | Línea: 70 | Columna: 27 | Tipo: reservada
+Token: INT | Valor: int | Línea: 70 | Columna: 28 | Tipo: reservada
+Token: ID | Valor: value | Línea: 70 | Columna: 32 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 70 | Columna: 37 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 70 | Columna: 39 | Tipo: reservada
+Token: FOR | Valor: for | Línea: 71 | Columna: 10 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 71 | Columna: 14 | Tipo: reservada
+Token: INT | Valor: int | Línea: 71 | Columna: 15 | Tipo: reservada
+Token: ID | Valor: i | Línea: 71 | Columna: 19 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 71 | Columna: 21 | Tipo: reservada
+Token: INT_LITERAL | Valor: 0 | Línea: 71 | Columna: 23 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 71 | Columna: 24 | Tipo: reservada
+Token: ID | Valor: i | Línea: 71 | Columna: 26 | Tipo: no reservada
+Token: LT | Valor: < | Línea: 71 | Columna: 28 | Tipo: reservada
+Token: ID | Valor: size | Línea: 71 | Columna: 30 | Tipo: no reservada
+Token: SEMI | Valor: ; | Línea: 71 | Columna: 34 | Tipo: reservada
+Token: ID | Valor: i | Línea: 71 | Columna: 36 | Tipo: no reservada
+Token: ASSIGN | Valor: = | Línea: 71 | Columna: 38 | Tipo: reservada
+Token: ID | Valor: i | Línea: 71 | Columna: 40 | Tipo: no reservada
+Token: PLUS | Valor: + | Línea: 71 | Columna: 42 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 71 | Columna: 44 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 71 | Columna: 45 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 71 | Columna: 47 | Tipo: reservada
+Token: IF | Valor: if | Línea: 72 | Columna: 14 | Tipo: reservada
+Token: LPAREN | Valor: ( | Línea: 72 | Columna: 17 | Tipo: reservada
+Token: ID | Valor: numbers | Línea: 72 | Columna: 18 | Tipo: no reservada
+Token: LBRACKET | Valor: [ | Línea: 72 | Columna: 25 | Tipo: reservada
+Token: ID | Valor: i | Línea: 72 | Columna: 26 | Tipo: no reservada
+Token: RBRACKET | Valor: ] | Línea: 72 | Columna: 27 | Tipo: reservada
+Token: EQ | Valor: == | Línea: 72 | Columna: 29 | Tipo: reservada
+Token: ID | Valor: value | Línea: 72 | Columna: 32 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 72 | Columna: 37 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 72 | Columna: 39 | Tipo: reservada
+Token: RETURN | Valor: return | Línea: 73 | Columna: 18 | Tipo: reservada
+Token: TRUE | Valor: true | Línea: 73 | Columna: 25 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 73 | Columna: 29 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 74 | Columna: 14 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 75 | Columna: 10 | Tipo: reservada
+Token: RETURN | Valor: return | Línea: 76 | Columna: 10 | Tipo: reservada
+Token: FALSE | Valor: false | Línea: 76 | Columna: 17 | Tipo: reservada
+Token: SEMI | Valor: ; | Línea: 76 | Columna: 22 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 77 | Columna: 6 | Tipo: reservada
+Token: RBRACE | Valor: } | Línea: 78 | Columna: 2 | Tipo: reservada

@@ -1,17 +1,18 @@
 package compiler.ast;
 
-public class Param extends ASTNode {
-    public String id;
-    public ASTType type;
+public class Param implements AST {
+    public Type type;
+    public String name;
+    public boolean isArray;
 
-    public Param(int line, int column, String id, ASTType type) {
-        super(line, column);
-        this.id = id;
+    public Param(Type type, String name, boolean isArray) {
         this.type = type;
+        this.name = name;
+        this.isArray = isArray;
     }
 
     @Override
-    public void accept(ASTVisitor visitor) {
-        visitor.visitParam(this);
+    public void accept(ASTVisitor v) {
+        v.visit(this);
     }
 }
