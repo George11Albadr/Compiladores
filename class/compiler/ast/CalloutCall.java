@@ -13,11 +13,22 @@ public class CalloutCall extends MethodCall {
         this.calloutArguments = calloutArguments;
     }
 
+    
+    public String getName() {
+        return functionName;
+    }
+
+    
     public String getFunctionName() {
         return functionName;
     }
 
-    // Nuevo método para obtener los argumentos como List<CalloutArg>
+    
+    public List<CalloutArg> getArgs() {
+        return calloutArguments;
+    }
+
+    
     public List<CalloutArg> getCalloutArguments() {
         return calloutArguments;
     }

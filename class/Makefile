@@ -1,131 +1,98 @@
-# Compila el archivo Parser y Scanner
-all: clean parser scanner compile
-	@echo "Regla 'all' completada."
+# Variables para simplificar rutas y opciones
+JC = javac
+JFLAGS = -cp compiler/lib/java-cup-11b.jar:.
+JAVA = java
+JAVACUP = java -jar compiler/lib/java-cup-11b.jar
+JFLEX = java -jar compiler/lib/jflex-full-1.9.1.jar
+INPUT = input.txt
 
-every: clean scanner parser compile-scan 
-	@echo "Regla 'every' completada."
+# Archivos generados
+SCANNER = compiler/scanner/Scanner.java
+PARSER = compiler/parser/Parser.java
+SYM = compiler/parser/sym.java
+AST_CLASSES = compiler/ast/*.java
+SEMANTIC_CLASSES = compiler/semantic/*.java
+COMPILER = compiler/Compiler.java
 
-every2: clean scanner parser compile-parse
-	@echo "Regla 'every2' completada."
+# Archivos de salida
+SCAN_OUTPUT = output_scan.txt
+PARSE_OUTPUT = output_parse.txt
+SEMANTIC_OUTPUT = output_semantic.txt
 
-allscan: clean scanner parser compile-scan compile-parse run-scan
-	@echo "Regla 'allscan' completada."
+# Regla por defecto
+all: clean scanner parser compile run-all
+	@echo "Compilación y ejecución completadas."
 
-allparse: clean scanner parser compile-scan compile-parse run-parse
-	@echo "Regla 'allparse' completada."
-
-# Limpia archivos generados previamente
+# Limpieza de archivos generados
 clean:
-	@echo "Ejecutando limpieza completa..."
-	rm -f compiler/parser/Parser.java compiler/parser/sym.java compiler/scanner/Scanner.java \
-	      compiler/parser/sym.class \
-	      compiler/parser/Parser\$$CUP\$$Parser\$$actions.class \
-	      compiler/parser/Parser.class compiler/scanner/Scanner.class \
-	      compiler/Compiler.class output_scan.txt output_parse.txt
+	@echo "Limpiando archivos generados..."
+	rm -f $(SCANNER) $(PARSER) $(SYM)
+	rm -f compiler/parser/*.class compiler/scanner/*.class compiler/semantic/*.class compiler/ast/*.class compiler/*.class
+	rm -f output*.txt output*.dot output*.pdf
 	@echo "Limpieza completada."
 
-clean-sus:
-	@echo "Ejecutando limpieza de archivos AST..."
-	rm compiler/ast/*.class
-	@echo "Limpieza de archivos AST completada."
-
-clean2:
-	@echo "Ejecutando limpieza completa con archivos DOT y PDF..."
-	rm -f compiler/parser/Parser.java compiler/parser/sym.java compiler/scanner/Scanner.java \
-	      compiler/parser/sym.class \
-	      compiler/parser/Parser\$$CUP\$$Parser\$$actions.class \
-	      compiler/parser/Parser.class compiler/scanner/Scanner.class \
-	      compiler/Compiler.class compiler/ast/*.class output_scan.txt output_parse.txt output_parse.pdf output_parse.dot 
-	@echo "Limpieza completa con archivos DOT y PDF."
-
-# Genera Parser.java y sym.java
-parser:
-	@echo "Generando Parser.java y sym.java..."
-	java -jar compiler/lib/java-cup-11b.jar -parser Parser -symbols sym -destdir compiler/parser compiler/parser/Parser.cup
-	@echo "Generación de Parser.java y sym.java completada."
-
-# Genera Scanner.java
+# Generación del scanner
 scanner:
 	@echo "Generando Scanner.java..."
-	java -jar compiler/lib/jflex-full-1.9.1.jar -d compiler/scanner/ compiler/scanner/Scanner.flex
+	$(JFLEX) -d compiler/scanner/ compiler/scanner/Scanner.flex
 	@echo "Generación de Scanner.java completada."
 
-# Compila los archivos del paquete ast
-compile-ast:
-	@echo "Compilando archivos AST..."
-	javac -cp compiler/lib/java-cup-11b.jar:. compiler/ast/*.java
-	@echo "Compilación de archivos AST completada."
+# Generación del parser y sym
+parser:
+	@echo "Generando Parser.java y sym.java..."
+	$(JAVACUP) -parser Parser -symbols sym -destdir compiler/parser compiler/parser/Parser.cup
+	@echo "Generación de Parser.java y sym.java completada."
 
-compile-scan:
-	@echo "Compilando Scanner.java y Compiler.java..."
-	javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/Compiler.java
-	@echo "Compilación de Scanner.java y Compiler.java completada."
-
-compile-parse:
-	@echo "Compilando Scanner.java, Parser.java, sym.java y Compiler.java..."
-	javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/parser/Parser.java compiler/parser/sym.java compiler/Compiler.java
-	@echo "Compilación completada."
-
-# Compila todos los archivos Java
+# Compilación de todos los archivos Java
 compile:
 	@echo "Compilando todos los archivos Java..."
-	javac -cp compiler/lib/java-cup-11b.jar:. compiler/scanner/Scanner.java compiler/ast/*.java compiler/parser/Parser.java compiler/parser/sym.java compiler/Compiler.java
-	@echo "Compilación de todos los archivos Java completada."
+	$(JC) $(JFLAGS) $(SCANNER) $(AST_CLASSES) $(PARSER) $(SYM) $(SEMANTIC_CLASSES) $(COMPILER)
+	@echo "Compilación completada."
 
-# Ejecuta el análisis de escaneo del archivo input.txt y guarda el resultado en output_scan.txt
+# Ejecución de todas las fases
+run-all: run-scan run-parse run-semantic
+
+# Ejecuta el análisis de escaneo
 run-scan:
 	@echo "Ejecutando análisis de escaneo..."
-	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target scan input.txt -o output_scan.txt
-	@echo "Análisis de escaneo completado. Resultado guardado en output_scan.txt."
+	$(JAVA) $(JFLAGS) compiler.Compiler -target scan $(INPUT) -o $(SCAN_OUTPUT)
+	@echo "Análisis de escaneo completado. Resultado guardado en $(SCAN_OUTPUT)."
 
-# Ejecuta el análisis de escaneo del archivo input.txt y guarda el resultado en output_scan.txt (con AST)
-run-scan-ast:
-	@echo "Ejecutando análisis de escaneo con AST..."
-	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target scan input.txt -o output_scan.txt
-	@echo "Análisis de escaneo con AST completado."
-
-run-scanb:
-	@echo "Ejecutando análisis de escaneo para input_copy.txt..."
-	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target scan input_copy.txt -o output_scan.txt
-	@echo "Análisis de escaneo para input_copy.txt completado."
-
-# Ejecuta el análisis de parsing del archivo input.txt y guarda el resultado en output_parse.txt
+# Ejecuta el análisis de parsing
 run-parse:
 	@echo "Ejecutando análisis de parsing..."
-	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target parse input.txt -o output_parse.txt
-	@echo "Análisis de parsing completado. Resultado guardado en output_parse.txt."
+	$(JAVA) $(JFLAGS) compiler.Compiler -target parse $(INPUT) -o $(PARSE_OUTPUT)
+	@echo "Análisis de parsing completado. Resultado guardado en $(PARSE_OUTPUT)."
 
-run-parseb:
-	@echo "Ejecutando análisis de parsing para input_copy.txt..."
-	java -cp compiler/lib/java-cup-11b.jar:. compiler.Compiler -target parse input_copy.txt -o output_parse.txt
-	@echo "Análisis de parsing para input_copy.txt completado."
+# Ejecuta el análisis semántico
+run-semantic:
+	@echo "Ejecutando análisis semántico..."
+	$(JAVA) $(JFLAGS) compiler.Compiler -target semantic $(INPUT) -o $(SEMANTIC_OUTPUT)
+	@echo "Análisis semántico completado. Resultado guardado en $(SEMANTIC_OUTPUT)."
 
-# Ejecuta todo el proceso (limpieza, generación y análisis)
-exe-scan: all run-scan
-	@echo "Ejecutando regla 'exe-scan' completada."
-
-exe-parse: all run-parse
-	@echo "Ejecutando regla 'exe-parse' completada."
-
-exe-M1: all run-scan run-parse
-	@echo "Ejecutando regla 'exe-M1' completada."
-
-exe-M2: all run-scanb run-parseb
-	@echo "Ejecutando regla 'exe-M2' completada."
-
-# Regla corregida para generar el PDF desde el archivo DOT
+# Genera el archivo DOT y PDF del AST
 generate-dot:
-	@echo "Generando PDF desde output_parse.dot..."
-	dot -Tpdf output_parse.dot -o output_parse.pdf
-	@echo "PDF generado exitosamente como output_parse.pdf"
+	@echo "Generando archivo DOT del AST..."
+	$(JAVA) $(JFLAGS) compiler.Compiler -target dot $(INPUT) -o output_ast.dot
+	@echo "Archivo DOT generado como output_ast.dot."
+	@echo "Generando PDF desde output_ast.dot..."
+	dot -Tpdf output_ast.dot -o output_ast.pdf
+	@echo "PDF generado exitosamente."
 
-# Ejecuta todo el proceso con AST, incluyendo la fase de escaneo y generación de PDF
-all-ast: clean2 scanner parser compile run-scan run-parse generate-dot
-	@echo "Ejecutando regla 'all-ast' completada."
+# Limpia y recompila todo
+rebuild: clean all
 
-# Agregar mensajes de depuración adicionales al final
-debug:
-	@echo "===== DEPURACIÓN ====="
-	@echo "Contenido de output_parse.dot:"
-	@cat output_parse.dot
-	@echo "===== FIN DE DEPURACIÓN ====="
+# Ayuda
+help:
+	@echo "Comandos disponibles:"
+	@echo "  make all          - Limpia, compila y ejecuta todas las fases."
+	@echo "  make clean        - Limpia archivos generados."
+	@echo "  make scanner      - Genera el scanner."
+	@echo "  make parser       - Genera el parser y sym."
+	@echo "  make compile      - Compila todos los archivos Java."
+	@echo "  make run-scan     - Ejecuta el análisis de escaneo."
+	@echo "  make run-parse    - Ejecuta el análisis de parsing."
+	@echo "  make run-semantic - Ejecuta el análisis semántico."
+	@echo "  make generate-dot - Genera el archivo DOT y PDF del AST."
+	@echo "  make rebuild      - Limpia y recompila todo."
+	@echo "  make help         - Muestra esta ayuda."

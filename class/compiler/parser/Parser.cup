@@ -82,7 +82,7 @@ precedence right UMINUS;
 /* Símbolo inicial */
 start with program;
 
-/* Reglas de la gramática */
+/* Producciones */
 program ::= CLASS ID:id LBRACE class_body_member_list:cbml RBRACE
           {: RESULT = new Program((String)id, cbml); :}
           ;

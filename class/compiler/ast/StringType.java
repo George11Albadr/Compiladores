@@ -1,14 +1,14 @@
 package compiler.ast;
 
-public class VoidType extends Type {
+public class StringType extends Type {
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof VoidType;
+        return obj instanceof StringType;
     }
 
     @Override
     public String toString() {
-        return "void";
+        return "String";
     }
 
     @Override

@@ -7,6 +7,7 @@ import compiler.ast.Program;
 import compiler.ast.ASTPrinter;
 import java_cup.runtime.Symbol;
 import compiler.ast.ASTDotGenerator;
+import compiler.semantic.SemanticAnalyzer;
 
 import java.io.File;
 import java.io.BufferedReader;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.FileReader;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class Compiler {
     public static void main(String[] args) {
@@ -23,11 +25,10 @@ public class Compiler {
             printHelp();
             System.exit(1);
         }
-    
 
         String filename = "";
         String output = "output.txt";
-        String target = "codegen"; // Por defecto
+        String target = "parse"; // Cambiado el valor por defecto a "parse"
         boolean debug = false;
 
         // Procesamiento de argumentos
@@ -77,6 +78,9 @@ public class Compiler {
                 case "parse":
                     runParse(filename, output, debug);
                     break;
+                case "semantic":
+                    runSemantic(filename, output, debug);
+                    break;
                 case "dot":
                     runDot(filename, output, debug);
                     break;
@@ -89,89 +93,8 @@ public class Compiler {
             if (debug) {
                 e.printStackTrace();
             }
-        }
-    }
-    
-
-    /**
-     * Método para ejecutar el análisis sintáctico y generar el AST.
-     *
-     * @param filename Archivo de entrada.
-     * @param output   Archivo de salida.
-     * @param debug    Bandera para activar el modo debug.
-     * @throws IOException Si ocurre un error de E/S.
-     */
-    private static void runParse(String filename, String output, boolean debug) throws IOException {
-        // Crear el archivo de salida para el parsing normal
-        try (PrintWriter writer = new PrintWriter(new FileWriter(output))) {
-            // Indicar el inicio de la etapa de parsing
-            writer.println("stage: parsing");
-            System.out.println("stage: parsing");
-
-            // Inicializar Scanner y Parser
-            Scanner scanner = new Scanner(new FileReader(filename));
-            Parser parser = new Parser(scanner);
-
-            // Realizar el parsing
-            Symbol result = parser.parse();
-
-            // Verificar si el parsing resultó en un AST válido
-            if (result == null || result.value == null) {
-                writer.println("Error: No se pudo generar el AST.");
-                if (debug) {
-                    System.err.println("Error: No se pudo generar el AST.");
-                }
-                return;
-            }
-
-            // Obtener el nodo raíz del AST
-            Program program = (Program) result.value;
-
-            // Confirmar que el parsing fue exitoso
-            writer.println("Parsing completed successfully.");
-            if (debug) {
-                System.out.println("Debug: Parsing completed successfully.");
-            }
-
-            // Indicar el inicio de la impresión del AST
-            writer.println("AST:");
-            ASTPrinter printer = new ASTPrinter(writer);
-
-            // Traversar el AST y generar la representación
-            program.accept(printer);
-            writer.println(); // Añadir una línea en blanco al final
-
-            // Generar el archivo DOT
-            String dotFile = output.substring(0, output.lastIndexOf('.')) + ".dot";
-            try (PrintWriter dotWriter = new PrintWriter(new FileWriter(dotFile))) {
-                ASTDotGenerator dotGenerator = new ASTDotGenerator(dotWriter);
-                dotGenerator.beginGraph();
-                program.accept(dotGenerator);
-                dotGenerator.endGraph();
-                System.out.println("Archivo DOT generado exitosamente en " + dotFile);
-
-                // Generar PDF automáticamente
-                String pdfFile = dotFile.replaceAll("\\.dot$", "") + ".pdf";
-                try {
-                    generatePDF(dotFile, pdfFile, debug);
-                    System.out.println("PDF generado exitosamente en " + pdfFile);
-                } catch (IOException e) {
-                    System.err.println("Error generando PDF: " + e.getMessage());
-                    // Puedes optar por imprimir la pila de excepciones solo si debug está activado
-                    if (debug) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            if (debug) {
-                System.out.println("Debug: AST generado correctamente en " + output);
-            }
-
-            // Mensaje de éxito
-            System.out.println("Parsing completado exitosamente. AST generado en " + output);
         } catch (Exception e) {
-            System.err.println("Error durante el parsing: " + e.getMessage());
+            System.err.println("Error durante la compilación: " + e.getMessage());
             if (debug) {
                 e.printStackTrace();
             }
@@ -217,6 +140,247 @@ public class Compiler {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    /**
+     * Método para ejecutar el análisis sintáctico y generar el AST.
+     *
+     * @param filename Archivo de entrada.
+     * @param output   Archivo de salida.
+     * @param debug    Bandera para activar el modo debug.
+     * @throws IOException Si ocurre un error de E/S.
+     */
+    private static void runParse(String filename, String output, boolean debug) throws IOException {
+        // Crear el archivo de salida para el parsing normal
+        try (PrintWriter writer = new PrintWriter(new FileWriter(output))) {
+            // Indicar el inicio de la etapa de parsing
+            writer.println("stage: parsing");
+            System.out.println("stage: parsing");
+
+            // Inicializar Scanner y Parser
+            Scanner scanner = new Scanner(new FileReader(filename));
+            Parser parser = new Parser(scanner);
+
+            // Realizar el parsing
+            Symbol result = parser.parse();
+
+            // Verificar si el parsing resultó en un AST válido
+            if (result == null || result.value == null) {
+                writer.println("Error: No se pudo generar el AST.");
+                if (debug) {
+                    System.err.println("Error: No se pudo generar el AST.");
+                }
+                return;
+            }
+
+            // Obtener el nodo raíz del AST
+            Program program = (Program) result.value;
+
+            // Confirmar que el parsing fue exitoso
+            writer.println("Parsing completed successfully.");
+            if (debug) {
+                System.out.println("Debug: Parsing completed successfully.");
+            }
+
+            // Indicar el inicio de la impresión del AST
+            writer.println("AST:");
+            ASTPrinter printer = new ASTPrinter(writer);
+
+            // Recorrer el AST y generar la representación
+            program.accept(printer);
+            writer.println(); // Añadir una línea en blanco al final
+
+            if (debug) {
+                System.out.println("Debug: AST generado correctamente en " + output);
+            }
+
+            // Mensaje de éxito
+            System.out.println("Parsing completado exitosamente. AST generado en " + output);
+        } catch (Exception e) {
+            System.err.println("Error durante el parsing: " + e.getMessage());
+            if (debug) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Método para ejecutar el análisis semántico.
+     *
+     * @param filename Archivo de entrada.
+     * @param output   Archivo de salida.
+     * @param debug    Bandera para activar el modo debug.
+     * @throws IOException Si ocurre un error de E/S.
+     */
+    private static void runSemantic(String filename, String output, boolean debug) throws IOException {
+        // Crear el archivo de salida para el análisis semántico
+        try (PrintWriter writer = new PrintWriter(new FileWriter(output))) {
+            // Indicar el inicio de la etapa de análisis semántico
+            writer.println("stage: semantic analysis");
+            System.out.println("stage: semantic analysis");
+
+            // Inicializar Scanner y Parser
+            Scanner scanner = new Scanner(new FileReader(filename));
+            Parser parser = new Parser(scanner);
+
+            // Realizar el parsing
+            Symbol result = parser.parse();
+
+            // Verificar si el parsing resultó en un AST válido
+            if (result == null || result.value == null) {
+                writer.println("Error: No se pudo generar el AST.");
+                if (debug) {
+                    System.err.println("Error: No se pudo generar el AST.");
+                }
+                return;
+            }
+
+            // Obtener el nodo raíz del AST
+            Program program = (Program) result.value;
+
+            // Confirmar que el parsing fue exitoso
+            writer.println("Parsing completed successfully.");
+            if (debug) {
+                System.out.println("Debug: Parsing completed successfully.");
+            }
+
+            // **Iniciar el Análisis Semántico**
+            SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
+            program.accept(semanticAnalyzer); // Recorrer el AST con el analizador semántico
+
+            // Obtener los errores semánticos
+            List<String> semanticErrors = semanticAnalyzer.getErrors();
+
+            // **Reportar errores semánticos**
+            if (!semanticErrors.isEmpty()) {
+                writer.println("Semantic Errors:");
+                System.out.println("Se encontraron errores semánticos:");
+                for (String error : semanticErrors) {
+                    writer.println(error);
+                    System.out.println(error);
+                }
+
+                // Opcional: Si deseas detener el proceso en caso de errores semánticos
+                // Puedes descomentar la siguiente línea si prefieres detener el proceso
+                // return;
+            } else {
+                writer.println("Semantic analysis completed successfully.");
+                if (debug) {
+                    System.out.println("Debug: Semantic analysis completed successfully.");
+                }
+            }
+            // Mensaje de éxito
+            System.out.println("Análisis semántico completado. Resultado guardado en " + output);
+        } catch (Exception e) {
+            System.err.println("Error durante el análisis semántico: " + e.getMessage());
+            if (debug) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Método para ejecutar la generación del archivo DOT y PDF.
+     *
+     * @param filename Archivo de entrada.
+     * @param output   Archivo de salida.
+     * @param debug    Bandera para activar el modo debug.
+     * @throws IOException Si ocurre un error de E/S.
+     */
+    private static void runDot(String filename, String output, boolean debug) throws IOException {
+        String dotFile = output;
+        String pdfFile = output.replaceAll("\\.dot$", "") + ".pdf";
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(dotFile))) {
+            // Inicializar Scanner y Parser
+            Scanner scanner = new Scanner(new FileReader(filename));
+            Parser parser = new Parser(scanner);
+
+            // Realizar el parsing
+            Symbol result = parser.parse();
+
+            if (result != null && result.value != null) {
+                Program program = (Program) result.value;
+
+                // Crear el generador DOT
+                ASTDotGenerator dotGenerator = new ASTDotGenerator(writer);
+
+                // Generar el archivo DOT
+                dotGenerator.beginGraph();
+                program.accept(dotGenerator);
+                dotGenerator.endGraph();
+
+                System.out.println("Archivo DOT generado exitosamente en " + dotFile);
+
+                // Generar el PDF automáticamente
+                try {
+                    generatePDF(dotFile, pdfFile, debug);
+                    System.out.println("PDF generado exitosamente en " + pdfFile);
+                } catch (IOException e) {
+                    System.err.println("Error generando PDF: " + e.getMessage());
+                    if (debug) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error generando el archivo DOT/PDF: " + e.getMessage());
+            if (debug) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Método para generar el PDF a partir del archivo DOT utilizando Graphviz.
+     *
+     * @param dotFile Ruta al archivo DOT.
+     * @param pdfFile Ruta al archivo PDF de salida.
+     * @param debug   Bandera para activar el modo debug.
+     * @throws IOException Si ocurre un error durante la ejecución de `dot`.
+     */
+    private static void generatePDF(String dotFile, String pdfFile, boolean debug) throws IOException {
+        if (debug) {
+            System.out.println("Contenido del archivo DOT antes de generar el PDF:");
+            try (BufferedReader br = new BufferedReader(new FileReader(dotFile))) {
+                String line;
+                int currentLine = 1;
+                while ((line = br.readLine()) != null) {
+                    System.out.printf("%d: %s%n", currentLine, line);
+                    currentLine++;
+                }
+            } catch (IOException e) {
+                System.err.println("Error leyendo el archivo DOT para depuración: " + e.getMessage());
+                if (debug) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        ProcessBuilder pb = new ProcessBuilder("dot", "-Tpdf", dotFile, "-o", pdfFile);
+        pb.redirectErrorStream(true); // Combina stdout y stderr
+
+        // Ejecutar el proceso
+        Process process = pb.start();
+
+        // Leer la salida del proceso para detectar errores
+        StringBuilder outputError = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                outputError.append(line).append("\n");
+            }
+        }
+
+        try {
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new IOException(outputError.toString().trim());
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Proceso de generación de PDF interrumpido", e);
         }
     }
 
@@ -301,102 +465,8 @@ public class Compiler {
     private static void printHelp() {
         System.out.println("Uso: java compiler.Compiler [option] <filename>");
         System.out.println("-o <outname>: Especifica el nombre del archivo de salida.");
-        System.out.println("-target <stage>: scan, parse, dot.");
+        System.out.println("-target <stage>: scan, parse, semantic, dot.");
         System.out.println("-debug: Activa el modo debug.");
         System.out.println("-h: Muestra esta ayuda.");
     }
-
-    /**
-     * Método para ejecutar la generación del archivo DOT y PDF.
-     *
-     * @param filename Archivo de entrada.
-     * @param output   Archivo de salida.
-     * @param debug    Bandera para activar el modo debug.
-     * @throws IOException Si ocurre un error de E/S.
-     */
-    private static void runDot(String filename, String output, boolean debug) throws IOException {
-        String dotFile = output;
-        String pdfFile = output.replaceAll("\\.dot$", "") + ".pdf";
-
-        try (PrintWriter writer = new PrintWriter(new FileWriter(dotFile))) {
-            // Inicializar Scanner y Parser
-            Scanner scanner = new Scanner(new FileReader(filename));
-            Parser parser = new Parser(scanner);
-
-            // Realizar el parsing
-            Symbol result = parser.parse();
-
-            if (result != null && result.value != null) {
-                Program program = (Program) result.value;
-
-                // Crear el generador DOT
-                ASTDotGenerator dotGenerator = new ASTDotGenerator(writer);
-
-                // Generar el archivo DOT
-                dotGenerator.beginGraph();
-                program.accept(dotGenerator);
-                dotGenerator.endGraph();
-
-                System.out.println("Archivo DOT generado exitosamente en " + dotFile);
-
-            }
-        } catch (Exception e) {
-            System.err.println("Error generando el archivo DOT/PDF: " + e.getMessage());
-            if (debug) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Método para generar el PDF a partir del archivo DOT utilizando Graphviz.
-     *
-     * @param dotFile Ruta al archivo DOT.
-     * @param pdfFile Ruta al archivo PDF de salida.
-     * @param debug    Bandera para activar el modo debug.
-     * @throws IOException Si ocurre un error durante la ejecución de `dot`.
-     */
-    private static void generatePDF(String dotFile, String pdfFile, boolean debug) throws IOException {
-        if (debug) {
-            System.out.println("Contenido del archivo DOT antes de generar el PDF:");
-            try (BufferedReader br = new BufferedReader(new FileReader(dotFile))) {
-                String line;
-                int currentLine = 1;
-                while ((line = br.readLine()) != null) {
-                    System.out.printf("%d: %s%n", currentLine, line);
-                    currentLine++;
-                }
-            } catch (IOException e) {
-                System.err.println("Error leyendo el archivo DOT para depuración: " + e.getMessage());
-                if (debug) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    
-        ProcessBuilder pb = new ProcessBuilder("dot", "-Tpdf", dotFile, "-o", pdfFile);
-        pb.redirectErrorStream(true); // Combina stdout y stderr
-    
-        // Ejecutar el proceso
-        Process process = pb.start();
-    
-        // Leer la salida del proceso para detectar errores
-        StringBuilder outputError = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                outputError.append(line).append("\n");
-            }
-        }
-    
-        try {
-            int exitCode = process.waitFor();
-            if (exitCode != 0) {
-                throw new IOException(outputError.toString().trim());
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new IOException("Proceso de generación de PDF interrumpido", e);
-        }
-    }
-}    
+}

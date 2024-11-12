@@ -1,7 +1,6 @@
 package compiler.ast;
 
 import java.io.PrintWriter;
-import java.util.List;
 
 public class ASTPrinter implements ASTVisitor {
     private PrintWriter writer;
@@ -29,7 +28,6 @@ public class ASTPrinter implements ASTVisitor {
     @Override
     public void visit(Program program) {
         println("Program: " + program.className);
-        System.out.println("Visiting Program");
         indent();
         for (ClassBodyMember member : program.classBody) {
             member.accept(this);
@@ -39,7 +37,7 @@ public class ASTPrinter implements ASTVisitor {
 
     @Override
     public void visit(VarDecl varDecl) {
-        println("VarDecl: " + varDecl.name + " Type: " + varDecl.type.getClass().getSimpleName() + (varDecl.isArray ? "[]" : ""));
+        println("VarDecl: " + varDecl.name + " Type: " + varDecl.type.toString() + (varDecl.isArray ? "[]" : ""));
         if (varDecl.initExpr != null) {
             indent();
             println("InitExpr:");
@@ -51,13 +49,22 @@ public class ASTPrinter implements ASTVisitor {
     }
 
     @Override
+    public void visit(MultiVarDecl multiVarDecl) {
+        for (ClassBodyMember member : multiVarDecl.getDeclarations()) {
+            if (member instanceof VarDecl) {
+                member.accept(this);
+            }
+        }
+    }
+
+    @Override
     public void visit(MethodDecl methodDecl) {
-        println("MethodDecl: " + methodDecl.name + " ReturnType: " + methodDecl.returnType.getClass().getSimpleName());
+        println("MethodDecl: " + methodDecl.name + " ReturnType: " + methodDecl.returnType.toString());
         indent();
         println("Parameters:");
         indent();
         for (Param param : methodDecl.params) {
-            println("Param: " + param.name + " Type: " + param.type.getClass().getSimpleName() + (param.isArray ? "[]" : ""));
+            param.accept(this);
         }
         unindent();
         println("Body:");
@@ -69,18 +76,22 @@ public class ASTPrinter implements ASTVisitor {
     public void visit(Block block) {
         println("Block:");
         indent();
-        println("VarDecls:");
-        indent();
-        for (VarDecl varDecl : block.varDecls) {
-            varDecl.accept(this);
+        if (!block.varDecls.isEmpty()) {
+            println("VarDecls:");
+            indent();
+            for (VarDecl varDecl : block.varDecls) {
+                varDecl.accept(this);
+            }
+            unindent();
         }
-        unindent();
-        println("Statements:");
-        indent();
-        for (Statement stmt : block.statements) {
-            stmt.accept(this);
+        if (!block.statements.isEmpty()) {
+            println("Statements:");
+            indent();
+            for (Statement stmt : block.statements) {
+                stmt.accept(this);
+            }
+            unindent();
         }
-        unindent();
         unindent();
     }
 
@@ -118,13 +129,13 @@ public class ASTPrinter implements ASTVisitor {
         unindent();
         println("Then Block:");
         indent();
-        if (ifStmt.getThenBlock() != null) { // Corrección aquí: Añadido 'if ('
+        if (ifStmt.getThenBlock() != null) {
             ifStmt.getThenBlock().accept(this);
         } else {
             println("None");
         }
         unindent();
-        if (ifStmt.getElseBlock() != null) { // Añadido 'if' para el else
+        if (ifStmt.getElseBlock() != null) {
             println("Else Block:");
             indent();
             ifStmt.getElseBlock().accept(this);
@@ -222,6 +233,14 @@ public class ASTPrinter implements ASTVisitor {
     }
 
     @Override
+    public void visit(CalloutStmt calloutStmt) {
+        println("CalloutStmt:");
+        indent();
+        calloutStmt.getCalloutCall().accept(this);
+        unindent();
+    }
+
+    @Override
     public void visit(AssignExpr assignExpr) {
         println("AssignExpr:");
         indent();
@@ -251,14 +270,6 @@ public class ASTPrinter implements ASTVisitor {
     }
 
     @Override
-    public void visit(CalloutStmt calloutStmt) {
-        println("CalloutStmt:");
-        indent();
-        calloutStmt.getCalloutCall().accept(this);
-        unindent();
-    }
-
-    @Override
     public void visit(CalloutCall calloutCall) {
         println("CalloutCall: " + calloutCall.getFunctionName());
         indent();
@@ -275,9 +286,9 @@ public class ASTPrinter implements ASTVisitor {
     public void visit(NewArrayExpr newArrayExpr) {
         println("NewArrayExpr:");
         indent();
-        println("Type:");
+        println("ElementType:");
         indent();
-        newArrayExpr.getType().accept(this);
+        newArrayExpr.getElementType().accept(this);
         unindent();
         println("Size:");
         indent();
@@ -311,17 +322,17 @@ public class ASTPrinter implements ASTVisitor {
 
     @Override
     public void visit(IntLiteral intLiteral) {
-        println("IntLiteral: " + intLiteral.value);
+        println("IntLiteral: " + intLiteral.getValue());
     }
 
     @Override
     public void visit(BoolLiteral boolLiteral) {
-        println("BoolLiteral: " + boolLiteral.value);
+        println("BoolLiteral: " + boolLiteral.getValue());
     }
 
     @Override
     public void visit(CharLiteral charLiteral) {
-        println("CharLiteral: '" + charLiteral.value + "'");
+        println("CharLiteral: '" + charLiteral.getValue() + "'");
     }
 
     @Override
@@ -366,8 +377,29 @@ public class ASTPrinter implements ASTVisitor {
     }
 
     @Override
+    public void visit(StringType stringType) {
+        println("Type: String");
+    }
+
+    @Override
+    public void visit(NullType nullType) {
+        println("Type: null");
+    }
+
+    @Override
+    public void visit(ArrayType arrayType) {
+        println("ArrayType:");
+        indent();
+        println("ElementType:");
+        indent();
+        arrayType.getElementType().accept(this);
+        unindent();
+        unindent();
+    }
+
+    @Override
     public void visit(Param param) {
-        println("Param: " + param.name + " Type: " + param.type.getClass().getSimpleName() + (param.isArray ? "[]" : ""));
+        println("Param: " + param.name + " Type: " + param.type.toString() + (param.isArray ? "[]" : ""));
     }
 
     @Override
@@ -381,12 +413,5 @@ public class ASTPrinter implements ASTVisitor {
     @Override
     public void visit(StringArg stringArg) {
         println("StringArg: \"" + stringArg.getValue() + "\"");
-    }
-
-    @Override
-    public void visit(MultiVarDecl multiVarDecl) {
-        for (ClassBodyMember decl : multiVarDecl.getDeclarations()) {
-            decl.accept(this);
-        }
     }
 }

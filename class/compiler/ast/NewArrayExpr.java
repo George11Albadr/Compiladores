@@ -2,15 +2,20 @@
 package compiler.ast;
 
 public class NewArrayExpr extends Expression {
-    private Type type;
+    private Type elementType;
     private Expression size;
+    private Type type;
 
     public NewArrayExpr(Type type, Expression size) {
-        this.type = type;
+        this.type = elementType;
         this.size = size;
+        this.type = new ArrayType(elementType);
     }
 
-    // Métodos getter
+    public Type getElementType() {
+        return elementType;
+    }
+
     public Type getType() {
         return type;
     }

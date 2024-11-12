@@ -1,7 +1,5 @@
 class ComplexProgram {
-    int counter;
-    boolean isComplete = TRUE;
-    int[5] values;
+    int array[]; 
     char letter;
 
     void initialize() {
@@ -12,38 +10,5 @@ class ComplexProgram {
         for (int i = 0; i < 5; i += 1) {
             values[i] = i * 2;
         }
-    }
-
-    int calculateSum() {
-        int sum = 0;
-        for (int i = 0; i < 5; i += 1) {
-            sum += values[i];
-        }
-        return sum;
-    }
-
-    void checkCompletion() {
-        if (calculateSum() > 10) {
-            isComplete = true;
-        } else {
-            callout("print", "Sum is 10 or less.");
-        }
-    }
-
-    void nestedLoop() {
-        for (int i = 0; i < 3; i += 1) {
-            for (int j = 0; j < 3; j += 1) {
-                values[i] = i + j;
-                if (values[i] % 2 == 0) {
-                    callout("print", "Even number detected.");
-                } else {
-                    callout("print", "Odd number detected.");
-                }
-            }
-        }
-    }
-
-    boolean isEven(int number) {
-        return number % 2 == 0;
     }
 }

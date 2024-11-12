@@ -7,6 +7,10 @@ public class CharLiteral extends Literal {
         this.value = value;
     }
 
+    public char getValue() {
+        return value;
+    }
+
     @Override
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);

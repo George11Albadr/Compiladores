@@ -50,4 +50,7 @@ public interface ASTVisitor {
     void visit(BooleanType booleanType);
     void visit(CharType charType);
     void visit(VoidType voidType);
+    void visit(ArrayType arrayType);
+    void visit(StringType stringType);
+    void visit(NullType nullType);
 }

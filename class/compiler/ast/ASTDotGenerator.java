@@ -251,12 +251,12 @@ public class ASTDotGenerator implements ASTVisitor {
 
     @Override
     public void visit(IntLiteral intLiteral) {
-        createNode(intLiteral, "IntLiteral\n" + intLiteral.value);
+        createNode(intLiteral, "IntLiteral\n" + intLiteral.getValue());
     }
 
     @Override
     public void visit(BoolLiteral boolLiteral) {
-        createNode(boolLiteral, "BoolLiteral\n" + boolLiteral.value);
+        createNode(boolLiteral, "BoolLiteral\n" + boolLiteral.getValue());
     }
 
     @Override
@@ -302,6 +302,12 @@ public class ASTDotGenerator implements ASTVisitor {
     }
 
     @Override
+    public void visit(ArrayType arrayType) {
+    createNode(arrayType, "ArrayType");
+    // Si arrayType tiene campos adicionales, puedes agregarlos aquí
+    }
+    
+    @Override
     public void visit(Param param) {
         String arrayStr = param.isArray ? "[]" : "";
         createNode(param, "Param\n" + param.name + ": " + param.type.getClass().getSimpleName() + arrayStr);
@@ -326,5 +332,15 @@ public class ASTDotGenerator implements ASTVisitor {
             createEdge(multiVarDecl, decl);
             decl.accept(this);
         }
+    }
+
+    @Override
+    public void visit(StringType stringType) {
+        System.out.println("\"StringType\" [label=\"String\"];");
+    }
+
+    @Override
+    public void visit(NullType nullType) {
+        System.out.println("\"NullType\" [label=\"null\"];");
     }
 }
