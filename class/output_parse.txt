@@ -1,4 +1,12 @@
 stage: parsing
+RESULT: Creando y devolviendo MethodCall con nombre: initialize y argumentos: []
+RESULT: Creando y devolviendo MethodCallStmt
+RESULT: Creando y devolviendo AssignStmt con operador: =
+RESULT: Creando y devolviendo AssignStmt con operador: =
+RESULT: Creando y devolviendo AssignStmt con operador: =
+RESULT: Creando y devolviendo ExprStmt con AssignExpr en for_update_stmt
+RESULT: Creando y devolviendo AssignStmt con operador: =
+RESULT: Creando y devolviendo ForStmt
 Parsing completed successfully.
 AST:
 Program: ComplexProgram
@@ -55,9 +63,13 @@ Program: ComplexProgram
               AssignExpr:
                 Location:
                   VarLocation: i
-                Operator: +=
+                Operator: =
                 Expression:
-                  IntLiteral: 1
+                  BinaryExpr: +
+                    Left:
+                      VarLocation: i
+                    Right:
+                      IntLiteral: 1
           Body:
             Block:
               Statements:

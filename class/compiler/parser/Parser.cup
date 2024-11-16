@@ -11,20 +11,50 @@ import java.util.*;
 
 parser code {:
     private Scanner scanner;
+    private PrintWriter outputWriter;
 
-    public Parser(Scanner scanner) {
+    // Constructor del parser
+    public Parser(Scanner scanner) throws IOException {
         this.scanner = scanner;
+        // Abrimos el archivo de salida para escribir el análisis semántico por defecto
+        try {
+            this.outputWriter = new PrintWriter(new FileWriter("output_semantic.txt"));
+        } catch (IOException e) {
+            System.err.println("Error al abrir el archivo de salida: " + e.getMessage());
+        }
     }
 
+    // Método para configurar el PrintWriter desde el exterior
+    public void setOutputWriter(PrintWriter writer) {
+        this.outputWriter = writer;
+    }
+
+    // Método para cerrar el archivo de salida
+    public void close() {
+        if (outputWriter != null) {
+            outputWriter.close();
+            System.out.println("Archivo output_semantic.txt cerrado correctamente.");
+        }
+    }
+
+    // Método para obtener el siguiente token del scanner
     public Symbol scan() throws Exception {
         return scanner.next_token();
     }
 
+    // Manejo de errores sintácticos
     public void syntax_error(Symbol s) {
-        report_error(
-            "Error de sintaxis en línea " + (s.left) + ", columna " + (s.right)
-            + ". Token inesperado: " + s.value, null
-        );
+        if (outputWriter != null) {
+            outputWriter.println(
+                "Error de sintaxis en línea " + s.left + ", columna " + s.right +
+                ". Token inesperado: " + s.value
+            );
+        } else {
+            System.err.println(
+                "Error de sintaxis en línea " + s.left + ", columna " + s.right +
+                ". Token inesperado: " + s.value
+            );
+        }
     }
 :}
 
@@ -173,55 +203,56 @@ statement_list ::= statement_list:sl statement:s
 
 statement ::= location:l assign_op:op expr:e SEMI
            {: 
-               System.out.println("Debug: Creando AssignStmt");
+               outputWriter.println("RESULT: Creando y devolviendo AssignStmt con operador: " + op);
                RESULT = new AssignStmt(l, op, e); 
            :}
          | method_call:mcall SEMI
            {: 
-               System.out.println("Debug: Creando MethodCallStmt");
+               outputWriter.println("RESULT: Creando y devolviendo MethodCallStmt");
                RESULT = new MethodCallStmt(mcall); 
            :}
          | IF LPAREN expr:cond RPAREN block:then_block ELSE block:else_block
            {: 
-               System.out.println("Debug: Creando IfStmt con else");
+               outputWriter.println("RESULT: Creando y devolviendo IfStmt con bloque ELSE");
                RESULT = new IfStmt(cond, then_block, else_block); 
            :}
          | IF LPAREN expr:cond RPAREN block:then_block
            {: 
-               System.out.println("Debug: Creando IfStmt sin else");
+               outputWriter.println("RESULT: Creando y devolviendo IfStmt sin bloque ELSE");
                RESULT = new IfStmt(cond, then_block, null); 
            :}
          | WHILE LPAREN expr:cond RPAREN block:body
            {: 
-               System.out.println("Debug: Creando WhileStmt");
+               outputWriter.println("RESULT: Creando y devolviendo WhileStmt");
                RESULT = new WhileStmt(cond, body); 
            :}
          | FOR LPAREN for_init_expr:init SEMI expr_opt:cond SEMI for_update_stmt:update RPAREN block:body
            {: 
-               System.out.println("Debug: Creando ForStmt");
+               outputWriter.println("RESULT: Creando y devolviendo ForStmt");
                RESULT = new ForStmt(init, cond, update, body); 
            :}
          | RETURN expr_opt:eopt SEMI
            {: 
-               System.out.println("Debug: Creando ReturnStmt");
+               outputWriter.println("RESULT: Creando y devolviendo ReturnStmt");
                RESULT = new ReturnStmt(eopt); 
            :}
          | BREAK SEMI
            {: 
-               System.out.println("Debug: Creando BreakStmt");
+               outputWriter.println("RESULT: Creando y devolviendo BreakStmt");
                RESULT = new BreakStmt(); 
            :}
          | CONTINUE SEMI
            {: 
-               System.out.println("Debug: Creando ContinueStmt");
+               outputWriter.println("RESULT: Creando y devolviendo ContinueStmt");
                RESULT = new ContinueStmt(); 
            :}
          | block:b
            {: 
-               System.out.println("Debug: Creando Block");
+               outputWriter.println("RESULT: Creando y devolviendo Block");
                RESULT = b; 
            :}
          ;
+
 
 for_init_expr ::= type:t id_with_optional_array:var assign_op:op expr:e
                    {:
@@ -242,17 +273,17 @@ expr_opt ::= expr:e
 
 for_update_stmt ::= assign_expr:aexpr
                    {: 
-                       System.out.println("Debug: Creando ExprStmt para for_update_stmt");
+                       outputWriter.println("RESULT: Creando y devolviendo ExprStmt con AssignExpr en for_update_stmt");
                        RESULT = new ExprStmt(aexpr); 
                    :}
                  | expr:e
                    {: 
-                       System.out.println("Debug: Creando ExprStmt para for_update_stmt con expr:e");
+                       outputWriter.println("RESULT: Creando y devolviendo ExprStmt con Expression en for_update_stmt");
                        RESULT = new ExprStmt(e); 
                    :}
                  | /* vacío */
                    {: 
-                       System.out.println("Debug: Creando for_update_stmt como null");
+                       outputWriter.println("RESULT: No se encontró for_update_stmt, devolviendo null");
                        RESULT = null; 
                    :}
                  ;
@@ -277,12 +308,14 @@ location ::= ID:id
 
 method_call ::= method_name:name LPAREN expr_plus_list_opt:args RPAREN
              {: 
-                 System.out.println("Debug: Creando MethodCall");
+                 outputWriter.println("RESULT: Creando y devolviendo MethodCall con nombre: " + name 
+                                      + " y argumentos: " + args);
                  RESULT = new MethodCall(name, args); 
              :}
            | CALLOUT LPAREN STRING_LITERAL:str opt_comma_callout_arg_list:args RPAREN
              {: 
-                 System.out.println("Debug: Creando CalloutCall");
+                 outputWriter.println("RESULT: Creando y devolviendo CalloutCall con cadena: \"" + str 
+                                      + "\" y argumentos: " + args);
                  RESULT = new CalloutCall((String) str, args); 
              :}
            ;

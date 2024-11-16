@@ -10,8 +10,11 @@ import compiler.ast.ASTDotGenerator;
 import compiler.semantic.SemanticAnalyzer;
 
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -152,19 +155,21 @@ public class Compiler {
      * @throws IOException Si ocurre un error de E/S.
      */
     private static void runParse(String filename, String output, boolean debug) throws IOException {
-        // Crear el archivo de salida para el parsing normal
         try (PrintWriter writer = new PrintWriter(new FileWriter(output))) {
             // Indicar el inicio de la etapa de parsing
             writer.println("stage: parsing");
             System.out.println("stage: parsing");
-
+    
             // Inicializar Scanner y Parser
             Scanner scanner = new Scanner(new FileReader(filename));
             Parser parser = new Parser(scanner);
-
+    
+            // Pasar el PrintWriter al parser
+            parser.setOutputWriter(writer);
+    
             // Realizar el parsing
             Symbol result = parser.parse();
-
+    
             // Verificar si el parsing resultó en un AST válido
             if (result == null || result.value == null) {
                 writer.println("Error: No se pudo generar el AST.");
@@ -173,28 +178,28 @@ public class Compiler {
                 }
                 return;
             }
-
+    
             // Obtener el nodo raíz del AST
             Program program = (Program) result.value;
-
+    
             // Confirmar que el parsing fue exitoso
             writer.println("Parsing completed successfully.");
             if (debug) {
                 System.out.println("Debug: Parsing completed successfully.");
             }
-
+    
             // Indicar el inicio de la impresión del AST
             writer.println("AST:");
             ASTPrinter printer = new ASTPrinter(writer);
-
+    
             // Recorrer el AST y generar la representación
             program.accept(printer);
             writer.println(); // Añadir una línea en blanco al final
-
+    
             if (debug) {
                 System.out.println("Debug: AST generado correctamente en " + output);
             }
-
+    
             // Mensaje de éxito
             System.out.println("Parsing completado exitosamente. AST generado en " + output);
         } catch (Exception e) {
@@ -214,71 +219,69 @@ public class Compiler {
      * @throws IOException Si ocurre un error de E/S.
      */
     private static void runSemantic(String filename, String output, boolean debug) throws IOException {
-        // Crear el archivo de salida para el análisis semántico
-        try (PrintWriter writer = new PrintWriter(new FileWriter(output))) {
-            // Indicar el inicio de la etapa de análisis semántico
-            writer.println("stage: semantic analysis");
-            System.out.println("stage: semantic analysis");
+    try (PrintWriter writer = new PrintWriter(new FileWriter(output))) {
+        // Indicar el inicio de la etapa de análisis semántico
+        writer.println("stage: semantic analysis");
+        System.out.println("stage: semantic analysis");
 
-            // Inicializar Scanner y Parser
-            Scanner scanner = new Scanner(new FileReader(filename));
-            Parser parser = new Parser(scanner);
+        // Inicializar Scanner y Parser
+        Scanner scanner = new Scanner(new FileReader(filename));
+        Parser parser = new Parser(scanner);
 
-            // Realizar el parsing
-            Symbol result = parser.parse();
+        // Pasar el PrintWriter al parser
+        parser.setOutputWriter(writer);
 
-            // Verificar si el parsing resultó en un AST válido
-            if (result == null || result.value == null) {
-                writer.println("Error: No se pudo generar el AST.");
-                if (debug) {
-                    System.err.println("Error: No se pudo generar el AST.");
-                }
-                return;
-            }
+        // Realizar el parsing
+        Symbol result = parser.parse();
 
-            // Obtener el nodo raíz del AST
-            Program program = (Program) result.value;
-
-            // Confirmar que el parsing fue exitoso
-            writer.println("Parsing completed successfully.");
+        // Verificar si el parsing resultó en un AST válido
+        if (result == null || result.value == null) {
+            writer.println("Error: No se pudo generar el AST.");
             if (debug) {
-                System.out.println("Debug: Parsing completed successfully.");
+                System.err.println("Error: No se pudo generar el AST.");
             }
+            return;
+        }
 
-            // **Iniciar el Análisis Semántico**
-            SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
-            program.accept(semanticAnalyzer); // Recorrer el AST con el analizador semántico
+        // Obtener el nodo raíz del AST
+        Program program = (Program) result.value;
 
-            // Obtener los errores semánticos
-            List<String> semanticErrors = semanticAnalyzer.getErrors();
+        // **Iniciar el Análisis Semántico**
+        SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
 
-            // **Reportar errores semánticos**
-            if (!semanticErrors.isEmpty()) {
-                writer.println("Semantic Errors:");
-                System.out.println("Se encontraron errores semánticos:");
-                for (String error : semanticErrors) {
-                    writer.println(error);
-                    System.out.println(error);
-                }
+        // Pasar el PrintWriter al analizador semántico
+        semanticAnalyzer.setOutputWriter(writer);
 
-                // Opcional: Si deseas detener el proceso en caso de errores semánticos
-                // Puedes descomentar la siguiente línea si prefieres detener el proceso
-                // return;
-            } else {
-                writer.println("Semantic analysis completed successfully.");
-                if (debug) {
-                    System.out.println("Debug: Semantic analysis completed successfully.");
-                }
+        // Recorrer el AST con el analizador semántico
+        program.accept(semanticAnalyzer);
+
+        // Obtener los errores semánticos
+        List<String> semanticErrors = semanticAnalyzer.getErrors();
+
+        // **Reportar errores semánticos**
+        if (!semanticErrors.isEmpty()) {
+            writer.println("Semantic Errors:");
+            System.out.println("Se encontraron errores semánticos:");
+            for (String error : semanticErrors) {
+                writer.println(error);
+                System.out.println(error);
             }
-            // Mensaje de éxito
-            System.out.println("Análisis semántico completado. Resultado guardado en " + output);
-        } catch (Exception e) {
-            System.err.println("Error durante el análisis semántico: " + e.getMessage());
+        } else {
+            writer.println("Semantic analysis completed successfully.");
             if (debug) {
-                e.printStackTrace();
+                System.out.println("Debug: Semantic analysis completed successfully.");
             }
         }
+
+        // Mensaje de éxito
+        System.out.println("Análisis semántico completado. Resultado guardado en " + output);
+    } catch (Exception e) {
+        System.err.println("Error durante el análisis semántico: " + e.getMessage());
+        if (debug) {
+            e.printStackTrace();
+        }
     }
+}
 
     /**
      * Método para ejecutar la generación del archivo DOT y PDF.
@@ -331,6 +334,22 @@ public class Compiler {
             }
         }
     }
+
+    /*Vamos a redirigir los mensajes de semantica a un archivo de texto*/
+private static void redirectOutputToFile(String output) {
+    try {
+        // Crear un PrintStream que apunte al archivo
+        PrintStream fileOut = new PrintStream(new FileOutputStream(output));
+        
+        // Redirigir System.out y System.err al archivo
+        System.setOut(fileOut);
+        System.setErr(fileOut);
+
+        System.out.println("stage: semantic analysis");
+    } catch (IOException e) {
+        System.err.println("No se pudo redirigir la salida: " + e.getMessage());
+    }
+}
 
     /**
      * Método para generar el PDF a partir del archivo DOT utilizando Graphviz.

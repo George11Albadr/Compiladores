@@ -2,6 +2,7 @@ package compiler.semantic;
 
 import compiler.ast.*;
 import java.util.*;
+import java.io.PrintWriter;
 
 public class SemanticAnalyzer implements ASTVisitor {
     private SymbolTable symbolTable;
@@ -13,6 +14,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     private boolean hasReturnStatement;
     private String currentMethodName;
     private int loopDepth;
+    private PrintWriter outputWriter;
 
     public SemanticAnalyzer() {
         symbolTable = new SymbolTable();
@@ -24,6 +26,20 @@ public class SemanticAnalyzer implements ASTVisitor {
         hasReturnStatement = false;
         currentMethodName = "";
         loopDepth = 0;
+    }
+
+    // Método para configurar el PrintWriter
+    public void setOutputWriter(PrintWriter writer) {
+        this.outputWriter = writer;
+    }
+
+    // Método centralizado para registrar mensajes
+    private void log(String message) {
+        if (outputWriter != null) {
+            outputWriter.println(message);
+        } else {
+            System.out.println(message);
+        }
     }
 
     public List<String> getErrors() {
@@ -41,7 +57,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     private void checkMainMethodExists(Program program) {
         boolean hasMainMethod = false;
         boolean hasValidMainMethod = false;
-        
+
         for (ClassBodyMember member : program.classBody) {
             if (member instanceof MethodDecl) {
                 MethodDecl methodDecl = (MethodDecl) member;
@@ -54,7 +70,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                 }
             }
         }
-        
+
         if (!hasMainMethod) {
             reportError("El programa debe contener un método 'main'.");
         } else if (!hasValidMainMethod) {
@@ -64,7 +80,7 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(Program program) {
-        System.out.println("Declarando variables globales...");
+        log("Declarando variables globales...");
         
         
         for (ClassBodyMember member : program.classBody) {
@@ -73,11 +89,11 @@ public class SemanticAnalyzer implements ASTVisitor {
             }
         }
 
-        System.out.println("Contenido de la tabla de símbolos después de declarar variables globales:");
-        symbolTable.printAllScopes();
+        log("Contenido de la tabla de símbolos después de declarar variables globales:");
+        symbolTable.printAllScopes(outputWriter);
 
         // Segunda pasada: declarar métodos
-        System.out.println("Declarando métodos...");
+        log("Declarando métodos...");
         for (ClassBodyMember member : program.classBody) {
             if (member instanceof MethodDecl) {
                 MethodDecl methodDecl = (MethodDecl) member;
@@ -89,7 +105,7 @@ public class SemanticAnalyzer implements ASTVisitor {
         checkMainMethodExists(program);
 
         // Tercera pasada: analizar cuerpos de métodos
-        System.out.println("Analizando métodos...");
+        log("Analizando métodos...");
         for (ClassBodyMember member : program.classBody) {
             if (member instanceof MethodDecl) {
                 member.accept(this);
@@ -116,14 +132,14 @@ public class SemanticAnalyzer implements ASTVisitor {
         Type type = varDecl.type;
         String name = varDecl.name;
 
-        System.out.println("visit(VarDecl): Declarando variable '" + name + "' de tipo '" + type + "'.");
+        log("visit(VarDecl): Declarando variable '" + name + "' de tipo '" + type + "'.");
 
         Symbol symbol = new Symbol(name, type, Symbol.SymbolType.VARIABLE);
 
         if (!symbolTable.declare(symbol)) {
             reportError("Identificador '" + name + "' ya está declarado en este scope.");
         } else {
-            System.out.println("Variable '" + name + "' declarada en el scope actual.");
+            log("Variable '" + name + "' declarada en el scope actual.");
         }
 
         if (varDecl.initExpr != null) {
@@ -156,7 +172,7 @@ public class SemanticAnalyzer implements ASTVisitor {
         hasReturnStatement = false;
 
         symbolTable.enterScope();
-        System.out.println("Entrando al scope del método '" + methodName + "'.");
+        log("Entrando al scope del método '" + methodName + "'.");
 
         // Insertar parámetros
         for (Param param : methodDecl.params) {
@@ -187,13 +203,13 @@ public class SemanticAnalyzer implements ASTVisitor {
         currentMethodName = "";
 
         symbolTable.exitScope();
-        System.out.println("Saliendo del scope del método '" + methodName + "'.");
+        log("Saliendo del scope del método '" + methodName + "'.");
     }
 
     @Override
     public void visit(Block block) {
         symbolTable.enterScope();
-        System.out.println("Entrando a un nuevo scope de bloque.");
+        log("Entrando a un nuevo scope de bloque.");
 
         for (VarDecl varDecl : block.varDecls) {
             varDecl.accept(this);
@@ -204,7 +220,7 @@ public class SemanticAnalyzer implements ASTVisitor {
         }
 
         symbolTable.exitScope();
-        System.out.println("Saliendo del scope de bloque.");
+        log("Saliendo del scope de bloque.");
     }
 
     @Override
@@ -534,7 +550,7 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (symbol == null || symbol.getSymbolType() != Symbol.SymbolType.VARIABLE) {
             reportError("La variable '" + varLocation.name + "' no está declarada.");
         } else {
-            System.out.println("Variable '" + varLocation.name + "' encontrada con tipo '" + 
+            log("Variable '" + varLocation.name + "' encontrada con tipo '" + 
                              symbol.getType() + "'.");
         }
     }
@@ -726,7 +742,7 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(MultiVarDecl multiVarDecl) {
-        System.out.println("visit(MultiVarDecl): Procesando declaraciones múltiples de variables.");
+        log("visit(MultiVarDecl): Procesando declaraciones múltiples de variables.");
         for (ClassBodyMember decl : multiVarDecl.getDeclarations()) {
             if (decl instanceof VarDecl) {
                 decl.accept(this);

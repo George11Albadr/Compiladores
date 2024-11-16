@@ -467,20 +467,50 @@ public class Parser extends java_cup.runtime.lr_parser {
 
 
     private Scanner scanner;
+    private PrintWriter outputWriter;
 
-    public Parser(Scanner scanner) {
+    // Constructor del parser
+    public Parser(Scanner scanner) throws IOException {
         this.scanner = scanner;
+        // Abrimos el archivo de salida para escribir el análisis semántico por defecto
+        try {
+            this.outputWriter = new PrintWriter(new FileWriter("output_semantic.txt"));
+        } catch (IOException e) {
+            System.err.println("Error al abrir el archivo de salida: " + e.getMessage());
+        }
     }
 
+    // Método para configurar el PrintWriter desde el exterior
+    public void setOutputWriter(PrintWriter writer) {
+        this.outputWriter = writer;
+    }
+
+    // Método para cerrar el archivo de salida
+    public void close() {
+        if (outputWriter != null) {
+            outputWriter.close();
+            System.out.println("Archivo output_semantic.txt cerrado correctamente.");
+        }
+    }
+
+    // Método para obtener el siguiente token del scanner
     public Symbol scan() throws Exception {
         return scanner.next_token();
     }
 
+    // Manejo de errores sintácticos
     public void syntax_error(Symbol s) {
-        report_error(
-            "Error de sintaxis en línea " + (s.left) + ", columna " + (s.right)
-            + ". Token inesperado: " + s.value, null
-        );
+        if (outputWriter != null) {
+            outputWriter.println(
+                "Error de sintaxis en línea " + s.left + ", columna " + s.right +
+                ". Token inesperado: " + s.value
+            );
+        } else {
+            System.err.println(
+                "Error de sintaxis en línea " + s.left + ", columna " + s.right +
+                ". Token inesperado: " + s.value
+            );
+        }
     }
 
 
@@ -853,7 +883,7 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		Expression e = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		 
-               System.out.println("Debug: Creando AssignStmt");
+               outputWriter.println("RESULT: Creando y devolviendo AssignStmt con operador: " + op);
                RESULT = new AssignStmt(l, op, e); 
            
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -868,7 +898,7 @@ class CUP$Parser$actions {
 		int mcallright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		MethodCall mcall = (MethodCall)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		 
-               System.out.println("Debug: Creando MethodCallStmt");
+               outputWriter.println("RESULT: Creando y devolviendo MethodCallStmt");
                RESULT = new MethodCallStmt(mcall); 
            
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -889,7 +919,7 @@ class CUP$Parser$actions {
 		int else_blockright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Block else_block = (Block)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-               System.out.println("Debug: Creando IfStmt con else");
+               outputWriter.println("RESULT: Creando y devolviendo IfStmt con bloque ELSE");
                RESULT = new IfStmt(cond, then_block, else_block); 
            
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-6)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -907,7 +937,7 @@ class CUP$Parser$actions {
 		int then_blockright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Block then_block = (Block)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-               System.out.println("Debug: Creando IfStmt sin else");
+               outputWriter.println("RESULT: Creando y devolviendo IfStmt sin bloque ELSE");
                RESULT = new IfStmt(cond, then_block, null); 
            
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -925,7 +955,7 @@ class CUP$Parser$actions {
 		int bodyright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Block body = (Block)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-               System.out.println("Debug: Creando WhileStmt");
+               outputWriter.println("RESULT: Creando y devolviendo WhileStmt");
                RESULT = new WhileStmt(cond, body); 
            
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -949,7 +979,7 @@ class CUP$Parser$actions {
 		int bodyright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Block body = (Block)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-               System.out.println("Debug: Creando ForStmt");
+               outputWriter.println("RESULT: Creando y devolviendo ForStmt");
                RESULT = new ForStmt(init, cond, update, body); 
            
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-8)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -964,7 +994,7 @@ class CUP$Parser$actions {
 		int eoptright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		Expression eopt = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		 
-               System.out.println("Debug: Creando ReturnStmt");
+               outputWriter.println("RESULT: Creando y devolviendo ReturnStmt");
                RESULT = new ReturnStmt(eopt); 
            
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -976,7 +1006,7 @@ class CUP$Parser$actions {
             {
               Statement RESULT =null;
 		 
-               System.out.println("Debug: Creando BreakStmt");
+               outputWriter.println("RESULT: Creando y devolviendo BreakStmt");
                RESULT = new BreakStmt(); 
            
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -988,7 +1018,7 @@ class CUP$Parser$actions {
             {
               Statement RESULT =null;
 		 
-               System.out.println("Debug: Creando ContinueStmt");
+               outputWriter.println("RESULT: Creando y devolviendo ContinueStmt");
                RESULT = new ContinueStmt(); 
            
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1003,7 +1033,7 @@ class CUP$Parser$actions {
 		int bright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Block b = (Block)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-               System.out.println("Debug: Creando Block");
+               outputWriter.println("RESULT: Creando y devolviendo Block");
                RESULT = b; 
            
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1084,7 +1114,7 @@ class CUP$Parser$actions {
 		int aexprright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		AssignExpr aexpr = (AssignExpr)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-                       System.out.println("Debug: Creando ExprStmt para for_update_stmt");
+                       outputWriter.println("RESULT: Creando y devolviendo ExprStmt con AssignExpr en for_update_stmt");
                        RESULT = new ExprStmt(aexpr); 
                    
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("for_update_stmt",26, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1099,7 +1129,7 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Expression e = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 
-                       System.out.println("Debug: Creando ExprStmt para for_update_stmt con expr:e");
+                       outputWriter.println("RESULT: Creando y devolviendo ExprStmt con Expression en for_update_stmt");
                        RESULT = new ExprStmt(e); 
                    
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("for_update_stmt",26, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1111,7 +1141,7 @@ class CUP$Parser$actions {
             {
               Statement RESULT =null;
 		 
-                       System.out.println("Debug: Creando for_update_stmt como null");
+                       outputWriter.println("RESULT: No se encontró for_update_stmt, devolviendo null");
                        RESULT = null; 
                    
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("for_update_stmt",26, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1201,7 +1231,8 @@ class CUP$Parser$actions {
 		int argsright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		List<Expression> args = (List<Expression>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		 
-                 System.out.println("Debug: Creando MethodCall");
+                 outputWriter.println("RESULT: Creando y devolviendo MethodCall con nombre: " + name 
+                                      + " y argumentos: " + args);
                  RESULT = new MethodCall(name, args); 
              
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("method_call",18, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1219,7 +1250,8 @@ class CUP$Parser$actions {
 		int argsright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		List<CalloutArg> args = (List<CalloutArg>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		 
-                 System.out.println("Debug: Creando CalloutCall");
+                 outputWriter.println("RESULT: Creando y devolviendo CalloutCall con cadena: \"" + str 
+                                      + "\" y argumentos: " + args);
                  RESULT = new CalloutCall((String) str, args); 
              
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("method_call",18, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);

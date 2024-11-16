@@ -60,10 +60,12 @@ Token: LT | Valor: < | Línea: 18 | Columna: 28 | Tipo: reservada
 Token: INT_LITERAL | Valor: 5 | Línea: 18 | Columna: 30 | Tipo: no reservada
 Token: SEMI | Valor: ; | Línea: 18 | Columna: 31 | Tipo: reservada
 Token: ID | Valor: i | Línea: 18 | Columna: 33 | Tipo: no reservada
-Token: PLUS_ASSIGN | Valor: += | Línea: 18 | Columna: 35 | Tipo: reservada
-Token: INT_LITERAL | Valor: 1 | Línea: 18 | Columna: 38 | Tipo: no reservada
-Token: RPAREN | Valor: ) | Línea: 18 | Columna: 39 | Tipo: reservada
-Token: LBRACE | Valor: { | Línea: 18 | Columna: 41 | Tipo: reservada
+Token: ASSIGN | Valor: = | Línea: 18 | Columna: 35 | Tipo: reservada
+Token: ID | Valor: i | Línea: 18 | Columna: 37 | Tipo: no reservada
+Token: PLUS | Valor: + | Línea: 18 | Columna: 39 | Tipo: reservada
+Token: INT_LITERAL | Valor: 1 | Línea: 18 | Columna: 41 | Tipo: no reservada
+Token: RPAREN | Valor: ) | Línea: 18 | Columna: 42 | Tipo: reservada
+Token: LBRACE | Valor: { | Línea: 18 | Columna: 44 | Tipo: reservada
 Token: ID | Valor: values | Línea: 19 | Columna: 14 | Tipo: no reservada
 Token: LBRACKET | Valor: [ | Línea: 19 | Columna: 20 | Tipo: reservada
 Token: ID | Valor: i | Línea: 19 | Columna: 21 | Tipo: no reservada

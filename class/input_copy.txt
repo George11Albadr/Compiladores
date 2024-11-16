@@ -1,14 +1,17 @@
-class ComplexProgram {
-    int array[]; 
-    char letter;
-
-    void initialize() {
-        counter = 0;
-        isComplete = false;
-        letter = 'A';
-
-        for (int i = 0; i < 5; i += 1) {
-            values[i] = i * 2;
-        }
+class Test {
+    void main() {
+        int x;
+        int y;
+        
+        x = 5;
+        y = 10;
+        
+        // Prueba de impresión
+        print(x, y);          // Imprime los valores de x y y
+        print(x + y);         // Imprime la suma de x y y
+        print(3 * (x + y));   // Imprime el resultado de 3 * (x + y)
+        //print("Hello, World!");  Imprime un string
+        //print true;           Imprime un valor booleano
+        //print false;          Imprime un valor booleano
     }
 }

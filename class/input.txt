@@ -1,5 +1,5 @@
 class ComplexProgram {
-    int array[]; 
+    int array[];
     char letter;
     int counter;
     boolean isComplete;
@@ -14,7 +14,7 @@ class ComplexProgram {
         isComplete = false;
         letter = 'A';
 
-        for (int i = 0; i < 5; i += 1) {
+        for (int i = 0; i < 5; i = i + 1) {
             values[i] = i * 2;
         }
     }

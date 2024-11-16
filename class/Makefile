@@ -71,7 +71,7 @@ run-semantic:
 	@echo "Análisis semántico completado. Resultado guardado en $(SEMANTIC_OUTPUT)."
 
 # Genera el archivo DOT y PDF del AST
-generate-dot:
+dot:
 	@echo "Generando archivo DOT del AST..."
 	$(JAVA) $(JFLAGS) compiler.Compiler -target dot $(INPUT) -o output_ast.dot
 	@echo "Archivo DOT generado como output_ast.dot."

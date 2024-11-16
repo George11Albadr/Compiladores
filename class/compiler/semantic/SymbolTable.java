@@ -2,6 +2,7 @@ package compiler.semantic;
 
 import compiler.ast.*;
 import java.util.*;
+import java.io.PrintWriter;
 
 /**
  * Maneja múltiples scopes y permite declarar y buscar símbolos.
@@ -93,18 +94,28 @@ public class SymbolTable {
         declare(printChar);
     }
 
+    /**
+     * Imprime todos los scopes en formato de tabla, redirigiendo la salida a un PrintWriter.
+     *
+     * @param writer PrintWriter para redirigir la salida.
+     */
+    public void printAllScopes(PrintWriter writer) {
+        int scopeLevel = scopes.size();
 
-public void printAllScopes() {
-    int scopeLevel = scopes.size();
-    for (Map<String, Symbol> scope : scopes) {
-        System.out.println("Scope nivel " + scopeLevel + ":");
-        for (String name : scope.keySet()) {
-            Symbol symbol = scope.get(name);
-            System.out.println("- " + name + " (" + symbol.getSymbolType() + ", tipo: " + symbol.getType() + ")");
+        // Encabezado de la tabla
+        writer.println("Scope Level | Name       | Type       | Symbol Type");
+        writer.println("------------|------------|------------|-------------");
+
+        for (Map<String, Symbol> scope : scopes) {
+            for (String name : scope.keySet()) {
+                Symbol symbol = scope.get(name);
+                writer.printf("%-12d| %-10s | %-10s | %-12s%n",
+                              scopeLevel,
+                              name,
+                              symbol.getType(),
+                              symbol.getSymbolType());
+            }
+            scopeLevel--;
         }
-        scopeLevel--;
     }
-}
-
-
 }
