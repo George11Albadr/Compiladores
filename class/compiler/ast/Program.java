@@ -11,6 +11,10 @@ public class Program {
         this.classBody = classBody;
     }
 
+    public List<ClassBodyMember> getMembers() {
+        return classBody;
+    }
+
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
     }

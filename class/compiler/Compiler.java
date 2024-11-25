@@ -8,6 +8,7 @@ import compiler.ast.ASTPrinter;
 import java_cup.runtime.Symbol;
 import compiler.ast.ASTDotGenerator;
 import compiler.semantic.SemanticAnalyzer;
+import compiler.irt.IRTPrinter;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.FileReader;
 import java.lang.reflect.Field;
+import java.text.ParseException;
 import java.util.List;
 
 public class Compiler {
@@ -83,6 +85,9 @@ public class Compiler {
                     break;
                 case "semantic":
                     runSemantic(filename, output, debug);
+                    break;
+                case "irt":
+                    runIRT(filename, output, debug);
                     break;
                 case "dot":
                     runDot(filename, output, debug);
@@ -275,13 +280,13 @@ public class Compiler {
 
         // Mensaje de éxito
         System.out.println("Análisis semántico completado. Resultado guardado en " + output);
-    } catch (Exception e) {
-        System.err.println("Error durante el análisis semántico: " + e.getMessage());
-        if (debug) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Error durante el análisis semántico: " + e.getMessage());
+            if(debug) {
+                e.printStackTrace();
+            }
         }
     }
-}
 
     /**
      * Método para ejecutar la generación del archivo DOT y PDF.
@@ -336,20 +341,20 @@ public class Compiler {
     }
 
     /*Vamos a redirigir los mensajes de semantica a un archivo de texto*/
-private static void redirectOutputToFile(String output) {
-    try {
-        // Crear un PrintStream que apunte al archivo
-        PrintStream fileOut = new PrintStream(new FileOutputStream(output));
+    private static void redirectOutputToFile(String output) {
+            try {
+            // Crear un PrintStream que apunte al archivo
+            PrintStream fileOut = new PrintStream(new FileOutputStream(output));
         
-        // Redirigir System.out y System.err al archivo
-        System.setOut(fileOut);
-        System.setErr(fileOut);
+            // Redirigir System.out y System.err al archivo
+            System.setOut(fileOut);
+            System.setErr(fileOut);
 
-        System.out.println("stage: semantic analysis");
-    } catch (IOException e) {
-        System.err.println("No se pudo redirigir la salida: " + e.getMessage());
+            System.out.println("stage: semantic analysis");
+        } catch (IOException e) {
+            System.err.println("No se pudo redirigir la salida: " + e.getMessage());
+        }
     }
-}
 
     /**
      * Método para generar el PDF a partir del archivo DOT utilizando Graphviz.
@@ -402,6 +407,105 @@ private static void redirectOutputToFile(String output) {
             throw new IOException("Proceso de generación de PDF interrumpido", e);
         }
     }
+/**
+ * Método para ejecutar la generación del IRT.
+ *
+ * @param filename Archivo de entrada.
+ * @param output   Archivo de salida.
+ * @param debug    Bandera para activar el modo debug.
+ * @throws IOException Si ocurre un error de E/S.
+ */
+private static void runIRT(String filename, String output, boolean debug) throws IOException {
+    try (PrintWriter writer = new PrintWriter(new FileWriter(output))) {
+        // Indicar el inicio de la etapa de generación de IRT
+        writer.println("stage: irt generation");
+        System.out.println("stage: irt generation");
+
+        // Inicializar Scanner y Parser
+        try (FileReader fileReader = new FileReader(filename)) {
+            Scanner scanner = new Scanner(fileReader);
+            Parser parser = new Parser(scanner);
+
+            // Realizar el parsing
+            Symbol result = parser.parse();
+
+            // Verificar si el parsing resultó en un AST válido
+            if (result == null || result.value == null) {
+                writer.println("Error: No se pudo generar el AST.");
+                if (debug) {
+                    System.err.println("Error: No se pudo generar el AST.");
+                }
+                return;
+            }
+
+            // Obtener el nodo raíz del AST
+            Program program = (Program) result.value;
+
+            // Iniciar el análisis semántico
+            SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
+            semanticAnalyzer.setOutputWriter(writer);
+            program.accept(semanticAnalyzer);
+
+            // Obtener los errores semánticos
+            List<String> semanticErrors = semanticAnalyzer.getErrors();
+
+            // Reportar errores semánticos
+            if (!semanticErrors.isEmpty()) {
+                writer.println("Semantic Errors:");
+                System.out.println("Se encontraron errores semánticos:");
+                for (String error : semanticErrors) {
+                    writer.println(error);
+                    System.out.println(error);
+                }
+                return;
+            } else {
+                writer.println("Semantic analysis completed successfully.");
+                if (debug) {
+                    System.out.println("Debug: Semantic analysis completed successfully.");
+                }
+            }
+
+            // Generar el IRT
+            compiler.irt.IRTreeGenerator irTreeGenerator = new compiler.irt.IRTreeGenerator();
+            irTreeGenerator.generateAndOptimize(program);
+
+            // Obtener las declaraciones IR generadas
+            List<compiler.irt.IRStmt> irStatements = irTreeGenerator.getIRStatements();
+
+            // Verificar si el IRT se generó correctamente
+            if (irStatements == null || irStatements.isEmpty()) {
+                writer.println("Error: No se pudo generar el IRT.");
+                if (debug) {
+                    System.err.println("Error: No se pudo generar el IRT.");
+                }
+                return;
+            }
+
+            // Imprimir el IRT al archivo de salida
+            compiler.irt.IRTPrinter irtPrinter = new compiler.irt.IRTPrinter(writer);
+            for (compiler.irt.IRStmt stmt : irStatements) {
+                stmt.accept(irtPrinter);
+            }
+
+            writer.println("IRT generation completed successfully.");
+            if (debug) {
+                System.out.println("Debug: IRT generation completed successfully.");
+            }
+
+            System.out.println("IRT generado exitosamente en " + output);
+        }
+    } catch (IOException e) {
+        System.err.println("Error de E/S durante la generación de IRT: " + e.getMessage());
+        if (debug) {
+            e.printStackTrace();
+        }
+    } catch (Exception e) {
+        System.err.println("Error inesperado durante la generación de IRT: " + e.getMessage());
+        if (debug) {
+            e.printStackTrace();
+        }
+    }
+}
 
     /**
      * Método para determinar si un token es una palabra reservada.
@@ -484,7 +588,7 @@ private static void redirectOutputToFile(String output) {
     private static void printHelp() {
         System.out.println("Uso: java compiler.Compiler [option] <filename>");
         System.out.println("-o <outname>: Especifica el nombre del archivo de salida.");
-        System.out.println("-target <stage>: scan, parse, semantic, dot.");
+        System.out.println("-target <stage>: scan, parse, semantic, dot, irt.");
         System.out.println("-debug: Activa el modo debug.");
         System.out.println("-h: Muestra esta ayuda.");
     }

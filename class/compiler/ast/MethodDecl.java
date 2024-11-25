@@ -15,6 +15,14 @@ public class MethodDecl implements ClassBodyMember {
         this.body = body;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Block getBody() {
+        return body;
+    }
+
     @Override
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
